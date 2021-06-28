@@ -1,2 +1,4 @@
 *.o
 host-app
+*.bin
+*.hex
