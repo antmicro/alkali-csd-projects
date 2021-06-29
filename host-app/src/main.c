@@ -145,9 +145,30 @@ void set_output_buffer(int fd)
 	ioctl(fd, NVME_IOCTL_IO_CMD, &cmd);
 }
 
-int setup_buffers(int fd, char *ifile)
+int setup_buffers(int fd)
+{
+	set_input_buffer(fd);
+
+	set_output_buffer(fd);
+
+	return 0;
+}
+
+int copy_input(char *ifile, char *dev)
 {
 	int ifd = open(ifile, O_RDONLY);
+	int ofd = open(dev, O_WRONLY, O_SYNC | O_DIRECT);
+
+	if(ifd == -1) {
+		printf("Failed to open input file!\n");
+		return 1;
+	}
+
+	if(ofd == -1) {
+		printf("Failed to open NVMe device (%s:%d)!\n", __func__, __LINE__);
+		return 1;
+	}
+
 	uint32_t len = lseek(ifd, 0, SEEK_END);
 
 	assert(len == BUF_SIZE);
@@ -165,9 +186,9 @@ int setup_buffers(int fd, char *ifile)
 
 	close(ifd);
 
-	lseek(fd, 0, SEEK_SET);
+	lseek(ofd, 0, SEEK_SET);
 
-	uint32_t wlen = write(fd, buf, len);
+	uint32_t wlen = write(ofd, buf, len);
 
 	free(buf);
 
@@ -176,15 +197,14 @@ int setup_buffers(int fd, char *ifile)
 		return 1;
 	}
 
-	set_input_buffer(fd);
-
-	set_output_buffer(fd);
+	syncfs(ofd);
 
 	return 0;
 }
 
-int copy_output(int fd, char *ofile)
+int copy_output(char *dev, char *ofile)
 {
+	int ifd = open(dev, O_RDONLY, O_SYNC | O_DIRECT);
 	int ofd = open(ofile, O_WRONLY, O_CREAT | O_TRUNC);
 
 	if(ofd == -1) {
@@ -192,13 +212,17 @@ int copy_output(int fd, char *ofile)
 		return 1;
 	}
 
+	if(ifd == -1) {
+		printf("Failed to open NVMe device (%s:%d)!\n", __func__, __LINE__);
+	}
+
 	uint32_t len = BUF_SIZE;
 
 	void *buf = malloc(len);
 
-	lseek(fd, len, SEEK_SET);
+	lseek(ifd, len, SEEK_SET);
 
-	uint32_t rlen = read(fd, buf, len);
+	uint32_t rlen = read(ifd, buf, len);
 
 	if(rlen != len) {
 		printf("Failed to read input file! (got: %d, expected: %d)\n", rlen, len);
@@ -231,7 +255,30 @@ void acc_ctl(int fd, uint32_t op, uint32_t id = 0)
 
 int check_acc(int fd)
 {
-	return 0;
+	uint32_t len = sizeof(status_head_t);
+	void *buf = malloc(len);
+
+	if(!buf)
+		return 1;
+
+	struct nvme_passthru_cmd cmd = {
+		.opcode = CMD_GET_STAT,
+		.addr = (uint64_t)buf,
+		.data_len = len,
+		.cdw10 = len / 4,
+		.cdw12 = 0,
+		.timeout_ms = TIMEOUT,
+	};
+
+	ioctl(fd, NVME_IOCTL_ADMIN_CMD, &cmd);
+
+	status_head_t *status = (status_head_t*)buf;
+
+	int ret = status->id == 2;
+
+	free(buf);
+
+	return ret;
 }
 
 int main(int argc, char *argv[])
@@ -241,9 +288,11 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+	copy_input(argv[3], argv[1]);
+
 	printf("Opening device: %s\n", argv[1]);
 
-	int fd = open(argv[1], O_RDWR);
+	int fd = open(argv[1], O_RDWR, O_SYNC | O_DIRECT);
 
 	if(fd == -1) {
 		printf("Failed to open NVMe device!\n");
@@ -260,19 +309,32 @@ int main(int argc, char *argv[])
 
 	send_fw(fd, argv[2]);
 
-	setup_buffers(fd, argv[3]);
+	printf("Configuring buffers\n");
+
+	setup_buffers(fd);
+
+	printf("Configuring firmware\n");
 
 	acc_ctl(fd, CTL_SEL_FW);
 
+	printf("Starting accelerator\n");
+
 	acc_ctl(fd, CTL_START);
 
-	//while(check_acc(fd)){
-	sleep(1);
-	//}
+	printf("Waiting for processing to end");
 
-	copy_output(fd, argv[4]);
+	while(!check_acc(fd)){
+		printf(".");
+		sleep(1);
+	}
+
+	printf("\nDone\n");
 
 	close(fd);
+
+	printf("Copying output data\n");
+
+	copy_output(argv[1], argv[4]);
 
 	return 0;
 }

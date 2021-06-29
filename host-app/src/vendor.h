@@ -32,4 +32,10 @@ typedef struct ident_head {
 	uint8_t rsvd[8];
 } ident_head_t;
 
+typedef struct status_head {
+	uint32_t len;
+	uint32_t id;
+	uint32_t rsvd[6];
+} status_head_t;
+
 #endif
