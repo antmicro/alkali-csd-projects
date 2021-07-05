@@ -12,11 +12,11 @@
 
 static void global_control(int fd, bool enable)
 {
-	struct nvme_passthru_cmd cmd = {
-		opcode : CMD_GLBL_CTL,
-		cdw12 : (enable) ? ACC_EN : ACC_DIS,
-		timeout_ms : TIMEOUT,
-	};
+	struct nvme_passthru_cmd cmd = {};
+
+	cmd.opcode = CMD_GLBL_CTL;
+	cmd.cdw12 = (enable) ? ACC_EN : ACC_DIS;
+	cmd.timeout_ms = TIMEOUT;
 
 	ioctl(fd, NVME_IOCTL_ADMIN_CMD, &cmd);
 }
@@ -41,13 +41,13 @@ int acc_identify(int fd)
 	if(!buf)
 		return 1;
 
-	struct nvme_passthru_cmd cmd = {
-		opcode : CMD_IDENT,
-		addr : (uint64_t)buf,
-		data_len : len,
-		cdw10 : len / 4,
-		timeout_ms : TIMEOUT,
-	};
+	struct nvme_passthru_cmd cmd = {};
+
+	cmd.opcode = CMD_IDENT;
+	cmd.addr = (uint64_t)buf;
+	cmd.data_len = len;
+	cmd.cdw10 = len / 4;
+	cmd.timeout_ms = TIMEOUT;
 
 	ioctl(fd, NVME_IOCTL_ADMIN_CMD, &cmd);
 
@@ -103,14 +103,14 @@ int send_fw(int fd, char *fw)
 
 	close(fw_fd);
 
-	struct nvme_passthru_cmd cmd = {
-		opcode : CMD_SEND_FW,
-		addr : (uint64_t)buf,
-		data_len : len,
-		cdw10 : len / 4,
-		cdw13 : FW_ID,
-		timeout_ms : TIMEOUT,
-	};
+	struct nvme_passthru_cmd cmd = {};
+
+	cmd.opcode = CMD_SEND_FW;
+	cmd.addr = (uint64_t)buf;
+	cmd.data_len = len;
+	cmd.cdw10 = len / 4;
+	cmd.cdw13 = FW_ID;
+	cmd.timeout_ms = TIMEOUT;
 
 	ioctl(fd, NVME_IOCTL_IO_CMD, &cmd);
 
@@ -121,26 +121,26 @@ int send_fw(int fd, char *fw)
 
 void set_input_buffer(int fd)
 {
-	struct nvme_passthru_cmd cmd = {
-		opcode : CMD_LBA_IN,
-		cdw12 : 0,
-		cdw13 : 0,
-		cdw14 : 1,
-		timeout_ms : TIMEOUT,
-	};
+	struct nvme_passthru_cmd cmd = {};
+
+	cmd.opcode = CMD_LBA_IN;
+	cmd.cdw12 = 0;
+	cmd.cdw13 = 0;
+	cmd.cdw14 = 1;
+	cmd.timeout_ms = TIMEOUT;
 
 	ioctl(fd, NVME_IOCTL_IO_CMD, &cmd);
 }
 
 void set_output_buffer(int fd)
 {
-	struct nvme_passthru_cmd cmd = {
-		opcode : CMD_LBA_OUT,
-		cdw12 : 1,
-		cdw13 : 0,
-		cdw14 : 1,
-		timeout_ms : TIMEOUT,
-	};
+	struct nvme_passthru_cmd cmd = {};
+
+	cmd.opcode = CMD_LBA_OUT;
+	cmd.cdw12 = 1;
+	cmd.cdw13 = 0;
+	cmd.cdw14 = 1;
+	cmd.timeout_ms = TIMEOUT;
 
 	ioctl(fd, NVME_IOCTL_IO_CMD, &cmd);
 }
@@ -243,12 +243,12 @@ int copy_output(char *dev, char *ofile)
 
 void acc_ctl(int fd, uint32_t op, uint32_t id = 0)
 {
-	struct nvme_passthru_cmd cmd = {
-		opcode : CMD_CTL,
-		cdw13 : op,
-		cdw14 : id,
-		timeout_ms : TIMEOUT,
-	};
+	struct nvme_passthru_cmd cmd = {};
+
+	cmd.opcode = CMD_CTL;
+	cmd.cdw13 = op;
+	cmd.cdw14 = id;
+	cmd.timeout_ms = TIMEOUT;
 
 	ioctl(fd, NVME_IOCTL_IO_CMD, &cmd);
 }
@@ -261,14 +261,14 @@ int check_acc(int fd)
 	if(!buf)
 		return 1;
 
-	struct nvme_passthru_cmd cmd = {
-		opcode : CMD_GET_STAT,
-		addr : (uint64_t)buf,
-		data_len : len,
-		cdw10 : len / 4,
-		cdw12 : 0,
-		timeout_ms : TIMEOUT,
-	};
+	struct nvme_passthru_cmd cmd = {};
+
+	cmd.opcode = CMD_GET_STAT;
+	cmd.addr = (uint64_t)buf;
+	cmd.data_len = len;
+	cmd.cdw10 = len / 4;
+	cmd.cdw12 = 0;
+	cmd.timeout_ms = TIMEOUT;
 
 	ioctl(fd, NVME_IOCTL_ADMIN_CMD, &cmd);
 
