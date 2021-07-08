@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define TIMEOUT		500
+#define TIMEOUT		5000
 #define FW_ID		0
 
 #define BUF_SIZE	4096

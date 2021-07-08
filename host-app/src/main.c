@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <cstring>
 #include <cassert>
+#include <ctime>
 
 #include "vendor.h"
 
@@ -283,6 +284,11 @@ int check_acc(int fd)
 
 int main(int argc, char *argv[])
 {
+	struct timespec ts;
+
+	ts.tv_sec = 0;
+	ts.tv_nsec = 100*1000*1000;
+
 	if(argc < 5) {
 		printf("Usage: %s <nvme device> <firwmare file> <input file> <output file>\n", argv[0]);
 		return -1;
@@ -303,29 +309,41 @@ int main(int argc, char *argv[])
 		printf("Identify failed!\n");
 	}
 
+	nanosleep(&ts, NULL);
+
 	global_control(fd, true);
+
+	nanosleep(&ts, NULL);
 
 	printf("Sending FW: %s\n", argv[2]);
 
 	send_fw(fd, argv[2]);
 
+	nanosleep(&ts, NULL);
+
 	printf("Configuring buffers\n");
 
 	setup_buffers(fd);
+
+	nanosleep(&ts, NULL);
 
 	printf("Configuring firmware\n");
 
 	acc_ctl(fd, CTL_SEL_FW);
 
+	nanosleep(&ts, NULL);
+
 	printf("Starting accelerator\n");
 
 	acc_ctl(fd, CTL_START);
+
+	nanosleep(&ts, NULL);
 
 	printf("Waiting for processing to end");
 
 	while(!check_acc(fd)){
 		printf(".");
-		sleep(1);
+		nanosleep(&ts, NULL);
 	}
 
 	printf("\nDone\n");
