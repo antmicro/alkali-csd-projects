@@ -18,6 +18,7 @@ static void global_control(int fd, bool enable)
 	cmd.opcode = CMD_GLBL_CTL;
 	cmd.cdw12 = (enable) ? ACC_EN : ACC_DIS;
 	cmd.timeout_ms = TIMEOUT;
+	cmd.nsid = 1;
 
 	ioctl(fd, NVME_IOCTL_ADMIN_CMD, &cmd);
 }
@@ -49,6 +50,7 @@ int acc_identify(int fd)
 	cmd.data_len = len;
 	cmd.cdw10 = len / 4;
 	cmd.timeout_ms = TIMEOUT;
+	cmd.nsid = 1;
 
 	ioctl(fd, NVME_IOCTL_ADMIN_CMD, &cmd);
 
@@ -70,6 +72,7 @@ int acc_identify(int fd)
 	cmd.addr = (uint64_t)buf;
 	cmd.data_len = len;
 	cmd.cdw10 = len / 4;
+	cmd.nsid = 1;
 
 	ioctl(fd, NVME_IOCTL_ADMIN_CMD, &cmd);
 
@@ -112,6 +115,7 @@ int send_fw(int fd, char *fw)
 	cmd.cdw10 = len / 4;
 	cmd.cdw13 = FW_ID;
 	cmd.timeout_ms = TIMEOUT;
+	cmd.nsid = 1;
 
 	ioctl(fd, NVME_IOCTL_IO_CMD, &cmd);
 
@@ -129,6 +133,7 @@ void set_input_buffer(int fd)
 	cmd.cdw13 = 0;
 	cmd.cdw14 = 1;
 	cmd.timeout_ms = TIMEOUT;
+	cmd.nsid = 1;
 
 	ioctl(fd, NVME_IOCTL_IO_CMD, &cmd);
 }
@@ -142,6 +147,7 @@ void set_output_buffer(int fd)
 	cmd.cdw13 = 0;
 	cmd.cdw14 = 1;
 	cmd.timeout_ms = TIMEOUT;
+	cmd.nsid = 1;
 
 	ioctl(fd, NVME_IOCTL_IO_CMD, &cmd);
 }
@@ -253,6 +259,7 @@ void acc_ctl(int fd, uint32_t op, uint32_t id = 0)
 	cmd.cdw13 = op;
 	cmd.cdw14 = id;
 	cmd.timeout_ms = TIMEOUT;
+	cmd.nsid = 1;
 
 	ioctl(fd, NVME_IOCTL_IO_CMD, &cmd);
 }
@@ -273,6 +280,7 @@ int check_acc(int fd)
 	cmd.cdw10 = len / 4;
 	cmd.cdw12 = 0;
 	cmd.timeout_ms = TIMEOUT;
+	cmd.nsid = 1;
 
 	ioctl(fd, NVME_IOCTL_ADMIN_CMD, &cmd);
 
