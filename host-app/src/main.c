@@ -199,6 +199,7 @@ int copy_input(char *ifile, char *dev)
 	}
 
 	syncfs(ofd);
+	close(ofd);
 
 	return 0;
 }
@@ -224,6 +225,8 @@ int copy_output(char *dev, char *ofile)
 	lseek(ifd, len, SEEK_SET);
 
 	uint32_t rlen = read(ifd, buf, len);
+
+	close(ifd);
 
 	if(rlen != len) {
 		printf("Failed to read input file! (got: %d, expected: %d)\n", rlen, len);
