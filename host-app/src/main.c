@@ -124,42 +124,43 @@ int send_fw(int fd, char *fw)
 	return 0;
 }
 
-void set_input_buffer(int fd)
+void set_input_buffer(int fd, int slba, int nlb)
 {
 	struct nvme_passthru_cmd cmd = {};
 
 	cmd.opcode = CMD_LBA_IN;
-	cmd.cdw12 = 0;
+	cmd.cdw12 = slba;
 	cmd.cdw13 = 0;
-	cmd.cdw14 = 1;
+	cmd.cdw14 = nlb & 0xffff;
 	cmd.timeout_ms = TIMEOUT;
 	cmd.nsid = 1;
 
 	ioctl(fd, NVME_IOCTL_IO_CMD, &cmd);
 }
 
-void set_output_buffer(int fd)
+void set_output_buffer(int fd, int slba, int nlb)
 {
 	struct nvme_passthru_cmd cmd = {};
 
 	cmd.opcode = CMD_LBA_OUT;
-	cmd.cdw12 = 1;
+	cmd.cdw12 = slba;
 	cmd.cdw13 = 0;
-	cmd.cdw14 = 1;
+	cmd.cdw14 = nlb & 0xffff;
 	cmd.timeout_ms = TIMEOUT;
 	cmd.nsid = 1;
 
 	ioctl(fd, NVME_IOCTL_IO_CMD, &cmd);
 }
 
-int setup_buffers(int fd)
+int setup_buffers(int fd, int input_nlb, int output_nlb)
 {
-	set_input_buffer(fd);
-
-	set_output_buffer(fd);
+	set_input_buffer(fd, 0, input_nlb);
+	set_output_buffer(fd, input_nlb, output_nlb);
 
 	return 0;
 }
+
+uint32_t input_len = 0;
 
 int copy_input(char *ifile, char *dev)
 {
@@ -177,12 +178,10 @@ int copy_input(char *ifile, char *dev)
 	}
 
 	uint32_t len = lseek(ifd, 0, SEEK_END);
-
-	assert(len == BUF_SIZE);
-
-	void *buf = malloc(len);
-
+	input_len = ((len + BUF_SIZE - 1) / BUF_SIZE) * BUF_SIZE;
 	lseek(ifd, 0, SEEK_SET);
+
+	void *buf = malloc(input_len);
 
 	uint32_t rlen = read(ifd, buf, len);
 
@@ -195,12 +194,12 @@ int copy_input(char *ifile, char *dev)
 
 	lseek(ofd, 0, SEEK_SET);
 
-	uint32_t wlen = write(ofd, buf, len);
+	uint32_t wlen = write(ofd, buf, input_len);
 
 	free(buf);
 
-	if(wlen != len) {
-		printf("Failed to write to NVMe! (got: %d, expected: %d)\n", wlen, len);
+	if(wlen != input_len) {
+		printf("Failed to write to NVMe! (got: %d, expected: %d)\n", wlen, input_len);
 		return 1;
 	}
 
@@ -228,7 +227,7 @@ int copy_output(char *dev, char *ofile)
 
 	void *buf = malloc(len);
 
-	lseek(ifd, len, SEEK_SET);
+	lseek(ifd, input_len, SEEK_SET);
 
 	uint32_t rlen = read(ifd, buf, len);
 
@@ -334,7 +333,7 @@ int main(int argc, char *argv[])
 
 	printf("Configuring buffers\n");
 
-	setup_buffers(fd);
+	setup_buffers(fd, (input_len + BUF_SIZE - 1) / BUF_SIZE, BUF_SIZE);
 
 	nanosleep(&ts, NULL);
 
