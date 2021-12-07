@@ -9,12 +9,14 @@ parser.add_argument('input_file', help='input image to be normalized')
 parser.add_argument('output_file', help='ouptut path for normalized image')
 args = parser.parse_args()
 
-data = np.array(im.open(args.input_file).resize((224, 224))).astype('float32')
+img = im.open(args.input_file)
+img = img.convert('RGB')
+img = img.resize((224, 224))
+npimg = np.array(img).astype(np.float32) / 255.0
 
-print(type(data))
-print(data.shape)
+mean = np.mean(npimg, axis=(0, 1))
+std = np.std(npimg, axis=(0, 1))
 
-data -= np.mean(data, axis=(0, 1))
-data /= np.std(data, axis=(0, 1))
+npimg = (npimg - mean) / std
 
-data.tofile(args.output_file)
+npimg.tofile(args.output_file)

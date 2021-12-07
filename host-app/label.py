@@ -16,3 +16,4 @@ data = data[:1000]
 
 for i in np.argpartition(data, -5)[-5:]:
     print(idx2label[i])
+    print(data[i])
