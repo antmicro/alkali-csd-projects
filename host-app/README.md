@@ -31,13 +31,18 @@ To create input file in correct format you can use:
 
     cat resnet50-int8.tflite input-data.bin > input.bin
 
-You will also need to update `model_size` with size of the `.tflite` file used and `input_size`/`output_size` to match your model.
+You will also need to update `model_size` with size of the `.tflite` file used and `input_size`/`output_size` with tensor sizes of your model. 
+Those values are defined in your BPF file.
 
 Processing Resnet inputs/outputs (non-int8 model)
 -------------------------------------------------
 
 Inputs and outputs used by the model must be processed.
 
-For inputs this is covered by `normalize.py` that decodes the image, performs normalization and saves it as raw binary file.
+For inputs this is covered by `normalize.py` that decodes the image, performs normalization and saves it as raw binary file:
 
-For outputs `label.py` is used to convert weights into labels.
+    ./normalize.py dog.jpg dog.bin
+
+For outputs `label.py` is used to convert weights into labels:
+
+    ./label.py imagenet1000_clsidx_to_labels.txt output.bin
