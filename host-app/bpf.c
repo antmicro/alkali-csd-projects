@@ -4,16 +4,24 @@ static void (*tflite_float)(char*, char*, int, int, int) = (void *)3;
 static void (*tflite_uint)(char*, char*, int, int, int) = (void *)4;
 static void (*tflite_vta)(char*, char*, int, int, int) = (void *)5;
 
+
 int bpf_prog(char *imem, char *omem)
 {
-       const int model_size = 102163764;
-       const int input_size = 224*224*3*4;
-       const int output_size = 1000*4;
+	const int model_size = 26294360;
+	const int input_size = 224*224*3*1;
+	const int output_size = 1000*1;
 
-       char msg[] = "VTA Test\n";
-       print(msg);
+	char msg[] = "VTA Test\n";
+	print(msg);
 
-       tflite_float(imem, omem, input_size, output_size, model_size);
+	tflite_uint(imem, omem, input_size, output_size, model_size);
+	tflite_vta(imem, omem+output_size, input_size, output_size, model_size);
 
-       return 0;
+	/* Compare VTA and APU-only output */
+	for(int i = 0; i < output_size; i++) {
+		if(omem[i] != omem[i+output_size])
+			return i;
+	}
+
+	return -1;
 }
