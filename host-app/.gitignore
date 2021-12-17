@@ -2,3 +2,4 @@
 host-app
 *.bin
 *.hex
+build/
