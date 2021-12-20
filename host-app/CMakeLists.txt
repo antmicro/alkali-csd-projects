@@ -22,3 +22,6 @@ add_subdirectory(
   "${CMAKE_CURRENT_BINARY_DIR}/tensorflow-lite" EXCLUDE_FROM_ALL)
 
 target_link_libraries(host-app tensorflow-lite)
+
+add_executable(tf-app src/tflite.cpp)
+target_link_libraries(tf-app tensorflow-lite)

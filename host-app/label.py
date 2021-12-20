@@ -19,7 +19,7 @@ if args.model is not None:
     data = np.fromfile(args.input_file, dtype='int8')
     with open(args.model, 'rb') as m:
         model = tf.lite.Interpreter(model_content=m.read())
-        det = model.get_input_details()[0]
+        det = model.get_output_details()[0]
         scale, zero_point = det['quantization']
         data = (data - zero_point).astype('float32') * scale
 else:
