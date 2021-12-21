@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstdint>
+#include <cassert>
 #include <unistd.h>
 #include <fcntl.h>
 #include <memory>
@@ -71,9 +72,7 @@ int main(int argc, char *argv[])
 	char *output_fname = argv[3];
 
 	char *model_buf, *input_buf;
-	int model_len, input_len, output_len = 1000;
-
-	int8_t *input_tensor, *output_tensor;
+	int model_len, input_len, output_len;
 
 	if(load_file(model_fname, &model_buf, &model_len)) {
 		printf("Failed to load model!\n");
@@ -94,35 +93,42 @@ int main(int argc, char *argv[])
 
 	// Resize input tensors, if desired.
 	interpreter->AllocateTensors();
-	input_tensor = interpreter->typed_input_tensor<int8_t>(0);
 
-	std::copy(input_buf, input_buf+input_len, input_tensor);
-
-	timespec_get(&ts[0], TIME_UTC);
-
-	// run model
-	interpreter->Invoke();
-
-	timespec_get(&ts[1], TIME_UTC);
+	auto in = interpreter->input_tensor(0);
+	auto out = interpreter->output_tensor(0);
 
 #ifdef DEBUG
 	for(int i = 0; i < interpreter->tensors_size(); i++) {
 		std::cout << "name: " << interpreter->tensor(i)->name << " type: " << interpreter->tensor(i)->type << " size: " << interpreter->tensor(i)->bytes << std::endl;
 	}
-
-	auto in = interpreter->input_tensor(0);
-	auto out = interpreter->output_tensor(0);
+#endif
 
 	printf("Input tensor bytes: %d name: %s\n", in->bytes, in->name);
 	printf("Output tensor bytes: %d name: %s\n", out->bytes, out->name);
-#endif
+	assert(input_len <= in->bytes);
+	output_len = out->bytes;
 
-	const uint64_t duration = (ts[1].tv_sec * 1000000000 + ts[1].tv_nsec) - (ts[0].tv_sec * 1000000000 + ts[0].tv_nsec);
+	void *input_tensor = (void*)interpreter->typed_input_tensor<int8_t>(0);
+	if(!input_tensor)
+		input_tensor = (void*)interpreter->typed_input_tensor<float>(0);
 
-	printf("Model processing took %llu ns\n", duration);
+	std::copy(input_buf, input_buf+input_len, (char*)input_tensor);
+
+	for (int i = 0; i < 10; i++) {
+		timespec_get(&ts[0], TIME_UTC);
+		interpreter->Invoke();
+		timespec_get(&ts[1], TIME_UTC);
+		const uint64_t duration = (ts[1].tv_sec * 1000000000 + ts[1].tv_nsec) - (ts[0].tv_sec * 1000000000 + ts[0].tv_nsec);
+		printf("Model processing took %llu ns\n", duration);
+	}
 
 	// get pointer to outputs
-	output_tensor = interpreter->typed_output_tensor<int8_t>(0);
+	void *output_tensor = interpreter->typed_output_tensor<int8_t>(0);
+	if(!output_tensor)
+		output_tensor = interpreter->typed_output_tensor<float>(0);
 
 	save_file(output_fname, (char*)output_tensor, output_len);
+
+	free(input_buf);
+	free(model_buf);
 }

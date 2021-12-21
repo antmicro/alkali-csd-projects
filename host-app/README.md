@@ -8,12 +8,14 @@ This repository contains host PC userspace application that is responsible for c
 Building
 --------
 
-To build this app you need to have GCC toolchain installed.
-Once that is installed, you can build the app with:
+To build this app you need to have CMake, GCC and Tensorflow sources on your PC.
+Once that is read, you can build the app with:
 
-    make
+    mkdir -p build && cd build
+    cmake .. -DTENSORFLOW_SOURCE_DIR=~/work/wd-nvme/new/wd-nvme-docker/tensorflow_src
+    cmake --build . -j
 
-This should create a file `host-app`.
+This should create `host-app` and `tf-app` executables in the `build` directory.
 
 Usage
 -----
@@ -21,6 +23,10 @@ Usage
 Easiest way to use the app is to utilize the `run.sh` wrapper script:
 
     ./run.sh <path to NVMe device> <path to BPF source file> <input file> <output file>
+
+To generate reference output calculated using TFLite on host, run:
+
+    ./tf-app resnet50-int8.tflite dog.int8 dog-res.int8
 
 Preparing input file 
 --------------------

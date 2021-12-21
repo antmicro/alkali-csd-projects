@@ -8,17 +8,10 @@ int bpf_prog(char *imem, char *omem)
 	const int input_size = 224*224*3*1;
 	const int output_size = 1000*1;
 
-	char msg[] = "VTA Test\n";
+	char msg[] = "VTA Test (int8-resnet)\n";
 	print(msg);
 
-	tflite_apu(imem, omem, input_size, output_size, model_size);
-	tflite_vta(imem, omem+output_size, input_size, output_size, model_size);
+	tflite_vta(imem, omem, input_size, output_size, model_size);
 
-	/* Compare VTA and APU-only output */
-	for(int i = 0; i < output_size; i++) {
-		if(omem[i] != omem[i+output_size])
-			return i;
-	}
-
-	return -1;
+	return 0;
 }
