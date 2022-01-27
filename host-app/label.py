@@ -25,8 +25,5 @@ if args.model is not None:
 else:
     data = np.fromfile(args.input_file, dtype='float32')
 
-data = data[:1000]
-
-for i in np.argpartition(data, -5)[-5:]:
-    print(idx2label[i])
-    print(data[i])
+for i in np.argsort(-data)[:5]:
+    print("{}: {}".format(idx2label[i], data[i]))
