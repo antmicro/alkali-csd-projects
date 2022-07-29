@@ -1,0 +1,3 @@
+[submodule "alkali-csd-hw"]
+	path = alkali-csd-hw
+	url = ../wd-nvme-alkali-csd-hw.git
