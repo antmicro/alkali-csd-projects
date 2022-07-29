@@ -22,7 +22,10 @@ You can install them using the following commands:
 
 ```
 sudo apt update -y
-sudo apt install -y curl default-jdk git make python3 python3-pip wget
+sudo apt install -y wget bc bison build-essential cpio curl default-jdk flex \
+    g++-aarch64-linux-gnu gcc-aarch64-linux-gnu git gperf libcurl4-openssl-dev \
+    libelf-dev libffi-dev libjpeg-dev libpcre3-dev libssl-dev make ninja-build \
+    python3 python3-pip python3-sphinx rsync rustc unzip
 ```
 
 Then, install the required python packages:
