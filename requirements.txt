@@ -1,1 +1,1 @@
--r alkali-csd-hw/third-party/registers-generator/requirements.txt
+-r alkali-csd-fw/requirements.txt
