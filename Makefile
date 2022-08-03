@@ -1,8 +1,9 @@
 # Helper directories ----------------------------------------------------------
+SHELL:=/bin/bash
 ROOT_DIR = $(realpath $(CURDIR))
 BUILD_DIR ?= $(ROOT_DIR)/build
-HW_BUILD_DIR ?= $(ROOT_DIR)/hardware
-FW_BUILD_DIR ?= $(ROOT_DIR)/firmware
+HW_BUILD_DIR ?= $(ROOT_DIR)/build/hardware
+FW_BUILD_DIR ?= $(ROOT_DIR)/build/firmware
 HW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-hw
 FW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-fw
 
@@ -15,6 +16,8 @@ FW_MAKE_OPTS = BUILD_DIR=$(FW_BUILD_DIR)
 # -----------------------------------------------------------------------------
 # All -------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
+
+# All -------------------------------------------------------------------------
 .PHONY: all
 all: hardware/all
 all: firmware/all ## Build all binaries for Hardware and Firmware
@@ -23,6 +26,8 @@ all: firmware/all ## Build all binaries for Hardware and Firmware
 # -----------------------------------------------------------------------------
 # Clean -----------------------------------------------------------------------
 # -----------------------------------------------------------------------------
+
+# Clean -----------------------------------------------------------------------
 .PHONY: clean
 clean: ## Remove ALL build artifacts
 	$(RM) -r $(BUILD_DIR)
@@ -37,7 +42,7 @@ clean: ## Remove ALL build artifacts
 firmware/all:  ## Build all Firmware binaries (Buildroot, APU App, RPU App)
 	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) all
 
-# Clean ------------------------------------------------------------------------
+# Clean -----------------------------------------------------------------------
 .PHONY: firmware/clean
 firmware/clean: ## Remove ALL Firmware build artifacts
 	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) clean
@@ -100,7 +105,7 @@ firmware/help: ## Show Firmware help message
 hardware/all: ## Build all Hardware binaries (Vivado design)
 	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) all
 
-# Clean ------------------------------------------------------------------------
+# Clean -----------------------------------------------------------------------
 .PHONY: hardware/clean
 hardware/clean:
 	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) clean
@@ -135,7 +140,7 @@ hardware/format: ## Format code
 hardware/docker: ## Build development docker image
 	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) docker
 
-# Enter  ---------------------------------------------------------------------
+# Enter  ----------------------------------------------------------------------
 .PHONY: hardware/enter
 hardware/enter: ## Enter development docker image
 	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) enter
