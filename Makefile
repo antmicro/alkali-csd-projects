@@ -8,14 +8,16 @@ HW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-hw
 FW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-fw
 
 # Helper macros ---------------------------------------------------------------
+FW_WEST_YML = $(FW_ROOT_DIR)/rpu-app/west.yml
+WEST_YML = $(FW_BUILD_DIR)/rpu-app/west.yml
+WEST_CONFIG = $(ROOT_DIR)/.west/config
+RPUAPP_APP_DIR = alkali-csd-fw/rpu-app
+
 HW_MAKEFILE = $(HW_ROOT_DIR)/Makefile
 FW_MAKEFILE = $(FW_ROOT_DIR)/Makefile
 HW_MAKE_OPTS = BUILD_DIR=$(HW_BUILD_DIR)
-FW_MAKE_OPTS = BUILD_DIR=$(FW_BUILD_DIR)
-
-FW_WEST_YML = $(FW_ROOT_DIR)/rpu-app/west.yml
-WEST_YML = $(FW_BUILD_DIR)/west.yml
-WEST_CONFIG = $(ROOT_DIR)/.west/config
+FW_MAKE_OPTS = BUILD_DIR=$(FW_BUILD_DIR) WEST_CONFIG=$(WEST_CONFIG) WEST_YML=$(WEST_YML) \
+	RPUAPP_APP_DIR=$(RPUAPP_APP_DIR)
 
 
 # -----------------------------------------------------------------------------
@@ -96,7 +98,7 @@ firmware/rpu-app/clean: ## Remove RPU App build files
 	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) rpu-app/clean
 
 $(WEST_YML): # Generate west.yml based on manifest from Firmware repository
-	mkdir -p $(FW_BUILD_DIR)
+	mkdir -p $(FW_BUILD_DIR)/rpu-app
 	sed -e 's/path: build/path: build\/firmware/g' \
 		-e 's/rpu-app/alkali-csd-fw\/rpu-app/g' $(FW_WEST_YML) > $(WEST_YML)
 
@@ -106,10 +108,6 @@ firmware/zephyr/sdk: ## Install Zephyr SDK locally (helper)
 
 .PHONY: firmware/zephyr/setup
 firmware/zephyr/setup: ## Clone main zephyr repositories and modules
-
-.PHONY: firmware/zephyr/deps
-firmware/zephyr/deps: ## Install Zephyr dependencies
-	pip3 install -r $(BUILD_DIR)/zephyr/scripts/requirements.txt
 
 .PHONY: firmware/zephyr/clean
 firmware/zephyr/clean: ## Remove Zephyr installed files

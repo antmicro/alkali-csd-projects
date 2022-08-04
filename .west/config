@@ -1,5 +1,5 @@
 [manifest]
-path = build/firmware
+path = build/firmware/rpu-app
 file = west.yml
 
 [zephyr]
