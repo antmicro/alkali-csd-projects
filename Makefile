@@ -105,13 +105,28 @@ $(WEST_YML): # Generate west.yml based on manifest from Firmware repository
 # Zephyr ----------------------------------------------------------------------
 .PHONY: firmware/zephyr/sdk
 firmware/zephyr/sdk: ## Install Zephyr SDK locally (helper)
+	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) zephyr/sdk
 
 .PHONY: firmware/zephyr/setup
 firmware/zephyr/setup: ## Clone main zephyr repositories and modules
+	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) zephyr/setup
 
 .PHONY: firmware/zephyr/clean
 firmware/zephyr/clean: ## Remove Zephyr installed files
-	$(RM) -r $(BUILD_DIR)/zephyr*
+	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) zephyr/clean
+
+# Docker ----------------------------------------------------------------------
+.PHONY: firmware/docker
+firmware/docker: ## Build development docker image
+	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) docker
+
+.PHONY: firmware/docker/clean
+firmware/docker/clean: ## Build development docker image
+	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) docker/clean
+
+.PHONY: firmware/enter
+firmware/enter: ## Enter development docker image
+	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) enter
 
 # Help ------------------------------------------------------------------------
 .PHONY: firmware/help
