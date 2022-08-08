@@ -1,6 +1,0 @@
-[manifest]
-path = build/firmware/rpu-app
-file = west.yml
-
-[zephyr]
-base = zephyr

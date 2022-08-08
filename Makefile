@@ -10,14 +10,14 @@ FW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-fw
 # Helper macros ---------------------------------------------------------------
 FW_WEST_YML = $(FW_ROOT_DIR)/rpu-app/west.yml
 WEST_YML = $(FW_BUILD_DIR)/rpu-app/west.yml
-WEST_CONFIG = $(ROOT_DIR)/.west/config
-RPUAPP_APP_DIR = alkali-csd-fw/rpu-app
+WEST_INIT_DIR = $(ROOT_DIR)
+RPUAPP_MAIN_DIR = alkali-csd-fw/rpu-app
 
 HW_MAKEFILE = $(HW_ROOT_DIR)/Makefile
 FW_MAKEFILE = $(FW_ROOT_DIR)/Makefile
 HW_MAKE_OPTS = BUILD_DIR=$(HW_BUILD_DIR)
 FW_MAKE_OPTS = BUILD_DIR=$(FW_BUILD_DIR) WEST_CONFIG=$(WEST_CONFIG) WEST_YML=$(WEST_YML) \
-	RPUAPP_APP_DIR=$(RPUAPP_APP_DIR)
+	RPUAPP_MAIN_DIR=$(RPUAPP_MAIN_DIR) WEST_INIT_DIR=$(BUILD_DIR)
 
 
 # -----------------------------------------------------------------------------
@@ -86,11 +86,11 @@ firmware/apu-app/clean: ## Remove APU App build files
 
 # RPU App ---------------------------------------------------------------------
 .PHONY: firmware/rpu-app
-firmware/rpu-app: $(WEST_YML) $(WEST_CONFIG) ## Build RPU App
+firmware/rpu-app: $(WEST_YML) ## Build RPU App
 	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) rpu-app
 
 .PHONY: firmware/rpu-app/with-sdk
-firmware/rpu-app/with-sdk: $(WEST_YML) $(WEST_CONFIG) ## Build RPU App with local Zephyr SDK (helper)
+firmware/rpu-app/with-sdk: $(WEST_YML) ## Build RPU App with local Zephyr SDK (helper)
 	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) rpu-app/with-sdk
 
 .PHONY: firmware/rpu-app/clean
