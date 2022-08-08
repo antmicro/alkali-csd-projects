@@ -10,6 +10,7 @@ FW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-fw
 # Helper macros ---------------------------------------------------------------
 FW_WEST_YML = $(FW_ROOT_DIR)/rpu-app/west.yml
 WEST_YML = $(FW_BUILD_DIR)/rpu-app/west.yml
+WEST_CONFIG = $(ROOT_DIR)/.west/config
 WEST_INIT_DIR = $(ROOT_DIR)
 RPUAPP_MAIN_DIR = alkali-csd-fw/rpu-app
 
@@ -38,6 +39,7 @@ all: firmware/all ## Build all binaries for Hardware and Firmware
 .PHONY: clean
 clean: ## Remove ALL build artifacts
 	$(RM) -r $(BUILD_DIR)
+	$(RM) -r $(ROOT_DIR)/.west
 
 
 # -----------------------------------------------------------------------------
@@ -108,12 +110,13 @@ firmware/zephyr/sdk: ## Install Zephyr SDK locally (helper)
 	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) zephyr/sdk
 
 .PHONY: firmware/zephyr/setup
-firmware/zephyr/setup: ## Clone main zephyr repositories and modules
+firmware/zephyr/setup: $(WEST_YML) ## Clone main Zephyr repositories and modules
 	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) zephyr/setup
 
 .PHONY: firmware/zephyr/clean
 firmware/zephyr/clean: ## Remove Zephyr installed files
 	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) zephyr/clean
+	$(RM) -r $(BUILD_DIR)/.west
 
 # Docker ----------------------------------------------------------------------
 .PHONY: firmware/docker
