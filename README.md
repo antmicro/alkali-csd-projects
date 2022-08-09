@@ -9,6 +9,8 @@ The diagram below presents the simplified structure of this repository along wit
 .
 ├── alkali-csd-hw (submodule)
     └── ...
+├── alkali-csd-fw (submodule)
+    └── ...
 ├── Makefile
 ├── README.md
 └── requirements.txt
@@ -17,8 +19,8 @@ The diagram below presents the simplified structure of this repository along wit
 # Prerequisites
 
 To build the design you must have `Vivado 2019.2` binary available in your
-system path. Additionally, you will need a few system packages.
-You can install them using the following commands:
+system path. Additionally, you will need a few system packages which you can
+install using the following commands:
 
 ```
 sudo apt update -y
@@ -35,11 +37,25 @@ pip3 install -r requirements.txt
 
 # Usage
 
-To generate both hardware and firmware, just run:
+There are many various options to run `make`. It includes all executable
+targets from both Hardware and Firmware Makefile flows. These are prefixed with
+`firmware/` and `hardware/` after which you should enter a command. To see all
+available options, type `make help`.
+
+It is recommended to build docker images for both parts using prepared
+Dockerfiles:
+```bash
+make firmware/docker
+make hardware/docker
 ```
-make
+Then you can enter them:
+```bash
+make firmware/enter # OR make hardware/enter
 ```
 
-If you want to specify which one to build then run:
-1. `make build-fw` for firmware or
-2. `make build-hw` for hardware.
+When you are in docker image, you should be able to build all required
+components with correct build commands.
+
+In case you are not able to install docker and you prefer to configure your
+environment manually, just execute build targets directly on your machine
+environment.
