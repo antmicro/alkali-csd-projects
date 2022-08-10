@@ -4,3 +4,9 @@
 [submodule "alkali-csd-fw"]
 	path = alkali-csd-fw
 	url = ../wd-nvme-alkali-csd-fw.git
+[submodule "third-party/zynq-mkbootimage"]
+	path = third-party/zynq-mkbootimage
+	url = https://github.com/antmicro/zynq-mkbootimage
+[submodule "third-party/u-boot-xlnx"]
+	path = third-party/u-boot-xlnx
+	url = https://github.com/Xilinx/u-boot-xlnx.git
