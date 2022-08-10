@@ -3,8 +3,12 @@
 # -----------------------------------------------------------------------------
 
 ROOT_DIR = $(realpath $(CURDIR))
+DOCKER_TAG_NAME = alkali:1.0
 
 # Input settings -------------------------------------------------------------
+
+DOCKER_IMAGE_BASE ?= debian:bullseye
+DOCKER_TAG ?= $(DOCKER_IMAGE_PREFIX)$(DOCKER_TAG_NAME)
 
 BOARD ?= basalt
 BUILD_DIR ?= $(ROOT_DIR)/build
@@ -26,7 +30,8 @@ endif
 
 HW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-hw
 FW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-fw
-THIRD_PARTY_DIR = $(ROOT_DIR)/third-party
+FW_THIRD_PARTY_DIR = $(FW_ROOT_DIR)/third-party
+REGGEN_DIR = $(FW_THIRD_PARTY_DIR)/registers-generator
 BOARD_DIR = $(ROOT_DIR)/boards/$(BOARD)
 FW_WEST_YML = $(FW_ROOT_DIR)/rpu-app/west.yml
 WEST_CONFIG = $(ROOT_DIR)/.west/config
@@ -206,6 +211,62 @@ $(SDCARD_OUTPUTS) &: | $(BOOT_BIN) $(SDCARD_BUILD_DIR)
 	cp $(SDCARD_FILES) $(SDCARD_BUILD_DIR)/.
 
 sdcard: $(SDCARD_OUTPUTS) ## Create build directory with SD card contents
+
+# -----------------------------------------------------------------------------
+# Docker ----------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+REGGEN_REL_DIR = $(shell realpath --relative-to $(ROOT_DIR) $(REGGEN_DIR))
+FW_REL_DIR = $(shell realpath --relative-to $(ROOT_DIR) $(FW_ROOT_DIR))
+DOCKER_BUILD_DIR = $(BUILD_DIR)/docker
+DOCKER_BUILD_REGGEN_REQS_DIR = $(DOCKER_BUILD_DIR)/$(REGGEN_REL_DIR)
+DOCKER_BUILD_FW_REQS_DIR = $(DOCKER_BUILD_DIR)/$(FW_REL_DIR)
+
+.PHONY: docker
+docker: $(DOCKER_BUILD_DIR)/docker.ok ## Build the development docker image
+
+$(DOCKER_BUILD_REGGEN_REQS_DIR):
+	@mkdir -p $@
+
+$(DOCKER_BUILD_DIR)/docker.ok: Dockerfile
+$(DOCKER_BUILD_DIR)/docker.ok: requirements.txt
+$(DOCKER_BUILD_DIR)/docker.ok: $(FW_ROOT_DIR)/requirements.txt
+$(DOCKER_BUILD_DIR)/docker.ok: $(REGGEN_DIR)/requirements.txt
+$(DOCKER_BUILD_DIR)/docker.ok: | $(DOCKER_BUILD_REGGEN_REQS_DIR)
+	cp $(ROOT_DIR)/Dockerfile $(DOCKER_BUILD_DIR)/.
+	cp $(ROOT_DIR)/requirements.txt $(DOCKER_BUILD_DIR)/requirements.txt
+	mkdir -p $(DOCKER_BUILD_REGGEN_REQS_DIR)
+	cp $(FW_ROOT_DIR)/requirements.txt $(DOCKER_BUILD_FW_REQS_DIR)/requirements.txt
+	cp $(REGGEN_DIR)/requirements.txt $(DOCKER_BUILD_REGGEN_REQS_DIR)/requirements.txt
+	cd $(DOCKER_BUILD_DIR) && docker build \
+		--build-arg IMAGE_BASE="$(DOCKER_IMAGE_BASE)" \
+		--build-arg REPO_ROOT="$(PWD)" \
+		-t $(DOCKER_TAG) . && touch docker.ok
+
+.PHONY: docker/clean
+docker/clean: ## Clean Docker build files
+	$(RM) -r $(DOCKER_BUILD_DIR)
+
+# -----------------------------------------------------------------------------
+# Enter -----------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+.PHONY: enter
+enter: $(DOCKER_BUILD_DIR)/docker.ok ## Enter the development docker image
+	docker run \
+		--rm \
+		-v $(PWD):$(PWD) \
+		-v /etc/passwd:/etc/passwd \
+		-v /etc/group:/etc/group \
+		-v /tmp:$(HOME)/.cache \
+		-v /tmp:$(HOME)/.sbt \
+		-v /tmp:$(HOME)/.Xilinx \
+		-u $(shell id -u):$(shell id -g) \
+		-h docker-container \
+		-w $(PWD) \
+		-it \
+		$(DOCKER_RUN_EXTRA_ARGS) \
+		$(DOCKER_TAG)
 
 # -----------------------------------------------------------------------------
 # Help ------------------------------------------------------------------------
