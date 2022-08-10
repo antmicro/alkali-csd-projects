@@ -9,9 +9,9 @@ FW_BUILD_DIR ?= $(ROOT_DIR)/build/firmware
 HW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-hw
 FW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-fw
 THIRD_PARTY_DIR = $(ROOT_DIR)/third-party
-SCRIPTS_DIR = $(ROOT_DIR)/scripts
-BINARIES_DIR = $(ROOT_DIR)/binaries
 BOARD_BUILD_DIR = $(BUILD_DIR)/$(BOARD)
+BOARD_DIR = $(ROOT_DIR)/boards/$(BOARD)
+SCRIPTS_DIR = $(BOARD_DIR)/scripts
 
 # Helper macros ---------------------------------------------------------------
 FW_WEST_YML = $(FW_ROOT_DIR)/rpu-app/west.yml
@@ -26,6 +26,18 @@ HW_MAKE_OPTS = BUILD_DIR=$(HW_BUILD_DIR)
 FW_MAKE_OPTS = BUILD_DIR=$(FW_BUILD_DIR) WEST_CONFIG=$(WEST_CONFIG) WEST_YML=$(WEST_YML) \
 	RPUAPP_MAIN_DIR=$(RPUAPP_MAIN_DIR) WEST_INIT_DIR=$(BUILD_DIR)
 
+# Check supported boards ------------------------------------------------------
+define UNSUPPORTED_BOARD_MSG
+Boards $(BOARD) is not supported, choose one of following:
+$(foreach BOARD, $(SUPPORTED_BOARDS),	- $(BOARD)
+)
+
+endef
+
+SUPPORTED_BOARDS =zcu106 basalt
+ifneq '$(BOARD)' '$(findstring $(BOARD),$(SUPPORTED_BOARDS))'
+$(error $(UNSUPPORTED_BOARD_MSG))
+endif
 
 # -----------------------------------------------------------------------------
 # All -------------------------------------------------------------------------
@@ -204,8 +216,8 @@ hardware/help: ## Show Hardware help message
 SYSTEM_DTB = $(FW_BUILD_DIR)/linux-9c71c6e9/arch/arm64/boot/dts/xilinx/zynqmp-$(BOARD)-nvme.dtb
 LINUX_IMAGE = $(FW_BUILD_DIR)/linux-9c71c6e9/arch/arm64/boot/Image
 BL31_ELF = $(FW_BUILD_DIR)/arm-trusted-firmware-xilinx-v2019.2/build/zynqmp/release/bl31/bl31.elf
-FSBL_ELF = $(BINARIES_DIR)/fsbl.elf
-PMU_ELF = $(BINARIES_DIR)/pmu.elf
+FSBL_ELF = $(BOARD_BUILD_DIR)/fsbl.elf
+PMU_ELF = $(BOARD_BUILD_DIR)/pmu.elf
 TOP_BIT = $(HW_BUILD_DIR)/project_vta/out/top.bit
 U_BOOT_ELF = $(FW_BUILD_DIR)/uboot-xilinx-v2019.2/u-boot.elf
 BOOT_BIF = $(SCRIPTS_DIR)/$(BOARD)/boot.bif
@@ -226,7 +238,9 @@ $(BOARD_BUILD_DIR):
 $(BOARD_BUILD_DIR)/boot.bin: firmware/buildroot
 $(BOARD_BUILD_DIR)/boot.bin: hardware/all
 $(BOARD_BUILD_DIR)/boot.bin: $(MKBOOTIMAGE)
-$(BOARD_BUILD_DIR)/boot.bin: $(BOARD_BUILD_DIR)/boot.scr
+$(BOARD_BUILD_DIR)/boot.bin: $(BOOT_SCR)
+$(BOARD_BUILD_DIR)/boot.bin: $(FSBL_ELF)
+$(BOARD_BUILD_DIR)/boot.bin: $(PMU_ELF)
 $(BOARD_BUILD_DIR)/boot.bin: | $(BOARD_BUILD_DIR)
 	cp $(SYSTEM_DTB) $(LINUX_IMAGE) $(BL31_ELF) $(FSBL_ELF) $(PMU_ELF) $(TOP_BIT) $(U_BOOT_ELF) $(BOARD_BUILD_DIR)
 	cd $(BOARD_BUILD_DIR) && $(MKBOOTIMAGE) --zynqmp $(BOOT_BIF) $(BOOT_BIN)
@@ -234,13 +248,11 @@ $(BOARD_BUILD_DIR)/boot.bin: | $(BOARD_BUILD_DIR)
 $(BOARD_BUILD_DIR)/boot.scr: $(MKIMAGE)
 	$(MKIMAGE) -c none -A arm -T script -d $(BOOT_CMD) $(BOOT_SCR)
 
-$(MKIMAGE):
-	make -C $(U_BOOT_XLNX_DIR) clean xilinx_zynqmp_zcu106_revA_defconfig
-	make -C $(U_BOOT_XLNX_DIR) -j`nproc`
+$(FSBL_ELF):
+	make -C $(BOARD_DIR) fsbl
 
-$(MKBOOTIMAGE):
-	make -C $(THIRD_PARTY_DIR)/zynq-mkbootimage clean all
-
+$(PMU_ELF):
+	make -C $(BOARD_DIR) pmu
 
 # -----------------------------------------------------------------------------
 # Help ------------------------------------------------------------------------
