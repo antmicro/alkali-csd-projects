@@ -1,4 +1,4 @@
-BOARD ?= zcu106
+BOARD ?= basalt
 
 # Helper directories ----------------------------------------------------------
 SHELL:=/bin/bash
