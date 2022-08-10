@@ -10,6 +10,7 @@ HW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-hw
 FW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-fw
 THIRD_PARTY_DIR = $(ROOT_DIR)/third-party
 SCRIPTS_DIR = $(ROOT_DIR)/scripts
+BINARIES_DIR = $(ROOT_DIR)/binaries
 BOARD_BUILD_DIR = $(BUILD_DIR)/$(BOARD)
 
 # Helper macros ---------------------------------------------------------------
@@ -202,33 +203,40 @@ hardware/help: ## Show Hardware help message
 # -----------------------------------------------------------------------------
 SYSTEM_DTB = $(FW_BUILD_DIR)/linux-9c71c6e9/arch/arm64/boot/dts/xilinx/zynqmp-$(BOARD)-nvme.dtb
 LINUX_IMAGE = $(FW_BUILD_DIR)/linux-9c71c6e9/arch/arm64/boot/Image
-BL31_ELF = $(FW_BUILD_DIR)/arm-trusted-firmware/build/zynqmp/release/bl31/bl31.elf
+BL31_ELF = $(FW_BUILD_DIR)/arm-trusted-firmware-xilinx-v2019.2/build/zynqmp/release/bl31/bl31.elf
 FSBL_ELF = $(BINARIES_DIR)/fsbl.elf
 PMU_ELF = $(BINARIES_DIR)/pmu.elf
-TOP_BIT = $(HW_BUILD_DIR)/$(BOARD)/project_vta/out/top.bit
+TOP_BIT = $(HW_BUILD_DIR)/project_vta/out/top.bit
 U_BOOT_ELF = $(FW_BUILD_DIR)/uboot-xilinx-v2019.2/u-boot.elf
+BOOT_BIF = $(SCRIPTS_DIR)/$(BOARD)/boot.bif
+BOOT_CMD = $(SCRIPTS_DIR)/$(BOARD)/boot.cmd
+BOOT_BIN = $(BOARD_BUILD_DIR)/boot.bin
+BOOT_SCR = $(BOARD_BUILD_DIR)/boot.scr
 
 MKBOOTIMAGE = $(THIRD_PARTY_DIR)/zynq-mkbootimage/mkbootimage
-U_BOOT_XLNX = $(THIRD_PARTY_DIR)/u-boot-xlnx
-MKIMAGE = $(U_BOOT_XLNX)/tools/mkimage
+U_BOOT_XLNX_DIR = $(THIRD_PARTY_DIR)/u-boot-xlnx
+MKIMAGE = $(U_BOOT_XLNX_DIR)/tools/mkimage
 
 .PHONY: boot-image
-boot-image: $(BOARD_BUILD_DIR)/boot.bin
-boot-image: firmware/buildroot
-boot-image: hardware/all ## Build boot.bin
+boot-image: $(BOOT_BIN) ## Build boot.bin
 
-$(BOARD_BUILD_DIR)/boot.bin: $(MKBOOTIMAGE) $(BOARD_BUILD_DIR)/boot.scr
-	cp $(SYSTEM_DTB) $(LINUX_IMAGE) $(BL31_ELF) $(TOP_BIT) $(U_BOOT_ELF) $(BOARD_BUILD_DIR)
-	$(MKBOOTIMAGE) --zynqmp $(BINARIES_DIR)/boot.bif $(BOARD_BUILD_DIR)/boot.bin
+$(BOARD_BUILD_DIR):
+	mkdir -p $@
+
+$(BOARD_BUILD_DIR)/boot.bin: firmware/buildroot
+$(BOARD_BUILD_DIR)/boot.bin: hardware/all
+$(BOARD_BUILD_DIR)/boot.bin: $(MKBOOTIMAGE)
+$(BOARD_BUILD_DIR)/boot.bin: $(BOARD_BUILD_DIR)/boot.scr
+$(BOARD_BUILD_DIR)/boot.bin: | $(BOARD_BUILD_DIR)
+	cp $(SYSTEM_DTB) $(LINUX_IMAGE) $(BL31_ELF) $(FSBL_ELF) $(PMU_ELF) $(TOP_BIT) $(U_BOOT_ELF) $(BOARD_BUILD_DIR)
+	cd $(BOARD_BUILD_DIR) && $(MKBOOTIMAGE) --zynqmp $(BOOT_BIF) $(BOOT_BIN)
 
 $(BOARD_BUILD_DIR)/boot.scr: $(MKIMAGE)
-	$(MKIMAGE) -c none -A arm -T script -d $(SCRIPTS_DIR)/boot_$(BOARD).cmd $(BOARD_BUILD_DIR)/boot.scr
+	$(MKIMAGE) -c none -A arm -T script -d $(BOOT_CMD) $(BOOT_SCR)
 
 $(MKIMAGE):
-	export ARCH=arm64
-	export CROSS_COMPILE=aarch64-linux-gnu-
-	make -C $(U_BOOT_XLNX) clean xilinx_zynqmp_zcu106_revA_defconfig
-	make -C $(U_BOOT_XLNX) -j`nproc`
+	make -C $(U_BOOT_XLNX_DIR) clean xilinx_zynqmp_zcu106_revA_defconfig
+	make -C $(U_BOOT_XLNX_DIR) -j`nproc`
 
 $(MKBOOTIMAGE):
 	make -C $(THIRD_PARTY_DIR)/zynq-mkbootimage clean all
