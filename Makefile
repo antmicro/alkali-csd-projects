@@ -71,6 +71,11 @@ firmware/all: $(WEST_YML) ## Build all Firmware binaries (Buildroot, APU App, RP
 firmware/clean: ## Remove ALL Firmware build artifacts
 	$(MAKE) -C $(FW_ROOT_DIR) $(FW_MAKE_OPTS) clean
 
+# Docker enter -----------------------------------------------------------------------
+.PHONY: firmware/enter
+firmware/enter: ## Enter firmware development docker image
+	$(MAKE) -C $(FW_ROOT_DIR) $(FW_MAKE_OPTS) enter
+
 # Other -----------------------------------------------------------------------
 .PHONY: firmware//%
 firmware//%: ## Forward rule to invoke firmware rules directly e.g. `make firmware//apu-app`, `make firmware//buildroot//menuconfig`
@@ -95,6 +100,11 @@ hardware/all: ## Build all Hardware binaries (Vivado design)
 .PHONY: hardware/clean
 hardware/clean:
 	$(MAKE) -C $(HW_ROOT_DIR) $(HW_MAKE_OPTS) clean
+
+# Docker enter -----------------------------------------------------------------------
+.PHONY: hardware/enter
+hardware/enter: ## Enter hardware development docker image
+	$(MAKE) -C $(HW_ROOT_DIR) $(FW_MAKE_OPTS) enter
 
 # Other -----------------------------------------------------------------------
 .PHONY: hardware//%
