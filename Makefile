@@ -20,8 +20,6 @@ WEST_CONFIG = $(ROOT_DIR)/.west/config
 WEST_INIT_DIR = $(ROOT_DIR)
 RPUAPP_MAIN_DIR = alkali-csd-fw/rpu-app
 
-HW_MAKEFILE = $(HW_ROOT_DIR)/Makefile
-FW_MAKEFILE = $(FW_ROOT_DIR)/Makefile
 HW_MAKE_OPTS = BUILD_DIR=$(HW_BUILD_DIR)
 FW_MAKE_OPTS = BUILD_DIR=$(FW_BUILD_DIR) WEST_CONFIG=$(WEST_CONFIG) WEST_YML=$(WEST_YML) \
 	RPUAPP_MAIN_DIR=$(RPUAPP_MAIN_DIR) WEST_INIT_DIR=$(BUILD_DIR)
@@ -67,17 +65,17 @@ clean: ## Remove ALL build artifacts
 # All -------------------------------------------------------------------------
 .PHONY: firmware/all
 firmware/all:  ## Build all Firmware binaries (Buildroot, APU App, RPU App)
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) all
+	$(MAKE) -C $(FW_ROOT_DIR) $(FW_MAKE_OPTS) all
 
 # Clean -----------------------------------------------------------------------
 .PHONY: firmware/clean
 firmware/clean: ## Remove ALL Firmware build artifacts
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) clean
+	$(MAKE) -C $(FW_ROOT_DIR) $(FW_MAKE_OPTS) clean
 
 # Other -----------------------------------------------------------------------
 .PHONY: firmware//%
 firmware//%: ## Forward rule to invoke firmware rules directly e.g. `make firmware//apu-app`, `make firmware//buildroot//menuconfig`
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) $*
+	$(MAKE) -C $(FW_ROOT_DIR) $(FW_MAKE_OPTS) $*
 
 $(WEST_YML): # Generate west.yml based on manifest from Firmware repository
 	mkdir -p $(FW_BUILD_DIR)/rpu-app
@@ -92,17 +90,17 @@ $(WEST_YML): # Generate west.yml based on manifest from Firmware repository
 # All -------------------------------------------------------------------------
 .PHONY: hardware/all
 hardware/all: ## Build all Hardware binaries (Vivado design)
-	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) all
+	$(MAKE) -C $(HW_ROOT_DIR) $(HW_MAKE_OPTS) all
 
 # Clean -----------------------------------------------------------------------
 .PHONY: hardware/clean
 hardware/clean:
-	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) clean
+	$(MAKE) -C $(HW_ROOT_DIR) $(HW_MAKE_OPTS) clean
 
 # Other -----------------------------------------------------------------------
 .PHONY: hardware//%
-hardware/%: ## Forward rule to invoke hardware rules directly e.g. `make hardware//chisel`
-	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) $*
+hardware//%: ## Forward rule to invoke hardware rules directly e.g. `make hardware//chisel`
+	$(MAKE) -C $(HW_ROOT_DIR) $(HW_MAKE_OPTS) $*
 
 
 # -----------------------------------------------------------------------------
