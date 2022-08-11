@@ -114,12 +114,12 @@ BL31_ELF = $(FW_BUILD_DIR)/arm-trusted-firmware-xilinx-v2019.2/build/zynqmp/rele
 FSBL_ELF = $(BOARD_BUILD_DIR)/fsbl.elf
 PMU_ELF = $(BOARD_BUILD_DIR)/pmu.elf
 TOP_BIT = $(HW_BUILD_DIR)/project_vta/out/top.bit
+TOP_XSA = $(HW_BUILD_DIR)/project_vta/out/top.xsa
 U_BOOT_ELF = $(FW_BUILD_DIR)/uboot-xilinx-v2019.2/u-boot.elf
 BOOT_BIF = $(SCRIPTS_DIR)/$(BOARD)/boot.bif
 BOOT_CMD = $(SCRIPTS_DIR)/$(BOARD)/boot.cmd
 BOOT_BIN = $(BOARD_BUILD_DIR)/boot.bin
 BOOT_SCR = $(BOARD_BUILD_DIR)/boot.scr
-
 MKBOOTIMAGE = $(THIRD_PARTY_DIR)/zynq-mkbootimage/mkbootimage
 U_BOOT_XLNX_DIR = $(THIRD_PARTY_DIR)/u-boot-xlnx
 MKIMAGE = $(U_BOOT_XLNX_DIR)/tools/mkimage
@@ -143,11 +143,21 @@ $(BOARD_BUILD_DIR)/boot.bin: | $(BOARD_BUILD_DIR)
 $(BOARD_BUILD_DIR)/boot.scr: $(MKIMAGE)
 	$(MKIMAGE) -c none -A arm -T script -d $(BOOT_CMD) $(BOOT_SCR)
 
-$(FSBL_ELF):
-	make -C $(BOARD_DIR) fsbl
+$(TOP_XSA):
+	$(MAKE) hardware/all
 
-$(PMU_ELF):
-	make -C $(BOARD_DIR) pmu
+$(FSBL_ELF): $(TOP_XSA)
+	BUILD_DIR=$(BOARD_BUILD_DIR) XSA_FILE=$(TOP_XSA) make -C $(BOARD_DIR) fsbl
+
+$(PMU_ELF): $(TOP_XSA)
+	BUILD_DIR=$(BOARD_BUILD_DIR) XSA_FILE=$(TOP_XSA) make -C $(BOARD_DIR) pmufw
+
+.PHONY: fsbl
+fsbl: $(FSBL_ELF)
+
+.PHONY: pmufw
+pmufw: $(PMU_ELF)
+
 
 # -----------------------------------------------------------------------------
 # Help ------------------------------------------------------------------------
