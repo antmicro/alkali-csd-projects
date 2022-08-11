@@ -63,7 +63,7 @@ clean: ## Remove ALL build artifacts
 
 # All -------------------------------------------------------------------------
 .PHONY: firmware/all
-firmware/all:  ## Build all Firmware binaries (Buildroot, APU App, RPU App)
+firmware/all: $(WEST_YML) ## Build all Firmware binaries (Buildroot, APU App, RPU App)
 	$(MAKE) -C $(FW_ROOT_DIR) $(FW_MAKE_OPTS) all
 
 # Clean -----------------------------------------------------------------------
