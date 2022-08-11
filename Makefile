@@ -184,6 +184,32 @@ $(PMU_ELF): $(TOP_XSA)
 .PHONY: pmufw
 pmufw: $(PMU_ELF)
 
+# -----------------------------------------------------------------------------
+# SDCARD ----------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+-include $(BOARD_DIR)/sdcard.mk
+
+ifndef SDCARD_CONTENTS
+$(error SDCARD_CONTENTS is not set. Please add sdcard.mk file to $(BOARD_DIR) directory)
+endif
+
+SDCARD_BUILD_DIR = $(BOARD_BUILD_DIR)/sdcard
+$(SDCARD_BUILD_DIR):
+	mkdir -p $@
+
+SDCARD_OUTPUTS = $(addprefix $(SDCARD_BUILD_DIR)/, $(SDCARD_CONTENTS))
+SDCARD_FILES = $(addprefix $(BOOTBIN_BUILD_DIR)/, $(SDCARD_CONTENTS))
+
+# dependency on phony target is allowed for $(SDCARD_OUTPUTS) rule because
+# it is hard to guarantee that all the components exist (without complicating the target).
+# It is not worth it since it is the last target to be built and will
+# not destroy the dependency tree.
+$(SDCARD_OUTPUTS): | boot-image
+$(SDCARD_OUTPUTS): | $(SDCARD_BUILD_DIR)
+	cp $(SDCARD_FILES) $(SDCARD_BUILD_DIR)/.
+
+sdcard: $(SDCARD_OUTPUTS) ## Create build directory with SD card contents
 
 # -----------------------------------------------------------------------------
 # Help ------------------------------------------------------------------------
