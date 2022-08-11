@@ -7,9 +7,6 @@
 [submodule "third-party/zynq-mkbootimage"]
 	path = third-party/zynq-mkbootimage
 	url = https://github.com/antmicro/zynq-mkbootimage
-[submodule "third-party/u-boot-xlnx"]
-	path = third-party/u-boot-xlnx
-	url = https://github.com/Xilinx/u-boot-xlnx.git
 [submodule "third-party/embeddedsw"]
 	path = third-party/embeddedsw
 	url = https://github.com/Xilinx/embeddedsw/
