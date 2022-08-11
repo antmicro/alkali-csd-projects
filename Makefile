@@ -205,8 +205,8 @@ SDCARD_FILES = $(addprefix $(BOOTBIN_BUILD_DIR)/, $(SDCARD_CONTENTS))
 # it is hard to guarantee that all the components exist (without complicating the target).
 # It is not worth it since it is the last target to be built and will
 # not destroy the dependency tree.
-$(SDCARD_OUTPUTS): | boot-image
-$(SDCARD_OUTPUTS): | $(SDCARD_BUILD_DIR)
+$(SDCARD_OUTPUTS) &: | boot-image
+$(SDCARD_OUTPUTS) &: | $(SDCARD_BUILD_DIR)
 	cp $(SDCARD_FILES) $(SDCARD_BUILD_DIR)/.
 
 sdcard: $(SDCARD_OUTPUTS) ## Create build directory with SD card contents

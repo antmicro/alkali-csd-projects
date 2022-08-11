@@ -1,0 +1,1 @@
+SDCARD_CONTENTS = boot.bin
