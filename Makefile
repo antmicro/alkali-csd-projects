@@ -18,11 +18,10 @@ FW_WEST_YML = $(FW_ROOT_DIR)/rpu-app/west.yml
 WEST_YML = $(FW_BUILD_DIR)/rpu-app/west.yml
 WEST_CONFIG = $(ROOT_DIR)/.west/config
 WEST_INIT_DIR = $(ROOT_DIR)
-RPUAPP_MAIN_DIR = alkali-csd-fw/rpu-app
 
 HW_MAKE_OPTS = BUILD_DIR=$(HW_BUILD_DIR)
-FW_MAKE_OPTS = BUILD_DIR=$(FW_BUILD_DIR) WEST_CONFIG=$(WEST_CONFIG) WEST_YML=$(WEST_YML) \
-	RPUAPP_MAIN_DIR=$(RPUAPP_MAIN_DIR) WEST_INIT_DIR=$(BUILD_DIR)
+FW_MAKE_OPTS = BUILD_DIR=$(FW_BUILD_DIR) WEST_CONFIG=$(WEST_CONFIG) \
+	       WEST_YML=$(WEST_YML) WEST_INIT_DIR=$(BUILD_DIR)
 
 # Check supported boards ------------------------------------------------------
 define UNSUPPORTED_BOARD_MSG
