@@ -74,85 +74,15 @@ firmware/all:  ## Build all Firmware binaries (Buildroot, APU App, RPU App)
 firmware/clean: ## Remove ALL Firmware build artifacts
 	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) clean
 
-# Buildroot -------------------------------------------------------------------
-.PHONY: firmware/buildroot
-firmware/buildroot: ## Build Buildroot
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) buildroot
-
-.PHONY: firmware/buildroot/distclean
-firmware/buildroot/distclean: ## Remove Buildroot build
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) buildroot/distclean
-
-.PHONY: firmware/buildroot/sdk
-firmware/buildroot/sdk: ## Generate Buildroot toolchain
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) buildroot/sdk
-
-.PHONY: firmware/buildroot/sdk-untar
-firmware/buildroot/sdk-untar: ## Untar Buildroot toolchain (helper)
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) buildroot/sdk-untar
-
-.PHONY: firmware/buildroot//%
-firmware/buildroot//%: ## Forward rule to invoke Buildroot rules directly e.g. `make buildroot//menuconfig`
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) buildroot//$*
-
-# APU App ---------------------------------------------------------------------
-.PHONY: firmware/apu-app
-firmware/apu-app: ## Build APU App
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) apu-app
-
-.PHONY: firmware/apu-app/clean
-firmware/apu-app/clean: ## Remove APU App build files
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) apu-app/clean
-
-# RPU App ---------------------------------------------------------------------
-.PHONY: firmware/rpu-app
-firmware/rpu-app: $(WEST_YML) ## Build RPU App
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) rpu-app
-
-.PHONY: firmware/rpu-app/with-sdk
-firmware/rpu-app/with-sdk: $(WEST_YML) ## Build RPU App with local Zephyr SDK (helper)
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) rpu-app/with-sdk
-
-.PHONY: firmware/rpu-app/clean
-firmware/rpu-app/clean: ## Remove RPU App build files
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) rpu-app/clean
+# Other -----------------------------------------------------------------------
+.PHONY: firmware//%
+firmware//%: ## Forward rule to invoke firmware rules directly e.g. `make firmware//apu-app`, `make firmware//buildroot//menuconfig`
+	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) $*
 
 $(WEST_YML): # Generate west.yml based on manifest from Firmware repository
 	mkdir -p $(FW_BUILD_DIR)/rpu-app
 	sed -e 's/path: build/path: build\/firmware/g' \
 		-e 's/rpu-app/alkali-csd-fw\/rpu-app/g' $(FW_WEST_YML) > $(WEST_YML)
-
-# Zephyr ----------------------------------------------------------------------
-.PHONY: firmware/zephyr/sdk
-firmware/zephyr/sdk: ## Install Zephyr SDK locally (helper)
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) zephyr/sdk
-
-.PHONY: firmware/zephyr/setup
-firmware/zephyr/setup: $(WEST_YML) ## Clone main Zephyr repositories and modules
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) zephyr/setup
-
-.PHONY: firmware/zephyr/clean
-firmware/zephyr/clean: ## Remove Zephyr installed files
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) zephyr/clean
-	$(RM) -r $(ROOT_DIR)/.west
-
-# Docker ----------------------------------------------------------------------
-.PHONY: firmware/docker
-firmware/docker: ## Build development docker image
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) docker
-
-.PHONY: firmware/docker/clean
-firmware/docker/clean: ## Build development docker image
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) docker/clean
-
-.PHONY: firmware/enter
-firmware/enter: ## Enter development docker image
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) enter
-
-# Help ------------------------------------------------------------------------
-.PHONY: firmware/help
-firmware/help: ## Show Firmware help message
-	make -f $(FW_MAKEFILE) $(FW_MAKE_OPTS) help
 
 
 # -----------------------------------------------------------------------------
@@ -169,45 +99,10 @@ hardware/all: ## Build all Hardware binaries (Vivado design)
 hardware/clean:
 	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) clean
 
-# Vivado ----------------------------------------------------------------------
-.PHONY: hardware/vivado
-hardware/vivado: ## Build Vivado design
-	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) vivado
-
-# Generate  -------------------------------------------------------------------
-.PHONY: hardware/generate
-hardware/generate: ## Generate register description in chisel
-	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) generate
-
-# Chisel ----------------------------------------------------------------------
-.PHONY: hardware/chisel
-hardware/chisel: ## Generate verilog sources using chisel
-	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) generate
-
-# Test  -----------------------------------------------------------------------
-.PHONY: hardware/test
-hardware/test: ## Run all tests
-	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) test
-
-# Format  ---------------------------------------------------------------------
-.PHONY: hardware/format
-hardware/format: ## Format code
-	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) format
-
-# Docker  ---------------------------------------------------------------------
-.PHONY: hardware/docker
-hardware/docker: ## Build development docker image
-	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) docker
-
-# Enter  ----------------------------------------------------------------------
-.PHONY: hardware/enter
-hardware/enter: ## Enter development docker image
-	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) enter
-
-# Help  -----------------------------------------------------------------------
-.PHONY: hardware/help
-hardware/help: ## Show Hardware help message
-	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) help
+# Other -----------------------------------------------------------------------
+.PHONY: hardware//%
+hardware/%: ## Forward rule to invoke hardware rules directly e.g. `make hardware//chisel`
+	make -f $(HW_MAKEFILE) $(HW_MAKE_OPTS) $*
 
 
 # -----------------------------------------------------------------------------
