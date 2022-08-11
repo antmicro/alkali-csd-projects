@@ -4,10 +4,46 @@ ifndef BUILD_DIR
 $(error BUILD_DIR is not set. Please provide path to build directory (e.g. BUILD_DIR=build))
 endif
 
-.PHONY: pmu
-pmu: ## Copy prebuilt pmu.elf to build directory
-	cp pmu.elf $(BUILD_DIR)/$(BOARD)
+FSBL_OUTPUT = $(BUILD_DIR)/fsbl.elf
+PMUFW_OUTPUT = $(BUILD_DIR)/pmufw.elf
 
+# -----------------------------------------------------------------------------
+# All -------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+.PHONY: all
+all: pmufw fsbl
+
+# -----------------------------------------------------------------------------
+# Clean -----------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+.PHONY: clean
+clean:
+	$(RM) $(FSBL_OUTPUT) $(PMUFW_OUTPUT)
+
+
+# create build directories ----------------------------------------------------
+
+$(BUILD_DIR):
+	@mkdir -p $(BUILD_DIR)
+
+
+# -----------------------------------------------------------------------------
+# FSBL ------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 .PHONY: fsbl
-fsbl: ## Copy prebuilt fsbl.elf to build directory
-	cp fsbl.elf $(BUILD_DIR)/$(BOARD)
+fsbl: $(FSBL_OUTPUT)
+
+$(FSBL_OUTPUT): fsbl.elf
+$(FSBL_OUTPUT): | $(BUILD_DIR)
+	cp fsbl.elf $(BUILD_DIR)/.
+
+
+# -----------------------------------------------------------------------------
+# PMUFW -----------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+.PHONY: pmufw
+pmufw: $(PMUFW_OUTPUT)
+
+$(PMUFW_OUTPUT): pmufw.elf
+$(PMUFW_OUTPUT): | $(BUILD_DIR)
+	cp pmufw.elf $(BUILD_DIR)/.
