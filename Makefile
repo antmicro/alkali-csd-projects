@@ -153,16 +153,15 @@ $(BOOT_BIN): | $(BOOTBIN_BUILD_DIR)
 	cp $(BOOT_SCR) $(BOOTBIN_BUILD_DIR)/.
 	cd $(BOOTBIN_BUILD_DIR) && mkbootimage --zynqmp $(BOOT_BIF) $(BOOT_BIN)
 
-
 .PHONY: boot-image
 boot-image: $(BOOT_BIN) ## Build boot.bin
 
 BUILDROOT_OUTPUTS = $(SYSTEM_DTB) $(LINUX_IMAGE) $(BL31_ELF) $(U_BOOT_ELF)
-$(BUILDROOT_OUTPUTS):
+$(BUILDROOT_OUTPUTS) &:
 	$(MAKE) firmware/all
 
 HARDWARE_OUTPUTS = $(TOP_BIT) $(TOP_XSA)
-$(HARDWARE_OUTPUTS):
+$(HARDWARE_OUTPUTS) &:
 	$(MAKE) hardware/all
 
 $(BOOT_SCR):
