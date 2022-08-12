@@ -77,8 +77,10 @@ firmware/clean: ## Remove ALL Firmware build artifacts
 firmware/enter: ## Enter firmware development docker image
 	$(MAKE) -C $(FW_ROOT_DIR) $(FW_MAKE_OPTS) enter
 
+# Firmware rule forwarding depends on $(WEST_YML) to make sure that
+# all zephyr and rpu-app targets work correctly
 .PHONY: firmware//%
-firmware//%: ## Forward rule to invoke firmware rules directly e.g. `make firmware//apu-app`, `make firmware//buildroot//menuconfig`
+firmware//%: $(WEST_YML) ## Forward rule to invoke firmware rules directly e.g. `make firmware//apu-app`, `make firmware//buildroot//menuconfig`
 	$(MAKE) -C $(FW_ROOT_DIR) $(FW_MAKE_OPTS) $*
 
 $(WEST_YML): # Generate west.yml based on manifest from Firmware repository
