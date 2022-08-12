@@ -1,31 +1,16 @@
-BOARD ?= basalt
+# -----------------------------------------------------------------------------
+# Common settings -------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
-# Helper directories ----------------------------------------------------------
-SHELL:=/bin/bash
 ROOT_DIR = $(realpath $(CURDIR))
+
+# Input settings -------------------------------------------------------------
+
+BOARD ?= basalt
 BUILD_DIR ?= $(ROOT_DIR)/build
 HW_BUILD_DIR ?= $(ROOT_DIR)/build/hardware
 FW_BUILD_DIR ?= $(ROOT_DIR)/build/firmware
 
-HW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-hw
-FW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-fw
-THIRD_PARTY_DIR = $(ROOT_DIR)/third-party
-BOARD_DIR = $(ROOT_DIR)/boards/$(BOARD)
-
-BOARD_BUILD_DIR = $(BUILD_DIR)/$(BOARD)
-BUILDROOT_BUILD_DIR = $(BUILD_DIR)/firmware/buildroot/images
-
-# Helper macros ---------------------------------------------------------------
-FW_WEST_YML = $(FW_ROOT_DIR)/rpu-app/west.yml
-WEST_YML = $(FW_BUILD_DIR)/rpu-app/west.yml
-WEST_CONFIG = $(ROOT_DIR)/.west/config
-WEST_INIT_DIR = $(ROOT_DIR)
-
-HW_MAKE_OPTS = BUILD_DIR=$(HW_BUILD_DIR)
-FW_MAKE_OPTS = BUILD_DIR=$(FW_BUILD_DIR) WEST_CONFIG=$(WEST_CONFIG) \
-	       WEST_YML=$(WEST_YML) WEST_INIT_DIR=$(BUILD_DIR)
-
-# Check supported boards ------------------------------------------------------
 define UNSUPPORTED_BOARD_MSG
 Boards $(BOARD) is not supported, choose one of following:
 $(foreach BOARD, $(SUPPORTED_BOARDS),	- $(BOARD)
@@ -37,6 +22,27 @@ ifneq '$(BOARD)' '$(findstring $(BOARD),$(SUPPORTED_BOARDS))'
 $(error $(UNSUPPORTED_BOARD_MSG))
 endif
 
+# Input paths -----------------------------------------------------------------
+
+HW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-hw
+FW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-fw
+THIRD_PARTY_DIR = $(ROOT_DIR)/third-party
+BOARD_DIR = $(ROOT_DIR)/boards/$(BOARD)
+FW_WEST_YML = $(FW_ROOT_DIR)/rpu-app/west.yml
+WEST_CONFIG = $(ROOT_DIR)/.west/config
+WEST_INIT_DIR = $(ROOT_DIR)
+
+# Output paths ----------------------------------------------------------------
+
+BOARD_BUILD_DIR = $(BUILD_DIR)/$(BOARD)
+BUILDROOT_BUILD_DIR = $(BUILD_DIR)/firmware/buildroot/images
+WEST_YML = $(FW_BUILD_DIR)/rpu-app/west.yml
+
+# Helpers  --------------------------------------------------------------------
+
+HW_MAKE_OPTS = BUILD_DIR=$(HW_BUILD_DIR)
+FW_MAKE_OPTS = BUILD_DIR=$(FW_BUILD_DIR) WEST_CONFIG=$(WEST_CONFIG) \
+	       WEST_YML=$(WEST_YML) WEST_INIT_DIR=$(BUILD_DIR)
 
 # -----------------------------------------------------------------------------
 # All -------------------------------------------------------------------------
@@ -46,7 +52,6 @@ endif
 all: hardware/all
 all: firmware/all ## Build all binaries for Hardware and Firmware
 
-
 # -----------------------------------------------------------------------------
 # Clean -----------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -55,7 +60,6 @@ all: firmware/all ## Build all binaries for Hardware and Firmware
 clean: ## Remove ALL build artifacts
 	$(RM) -r $(BUILD_DIR)
 	$(RM) -r $(ROOT_DIR)/.west
-
 
 # -----------------------------------------------------------------------------
 # Firmware --------------------------------------------------------------------
@@ -82,7 +86,6 @@ $(WEST_YML): # Generate west.yml based on manifest from Firmware repository
 	sed -e 's/path: build/path: build\/firmware/g' \
 		-e 's/rpu-app/alkali-csd-fw\/rpu-app/g' $(FW_WEST_YML) > $(WEST_YML)
 
-
 # -----------------------------------------------------------------------------
 # Hardware --------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -102,7 +105,6 @@ hardware/enter: ## Enter hardware development docker image
 .PHONY: hardware//%
 hardware//%: ## Forward rule to invoke hardware rules directly e.g. `make hardware//chisel`
 	$(MAKE) -C $(HW_ROOT_DIR) $(HW_MAKE_OPTS) $*
-
 
 # -----------------------------------------------------------------------------
 # Build boot image ------------------------------------------------------------
@@ -166,7 +168,6 @@ $(HARDWARE_OUTPUTS) &:
 
 $(BOOT_SCR):
 	mkimage -c none -A arm -T script -d $(BOOT_CMD) $(BOOT_SCR)
-
 
 # -----------------------------------------------------------------------------
 # FSBL and PMUFW --------------------------------------------------------------
