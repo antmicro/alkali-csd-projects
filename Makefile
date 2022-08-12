@@ -202,11 +202,7 @@ $(SDCARD_BUILD_DIR):
 SDCARD_OUTPUTS = $(addprefix $(SDCARD_BUILD_DIR)/, $(SDCARD_CONTENTS))
 SDCARD_FILES = $(addprefix $(BOOTBIN_BUILD_DIR)/, $(SDCARD_CONTENTS))
 
-# dependency on phony target is allowed for $(SDCARD_OUTPUTS) rule because
-# it is hard to guarantee that all the components exist (without complicating the target).
-# It is not worth it since it is the last target to be built and will
-# not destroy the dependency tree.
-$(SDCARD_OUTPUTS) &: | boot-image
+$(SDCARD_OUTPUTS) &: | $(BOOT_BIN)
 $(SDCARD_OUTPUTS) &: | $(SDCARD_BUILD_DIR)
 	cp $(SDCARD_FILES) $(SDCARD_BUILD_DIR)/.
 
