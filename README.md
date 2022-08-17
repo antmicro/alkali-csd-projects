@@ -1,6 +1,21 @@
-# Alkali build system
+# Alkali Build System
 
-This repository contains an automated build system for hardware (FPGA design) and Firmware of Western Digital NVMe accelerator test platform.
+This repository contains an automated build system for hardware (FPGA design)
+and firmware of Western Digital NVMe accelerator test platform.
+
+The Alkali Hardware repository is used to generate:
+* bitstream
+* hardware description file
+
+The Alkali Firmware repository, on the other hand, is used to build:
+* APU application
+* RPU application
+* U-Boot binaries
+* Linux kernel
+* Root filesystem image
+
+Finally, the Alkali Build is responsible for generating FSBL and PMUFW
+binaries from the hardware description file and generating Zynq boot image.
 
 ## Repository structure
 
@@ -18,44 +33,38 @@ The diagram below presents the simplified structure of this repository along wit
 
 # Prerequisites
 
-To build the design you must have `Vivado 2019.2` binary available in your
-system path. Additionally, you will need a few system packages which you can
-install using the following commands:
-
+The repository contains a docker image which can be used to simplify
+the process of installing dependencies. Before running other rules from
+this repository make sure that you build the docker image by using:
 ```
-sudo apt update -y
-sudo apt install -y wget bc bison build-essential cpio curl default-jdk flex \
-    g++-aarch64-linux-gnu gcc-aarch64-linux-gnu git gperf libcurl4-openssl-dev \
-    libelf-dev libffi-dev libjpeg-dev libpcre3-dev libssl-dev make ninja-build \
-    python3 python3-pip python3-sphinx rsync rustc unzip
+make docker
 ```
 
-Then, install the required python packages:
+For now, to enable the ability to build Vivado designs.
+You have to use a custom base docker image with Vivado installed.
+To specify the custom base set the `DOCKER_IMAGE_BASE` variable before
+building the development image:
 ```
-pip3 install -r requirements.txt
+export DOCKER_IMAGE_BASE=debian-vivado-2019.2
+make docker
 ```
+
+In case you want to install all the prerequisites directly on your machine,
+follow the instructions from the `Dockerfile`
 
 # Usage
 
-There are many various options to run `make`. It includes all executable
-targets from both Hardware and Firmware Makefile flows. These are prefixed with
-`firmware/` and `hardware/` after which you should enter a command. To see all
-available options, type `make help`.
+If you use docker workflow, use `make enter` to open the docker container
+before running other commands.
 
-It is recommended to build docker images for both parts using prepared
-Dockerfiles:
-```bash
-make firmware/docker
-make hardware/docker
+Before building any target choose the desired board (`basalt` or ` zcu106`),
+by setting the `BOARD` environment variable:
 ```
-Then you can enter them:
-```bash
-make firmware/enter # OR make hardware/enter
+export BOARD=basalt
 ```
 
-When you are in docker image, you should be able to build all required
-components with correct build commands.
-
-In case you are not able to install docker and you prefer to configure your
-environment manually, just execute build targets directly on your machine
-environment.
+Then run the target that you want to compile. The list of targets is available
+after running `make help`. To build all output products use:
+```
+make all
+```
