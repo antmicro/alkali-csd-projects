@@ -57,6 +57,15 @@ follow the instructions from the `Dockerfile`
 If you use docker workflow, use `make enter` to open the docker container
 before running other commands.
 
+**Note: Before making the alkali repositories public, it is necessary
+to bind your ssh keys to the docker container to download
+all the private repositories**
+
+This can be done be setting DOCKER_RUN_EXTRA_ARGS:
+```
+export DOCKER_RUN_EXTRA_ARGS="-v ${HOME}/.ssh:${HOME}/.ssh"
+```
+
 Before building any target choose the desired board (`basalt` or ` zcu106`),
 by setting the `BOARD` environment variable:
 ```
