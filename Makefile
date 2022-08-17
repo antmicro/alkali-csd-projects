@@ -7,7 +7,7 @@ DOCKER_TAG_NAME = alkali:1.0
 
 # Input settings -------------------------------------------------------------
 
-DOCKER_IMAGE_BASE ?= debian:bullseye
+DOCKER_IMAGE_BASE ?= debian:buster
 DOCKER_TAG ?= $(DOCKER_IMAGE_PREFIX)$(DOCKER_TAG_NAME)
 
 BOARD ?= basalt
