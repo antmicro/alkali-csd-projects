@@ -34,10 +34,10 @@ RUN apt update -y && apt install -y \
   unzip \
   wget \
   u-boot-tools \
-  gcc-9
+  gcc-8
 
-# Use gcc-9 by default
-RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9
+# Use gcc-8 by default
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 9
 
 # Install CMake
 RUN git clone -b v3.16.7 https://gitlab.kitware.com/cmake/cmake.git cmake && \
