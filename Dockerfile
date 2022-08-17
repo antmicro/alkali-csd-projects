@@ -63,6 +63,9 @@ RUN apt install --no-install-recommends -y git cmake ninja-build gperf \
   make gcc gcc-multilib g++-multilib libsdl2-dev libmagic1
 ENV ZEPHYR_TOOLCHAIN_VARIANT=zephyr
 ENV ZEPHYR_SDK_INSTALL_DIR=/zephyr-sdk-0.10.3
+RUN wget https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/64dbc3e610d79db74f3ff1395fc9b1bf891f73c2/scripts/requirements.txt
+RUN pip3 install -r requirements.txt
+RUN rm requirements.txt
 
 # Install Chisel dependencies
 RUN apt install -y default-jdk
