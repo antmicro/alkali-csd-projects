@@ -33,38 +33,29 @@ The diagram below presents the simplified structure of this repository along wit
 
 # Prerequisites
 
-The repository contains a docker image which can be used to simplify
-the process of installing dependencies. Before running other rules from
-this repository make sure that you build the docker image by using:
-```
-make docker
-```
+To build this project it is recommended to use a dedicated docker container
+with all the prerequisites installed. The appropriate docker image can be
+created using `alkali.dockerfile` provided in the `docker` directory.
 
-For now, to enable the ability to build Vivado designs.
-You have to use a custom base docker image with Vivado installed.
-To specify the custom base set the `DOCKER_IMAGE_BASE` variable before
-building the development image:
-```
-export DOCKER_IMAGE_BASE=debian-vivado-2019.2
-make docker
-```
+Note that to build the image, you have to provide a tarball with Vivado 2019.2
+installer. This file has to be placed in the
+`docker/Xilinx_Vivado_2019.2_1106_2127.tar.gz` path before building the image.
+It can be [downloaded](https://www.xilinx.com/member/forms/download/xef.html?filename=Xilinx_Vivado_2019.2_1106_2127.tar.gz)
+from the Official Xilinx Website.
 
-In case you want to install all the prerequisites directly on your machine,
-follow the instructions from the `Dockerfile`
+After placing the file in the specified location use `make docker` to build
+the image. In case you want to install all the prerequisites directly on
+your machine, follow the instructions from the `alkali.dockerfile`.
+
+Use `make enter` to open the container and then execute the rest of
+the commands inside it.
 
 # Usage
 
-If you use docker workflow, use `make enter` to open the docker container
-before running other commands.
-
-**Note: Before making the alkali repositories public, it is necessary
-to bind your ssh keys to the docker container to download
-all the private repositories**
-
-This can be done be setting DOCKER_RUN_EXTRA_ARGS:
-```
-export DOCKER_RUN_EXTRA_ARGS="-v ${HOME}/.ssh:${HOME}/.ssh"
-```
+**NOTE: You have to be in the dedicated docker container or have all
+the prerequisites installed locally to use the instructions below correctly.
+Refer to the [#Prerequisites](#prerequisites) section in case of any problems
+with building the project**
 
 Before building any target choose the desired board (`basalt` or ` zcu106`),
 by setting the `BOARD` environment variable:
@@ -76,4 +67,15 @@ Then run the target that you want to compile. The list of targets is available
 after running `make help`. To build all output products use:
 ```
 make all
+```
+
+## Before publishing
+
+**Note: Before making the alkali repositories public, it is necessary
+to bind your ssh keys to the docker container to download
+all the private repositories**
+
+This can be done be setting `DOCKER_RUN_EXTRA_ARGS`:
+```
+export DOCKER_RUN_EXTRA_ARGS="-v ${HOME}/.ssh:${HOME}/.ssh"
 ```
