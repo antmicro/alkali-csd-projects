@@ -10,6 +10,7 @@ DOCKER_TAG_NAME = alkali:1.0
 DOCKER_TAG ?= $(DOCKER_IMAGE_PREFIX)$(DOCKER_TAG_NAME)
 
 BOARD ?= basalt
+BAR_SIZE ?= 16MB
 BUILD_DIR ?= $(ROOT_DIR)/build
 HW_BUILD_DIR ?= $(ROOT_DIR)/build/hardware
 FW_BUILD_DIR ?= $(ROOT_DIR)/build/firmware
@@ -45,7 +46,7 @@ WEST_YML = $(FW_BUILD_DIR)/rpu-app/west.yml
 
 # Helpers  --------------------------------------------------------------------
 
-HW_MAKE_OPTS = BUILD_DIR=$(HW_BUILD_DIR)
+HW_MAKE_OPTS = BUILD_DIR=$(HW_BUILD_DIR) BAR_SIZE=$(BAR_SIZE)
 FW_MAKE_OPTS = BUILD_DIR=$(FW_BUILD_DIR) WEST_CONFIG=$(WEST_CONFIG) \
 	       WEST_YML=$(WEST_YML) WEST_INIT_DIR=$(BUILD_DIR)
 
@@ -283,5 +284,13 @@ help: ## Show this help message
 	@echo ""
 	@grep -hE '^[^#[:blank:]]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf $(HELP_FORMAT_STRING), $$1, $$2}'
 	@echo ""
+	@echo "Additionally, you can use the following environment variables:"
+	@echo ""
+	@printf $(HELP_FORMAT_STRING) "BOARD" "The board to build the gateware for ('basalt' or 'zcu106')"
+	@printf $(HELP_FORMAT_STRING) "BAR_SIZE" "bar size with unit (e.g. 16MB)"
+	@printf $(HELP_FORMAT_STRING) "DOCKER_IMAGE_PREFIX" "registry prefix with '/' at the end"
+	@printf $(HELP_FORMAT_STRING) "DOCKER_TAG" "docker tag for building and running images"
+	@printf $(HELP_FORMAT_STRING) "DOCKER_RUN_EXTRA_ARGS" "Extra arguments for running docker container"
+	@printf $(HELP_FORMAT_STRING) "DOCKER_BUILD_EXTRA_ARGS" "Extra arguments for building docker"
 
 .DEFAULT_GOAL := help
