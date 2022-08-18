@@ -99,6 +99,12 @@ RUN git clone https://github.com/antmicro/zynq-mkbootimage.git && \
   cd zynq-mkbootimage && make
 ENV PATH=${PATH}:/zynq-mkbootimage
 
+# Aarch64 bare-metal toolchain
+RUN wget https://developer.arm.com/-/media/Files/downloads/gnu/11.3.rel1/binrel/arm-gnu-toolchain-11.3.rel1-x86_64-aarch64_be-none-linux-gnu.tar.xz && \
+  tar xJf arm-gnu-toolchain-11.3.rel1-x86_64-aarch64_be-none-linux-gnu.tar.xz -C / && \
+  cp -r arm-gnu-toolchain-11.3.rel1-x86_64-aarch64_be-none-linux-gnu/* / && \
+  rm arm-gnu-toolchain-11.3.rel1-x86_64-aarch64_be-none-linux-gnu/*
+
 # Configure entrypoint
 COPY entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
