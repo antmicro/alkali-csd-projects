@@ -105,6 +105,13 @@ RUN wget https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/bi
   cp -r gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf/* / && \
   rm -rf gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf/*
 
+# Install make 4.3
+RUN wget https://ftp.gnu.org/gnu/make/make-4.3.tar.gz
+RUN tar xf make-4.3.tar.gz && cd make-4.3 && ./configure && make -j$(nproc)
+RUN cp make-4.3/make /opt/.
+RUN rm -rf make-4.3*
+ENV PATH="/opt:${PATH}"
+
 # Configure entrypoint
 COPY entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
