@@ -1,16 +1,29 @@
-ARG IMAGE_BASE
-
-FROM ${IMAGE_BASE}
-ARG IMAGE_BASE
-ARG REPO_ROOT
-
-RUN echo "Using ${IMAGE_BASE} docker image as a base..."
-RUN echo "Repository root set to be ${REPO_ROOT}..."
+FROM debian:buster
 
 ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update
+
+# Install Vivado
+RUN apt install -y \
+  wget \
+  x11-xserver-utils \
+  libxtst6 \
+  build-essential \
+  xsltproc \
+  bzip2 \
+  tcl \
+  libtinfo5
+
+COPY Xilinx_Vivado_2019.2_1106_2127.tar.gz /
+COPY install_config.txt /
+
+RUN tar -xzf Xilinx_Vivado_2019.2_1106_2127.tar.gz && \
+    /Xilinx_Vivado_2019.2_1106_2127/xsetup --agree 3rdPartyEULA,WebTalkTerms,XilinxEULA --batch Install --config install_config.txt && \
+    rm -rf Xilinx_Vivado_2019.2_1106_2127*
+RUN rm install_config.txt
 
 # Install system dependencies
-RUN apt update -y && apt install -y \
+RUN apt install -y \
   bc \
   bison \
   build-essential \
@@ -85,3 +98,8 @@ COPY --from=mvdan/shfmt /bin/shfmt /bin/shfmt
 RUN git clone https://github.com/antmicro/zynq-mkbootimage.git && \
   cd zynq-mkbootimage && make
 ENV PATH=${PATH}:/zynq-mkbootimage
+
+# Configure entrypoint
+COPY entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/bin/bash"]

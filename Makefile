@@ -7,7 +7,6 @@ DOCKER_TAG_NAME = alkali:1.0
 
 # Input settings -------------------------------------------------------------
 
-DOCKER_IMAGE_BASE ?= debian:buster
 DOCKER_TAG ?= $(DOCKER_IMAGE_PREFIX)$(DOCKER_TAG_NAME)
 
 BOARD ?= basalt
@@ -32,6 +31,7 @@ HW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-hw
 FW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-fw
 FW_THIRD_PARTY_DIR = $(FW_ROOT_DIR)/third-party
 REGGEN_DIR = $(FW_THIRD_PARTY_DIR)/registers-generator
+DOCKER_DIR = $(ROOT_DIR)/docker
 BOARD_DIR = $(ROOT_DIR)/boards/$(BOARD)
 FW_WEST_YML = $(FW_ROOT_DIR)/rpu-app/west.yml
 WEST_CONFIG = $(ROOT_DIR)/.west/config
@@ -222,26 +222,29 @@ DOCKER_BUILD_DIR = $(BUILD_DIR)/docker
 DOCKER_BUILD_REGGEN_REQS_DIR = $(DOCKER_BUILD_DIR)/$(REGGEN_REL_DIR)
 DOCKER_BUILD_FW_REQS_DIR = $(DOCKER_BUILD_DIR)/$(FW_REL_DIR)
 
-.PHONY: docker
-docker: $(DOCKER_BUILD_DIR)/docker.ok ## Build the development docker image
-
 $(DOCKER_BUILD_REGGEN_REQS_DIR):
 	@mkdir -p $@
 
-$(DOCKER_BUILD_DIR)/docker.ok: Dockerfile
-$(DOCKER_BUILD_DIR)/docker.ok: requirements.txt
-$(DOCKER_BUILD_DIR)/docker.ok: $(FW_ROOT_DIR)/requirements.txt
-$(DOCKER_BUILD_DIR)/docker.ok: $(REGGEN_DIR)/requirements.txt
-$(DOCKER_BUILD_DIR)/docker.ok: | $(DOCKER_BUILD_REGGEN_REQS_DIR)
-	cp $(ROOT_DIR)/Dockerfile $(DOCKER_BUILD_DIR)/.
+.PHONY: docker
+docker: $(DOCKER_DIR)/alkali.dockerfile  ## Build the development docker image
+docker: $(DOCKER_DIR)/install_config.txt
+docker: $(DOCKER_DIR)/entrypoint.sh
+docker: $(DOCKER_DIR)/Xilinx_Vivado_2019.2_1106_2127.tar.gz
+docker: requirements.txt
+docker: $(FW_ROOT_DIR)/requirements.txt
+docker: $(REGGEN_DIR)/requirements.txt
+docker: | $(DOCKER_BUILD_REGGEN_REQS_DIR)
+	cp $(DOCKER_DIR)/alkali.dockerfile $(DOCKER_BUILD_DIR)/Dockerfile
+	cp $(DOCKER_DIR)/install_config.txt $(DOCKER_BUILD_DIR)/.
+	cp $(DOCKER_DIR)/entrypoint.sh $(DOCKER_BUILD_DIR)/.
+	cp $(DOCKER_DIR)/Xilinx_Vivado_2019.2_1106_2127.tar.gz $(DOCKER_BUILD_DIR)/.
 	cp $(ROOT_DIR)/requirements.txt $(DOCKER_BUILD_DIR)/requirements.txt
 	mkdir -p $(DOCKER_BUILD_REGGEN_REQS_DIR)
 	cp $(FW_ROOT_DIR)/requirements.txt $(DOCKER_BUILD_FW_REQS_DIR)/requirements.txt
 	cp $(REGGEN_DIR)/requirements.txt $(DOCKER_BUILD_REGGEN_REQS_DIR)/requirements.txt
 	cd $(DOCKER_BUILD_DIR) && docker build \
-		--build-arg IMAGE_BASE="$(DOCKER_IMAGE_BASE)" \
-		--build-arg REPO_ROOT="$(PWD)" \
-		-t $(DOCKER_TAG) . && touch docker.ok
+		$(DOCKER_BUILD_EXTRA_ARGS) \
+		-t $(DOCKER_TAG) .
 
 .PHONY: docker/clean
 docker/clean: ## Clean Docker build files
@@ -252,7 +255,7 @@ docker/clean: ## Clean Docker build files
 # -----------------------------------------------------------------------------
 
 .PHONY: enter
-enter: $(DOCKER_BUILD_DIR)/docker.ok ## Enter the development docker image
+enter: ## Enter the development docker image
 	docker run \
 		--rm \
 		-v $(PWD):$(PWD) \
