@@ -265,6 +265,7 @@ enter: ## Enter the development docker image
 		-v /tmp:$(HOME)/.cache \
 		-v /tmp:$(HOME)/.sbt \
 		-v /tmp:$(HOME)/.Xilinx \
+		-e CCACHE_DISABLE=1 \
 		-u $(shell id -u):$(shell id -g) \
 		-h docker-container \
 		-w $(PWD) \
