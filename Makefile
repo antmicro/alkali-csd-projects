@@ -133,6 +133,7 @@ U_BOOT_ELF = $(BUILDROOT_BUILD_DIR)/u-boot.elf
 
 TOP_BIT = $(HW_BUILD_DIR)/$(BOARD)/project_vta/out/top.bit
 TOP_XSA = $(HW_BUILD_DIR)/$(BOARD)/project_vta/out/top.xsa
+
 BOOT_SCR = $(BOARD_BUILD_DIR)/boot.scr
 BOOT_BIF = $(BOARD_DIR)/boot.bif
 BOOT_CMD = $(BOARD_DIR)/boot.cmd
@@ -140,16 +141,11 @@ BOOT_BIN = $(BOOTBIN_BUILD_DIR)/boot.bin
 FSBL_ELF = $(BOOTBIN_BUILD_DIR)/fsbl.elf
 PMU_ELF = $(BOOTBIN_BUILD_DIR)/pmufw.elf
 
-$(BOOT_BIN): $(FSBL_ELF)
-$(BOOT_BIN): $(PMU_ELF)
-$(BOOT_BIN): $(TOP_BIT)
-$(BOOT_BIN): $(SYSTEM_DTB)
-$(BOOT_BIN): $(BL31_ELF)
-$(BOOT_BIN): $(U_BOOT_ELF)
-$(BOOT_BIN): $(LINUX_IMAGE)
-$(BOOT_BIN): $(ROOTFS_CPIO)
+$(BOOT_BIN): hardware/all
+$(BOOT_BIN): firmware/all
 $(BOOT_BIN): $(BOOT_SCR)
-$(BOOT_BIN): $(BOOT_BIF)
+$(BOOT_BIN): $(PMU_ELF)
+$(BOOT_BIN): $(FSBL_ELF)
 $(BOOT_BIN): | $(BOOTBIN_BUILD_DIR)
 	stat $(FSBL_ELF) $(PMU_ELF) # already in the build directory (check `make fsbl`, `make pmufw`)
 	cp $(TOP_BIT) $(BOOTBIN_BUILD_DIR)/.
@@ -164,28 +160,20 @@ $(BOOT_BIN): | $(BOOTBIN_BUILD_DIR)
 .PHONY: boot-image
 boot-image: $(BOOT_BIN) ## Build boot.bin
 
-BUILDROOT_OUTPUTS = $(SYSTEM_DTB) $(ROOTFS_CPIO) $(LINUX_IMAGE) $(BL31_ELF) $(U_BOOT_ELF)
-$(BUILDROOT_OUTPUTS) &:
-	$(MAKE) firmware/all
-
-HARDWARE_OUTPUTS = $(TOP_BIT) $(TOP_XSA)
-$(HARDWARE_OUTPUTS) &:
-	$(MAKE) hardware/all
-
-$(BOOT_SCR):
+$(BOOT_SCR): $(BOOT_CMD)
 	mkimage -c none -A arm -T script -d $(BOOT_CMD) $(BOOT_SCR)
 
 # -----------------------------------------------------------------------------
 # FSBL and PMUFW --------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-$(FSBL_ELF): $(TOP_XSA)
+$(FSBL_ELF): hardware/all
 	BUILD_DIR=$(BOOTBIN_BUILD_DIR) XSA_FILE=$(TOP_XSA) make -C $(BOARD_DIR) fsbl
 
 .PHONY: fsbl
 fsbl: $(FSBL_ELF)
 
-$(PMU_ELF): $(TOP_XSA)
+$(PMU_ELF): hardware/all
 	BUILD_DIR=$(BOOTBIN_BUILD_DIR) XSA_FILE=$(TOP_XSA) make -C $(BOARD_DIR) pmufw
 
 .PHONY: pmufw
@@ -208,7 +196,7 @@ $(SDCARD_BUILD_DIR):
 SDCARD_OUTPUTS = $(addprefix $(SDCARD_BUILD_DIR)/, $(SDCARD_CONTENTS))
 SDCARD_FILES = $(addprefix $(BOOTBIN_BUILD_DIR)/, $(SDCARD_CONTENTS))
 
-$(SDCARD_OUTPUTS) &: | $(BOOT_BIN) $(SDCARD_BUILD_DIR)
+$(SDCARD_OUTPUTS) &: $(BOOT_BIN) | $(SDCARD_BUILD_DIR)
 	cp $(SDCARD_FILES) $(SDCARD_BUILD_DIR)/.
 
 sdcard: $(SDCARD_OUTPUTS) ## Create build directory with SD card contents
