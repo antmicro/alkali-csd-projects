@@ -50,6 +50,19 @@ HW_MAKE_OPTS = BUILD_DIR=$(HW_BUILD_DIR) BAR_SIZE=$(BAR_SIZE)
 FW_MAKE_OPTS = BUILD_DIR=$(FW_BUILD_DIR) WEST_CONFIG=$(WEST_CONFIG) \
 	       WEST_YML=$(WEST_YML) WEST_INIT_DIR=$(BUILD_DIR)
 
+# Board-specific settings -----------------------------------------------------
+
+-include $(BOARD_DIR)/board.mk
+
+ifndef BOARD_SDCARD_CONTENTS
+$(error BOARD_SDCARD_CONTENTS is not set. Please update board.mk file in the $(BOARD_DIR) directory)
+endif
+
+ifndef BOARD_DTB_NAME
+$(error BOARD_DTB_NAME is not set. Please update board.mk file in the $(BOARD_DIR) directory)
+endif
+
+
 # -----------------------------------------------------------------------------
 # All -------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -125,7 +138,7 @@ BOOTBIN_BUILD_DIR = $(BOARD_BUILD_DIR)/bootbin
 $(BOOTBIN_BUILD_DIR):
 	mkdir -p $@
 
-SYSTEM_DTB = $(BUILDROOT_BUILD_DIR)/zynqmp-basalt-nvme.dtb
+SYSTEM_DTB = $(BUILDROOT_BUILD_DIR)/$(BOARD_DTB_NAME)
 ROOTFS_CPIO = $(BUILDROOT_BUILD_DIR)/rootfs.cpio.uboot
 LINUX_IMAGE = $(BUILDROOT_BUILD_DIR)/Image
 BL31_ELF = $(BUILDROOT_BUILD_DIR)/bl31.elf
@@ -183,18 +196,12 @@ pmufw: $(PMU_ELF)
 # SDCARD ----------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
--include $(BOARD_DIR)/sdcard.mk
-
-ifndef SDCARD_CONTENTS
-$(error SDCARD_CONTENTS is not set. Please add sdcard.mk file to $(BOARD_DIR) directory)
-endif
-
 SDCARD_BUILD_DIR = $(BOARD_BUILD_DIR)/sdcard
 $(SDCARD_BUILD_DIR):
 	mkdir -p $@
 
-SDCARD_OUTPUTS = $(addprefix $(SDCARD_BUILD_DIR)/, $(SDCARD_CONTENTS))
-SDCARD_FILES = $(addprefix $(BOOTBIN_BUILD_DIR)/, $(SDCARD_CONTENTS))
+SDCARD_OUTPUTS = $(addprefix $(SDCARD_BUILD_DIR)/, $(BOARD_SDCARD_CONTENTS))
+SDCARD_FILES = $(addprefix $(BOOTBIN_BUILD_DIR)/, $(BOARD_SDCARD_CONTENTS))
 
 $(SDCARD_OUTPUTS) &: $(BOOT_BIN) | $(SDCARD_BUILD_DIR)
 	cp $(SDCARD_FILES) $(SDCARD_BUILD_DIR)/.
