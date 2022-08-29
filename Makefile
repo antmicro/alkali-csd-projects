@@ -92,10 +92,6 @@ firmware/all: $(WEST_YML) ## Build all Firmware binaries (Buildroot, APU App, RP
 firmware/clean: ## Remove ALL Firmware build artifacts
 	$(MAKE) -C $(FW_ROOT_DIR) $(FW_MAKE_OPTS) clean
 
-.PHONY: firmware/enter
-firmware/enter: ## Enter firmware development docker image
-	$(MAKE) -C $(FW_ROOT_DIR) $(FW_MAKE_OPTS) enter
-
 # Firmware rule forwarding depends on $(WEST_YML) to make sure that
 # all zephyr and rpu-app targets work correctly
 .PHONY: firmware//%
@@ -118,10 +114,6 @@ hardware/all: ## Build all Hardware binaries (Vivado design)
 .PHONY: hardware/clean
 hardware/clean:
 	$(MAKE) -C $(HW_ROOT_DIR) $(HW_MAKE_OPTS) clean
-
-.PHONY: hardware/enter
-hardware/enter: ## Enter hardware development docker image
-	$(MAKE) -C $(HW_ROOT_DIR) $(FW_MAKE_OPTS) enter
 
 .PHONY: hardware//%
 hardware//%: ## Forward rule to invoke hardware rules directly e.g. `make hardware//chisel`
