@@ -1,9 +1,10 @@
 NVMe host application
 =====================
 
-Copyright (c) 2021 [Antmicro](https://www.antmicro.com)
+Copyright (c) 2022 [Antmicro](https://www.antmicro.com)
 
-This repository contains host PC userspace application that is responsible for controlling the accelerator using NVMe commands.
+This directory contains host PC userspace application that is responsible for
+controlling the accelerator using NVMe commands.
 
 Building
 --------
