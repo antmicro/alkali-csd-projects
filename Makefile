@@ -32,16 +32,18 @@ HW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-hw
 FW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-fw
 FW_THIRD_PARTY_DIR = $(FW_ROOT_DIR)/third-party
 REGGEN_DIR = $(FW_THIRD_PARTY_DIR)/registers-generator
+TENSORFLOW_DIR = $(FW_THIRD_PARTY_DIR)/tensorflow
 DOCKER_DIR = $(ROOT_DIR)/docker
 BOARD_DIR = $(ROOT_DIR)/boards/$(BOARD)
+HOSTAPP_DIR = $(ROOT_DIR)/host-app
 FW_WEST_YML = $(FW_ROOT_DIR)/rpu-app/west.yml
 WEST_CONFIG = $(ROOT_DIR)/.west/config
 WEST_INIT_DIR = $(ROOT_DIR)
-
 # Output paths ----------------------------------------------------------------
 
 BOARD_BUILD_DIR = $(BUILD_DIR)/$(BOARD)
 BUILDROOT_BUILD_DIR = $(BUILD_DIR)/firmware/buildroot/images
+HOSTAPP_BUILD_DIR = $(BUILD_DIR)/host-app
 WEST_YML = $(FW_BUILD_DIR)/rpu-app/west.yml
 
 # Helpers  --------------------------------------------------------------------
@@ -199,6 +201,26 @@ $(SDCARD_OUTPUTS) &: $(BOOT_BIN) | $(SDCARD_BUILD_DIR)
 	cp $(SDCARD_FILES) $(SDCARD_BUILD_DIR)/.
 
 sdcard: $(SDCARD_OUTPUTS) ## Create build directory with SD card contents
+
+# -----------------------------------------------------------------------------
+#  HOST APP -------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+HOSTAPP_OUTPUTS = $(HOSTAPP_BUILD_DIR)/host-app $(HOSTAPP_BUILD_DIR)/tf-app
+HOSTAPP_SOURCES = $(wildcard $(HOSTAPP_DIR)/src/*.cpp) \
+		   $(wildcard $(HOSTAPP_DIR)/src/*.h)
+
+$(HOSTAPP_BUILD_DIR):
+	@mkdir -p $@
+
+$(HOSTAPP_OUTPUTS) &: $(HOSTAPP_SOURCES) | $(HOSTAPP_BUILD_DIR)
+	@cmake \
+		-DTENSORFLOW_SOURCE_DIR=$(TENSORFLOW_DIR) \
+		-S $(HOSTAPP_DIR) -B $(HOSTAPP_BUILD_DIR)
+	$(MAKE) -C $(HOSTAPP_BUILD_DIR) -j`nproc` all
+
+.PHONY: host-app
+host-app: $(HOSTAPP_OUTPUTS)
 
 # -----------------------------------------------------------------------------
 # Docker ----------------------------------------------------------------------
