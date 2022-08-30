@@ -12,6 +12,7 @@ DOCKER_TAG ?= $(DOCKER_IMAGE_PREFIX)$(DOCKER_TAG_NAME)
 BOARD ?= basalt
 BAR_SIZE ?= 16MB
 BUILD_DIR ?= $(ROOT_DIR)/build
+EXAMPLE ?= add
 HW_BUILD_DIR ?= $(ROOT_DIR)/build/hardware
 FW_BUILD_DIR ?= $(ROOT_DIR)/build/firmware
 
@@ -35,15 +36,18 @@ REGGEN_DIR = $(FW_THIRD_PARTY_DIR)/registers-generator
 TENSORFLOW_DIR = $(FW_THIRD_PARTY_DIR)/tensorflow
 DOCKER_DIR = $(ROOT_DIR)/docker
 BOARD_DIR = $(ROOT_DIR)/boards/$(BOARD)
+EXAMPLE_DIR = $(ROOT_DIR)/examples/$(EXAMPLE)
 HOSTAPP_DIR = $(ROOT_DIR)/host-app
 FW_WEST_YML = $(FW_ROOT_DIR)/rpu-app/west.yml
 WEST_CONFIG = $(ROOT_DIR)/.west/config
 WEST_INIT_DIR = $(ROOT_DIR)
+
 # Output paths ----------------------------------------------------------------
 
 BOARD_BUILD_DIR = $(BUILD_DIR)/$(BOARD)
 BUILDROOT_BUILD_DIR = $(BUILD_DIR)/firmware/buildroot/images
 HOSTAPP_BUILD_DIR = $(BUILD_DIR)/host-app
+EXAMPLE_BUILD_DIR = $(BUILD_DIR)/examples/$(EXAMPLE)
 WEST_YML = $(FW_BUILD_DIR)/rpu-app/west.yml
 
 # Helpers  --------------------------------------------------------------------
@@ -210,6 +214,9 @@ HOSTAPP_OUTPUTS = $(HOSTAPP_BUILD_DIR)/host-app $(HOSTAPP_BUILD_DIR)/tf-app
 HOSTAPP_SOURCES = $(wildcard $(HOSTAPP_DIR)/src/*.cpp) \
 		   $(wildcard $(HOSTAPP_DIR)/src/*.h)
 
+.PHONY: host-app
+host-app: $(HOSTAPP_OUTPUTS) ## Build host app
+
 $(HOSTAPP_BUILD_DIR):
 	@mkdir -p $@
 
@@ -219,8 +226,34 @@ $(HOSTAPP_OUTPUTS) &: $(HOSTAPP_SOURCES) | $(HOSTAPP_BUILD_DIR)
 		-S $(HOSTAPP_DIR) -B $(HOSTAPP_BUILD_DIR)
 	$(MAKE) -C $(HOSTAPP_BUILD_DIR) -j`nproc` all
 
-.PHONY: host-app
-host-app: $(HOSTAPP_OUTPUTS)
+# -----------------------------------------------------------------------------
+#  EXAMPLES -------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+EXAMPLE_INPUT_FILE = $(EXAMPLE_BUILD_DIR)/input.bin
+EXAMPLE_OUTPUT_FILE = $(EXAMPLE_BUILD_DIR)/output.bin
+EXAMPLE_BPF_OBJECT_FILE = $(EXAMPLE_BUILD_DIR)/bpf.o
+
+.PHONY: load-example
+load-example: $(EXAMPLE_OUTPUT_FILE) ## Load example specified by EXAMPLE to nvme device specified by NVME_DEVICE
+
+$(EXAMPLE_BUILD_DIR):
+	@mkdir -p $@
+
+$(EXAMPLE_INPUT_FILE): $(EXAMPLE_DIR)/model.tflite
+$(EXAMPLE_INPUT_FILE): $(EXAMPLE_DIR)/input-vector.bin
+$(EXAMPLE_INPUT_FILE): | $(EXAMPLE_BUILD_DIR)
+	cat $(EXAMPLE_DIR)/model.tflite $(EXAMPLE_DIR)/input-vector.bin > $(EXAMPLE_INPUT_FILE)
+
+$(EXAMPLE_BPF_OBJECT_FILE): $(EXAMPLE_DIR)/bpf.c
+$(EXAMPLE_BPF_OBJECT_FILE): | $(EXAMPLE_BUILD_DIR)
+	clang -O2 -target bpf -c $(EXAMPLE_DIR)/bpf.c -o $(EXAMPLE_BPF_OBJECT_FILE)
+
+$(EXAMPLE_OUTPUT_FILE): $(HOSTAPP_OUTPUTS)
+$(EXAMPLE_OUTPUT_FILE): $(EXAMPLE_INPUT_FILE)
+$(EXAMPLE_OUTPUT_FILE): $(EXAMPLE_BPF_OBJECT_FILE)
+	@if [ -z "$(NVME_DEVICE)" ]; then echo "ERROR: Please set NVME_DEVICE variable" && exit 1; fi
+	$(HOSTAPP_DIR)/run.sh $(NVME_DEVICE) $(EXAMPLE_BPF_OBJECT_FILE) $(EXAMPLE_INPUT_FILE) $(EXAMPLE_OUTPUT_FILE)
 
 # -----------------------------------------------------------------------------
 # Docker ----------------------------------------------------------------------
@@ -298,6 +331,8 @@ help: ## Show this help message
 	@echo ""
 	@printf $(HELP_FORMAT_STRING) "BOARD" "The board to build the gateware for ('basalt' or 'zcu106')"
 	@printf $(HELP_FORMAT_STRING) "BAR_SIZE" "bar size with unit (e.g. 16MB)"
+	@printf $(HELP_FORMAT_STRING) "EXAMPLE" "name of the example to run (name of the chosen directory in examples/)"
+	@printf $(HELP_FORMAT_STRING) "NVME_DEVICE" "nvme device to use"
 	@printf $(HELP_FORMAT_STRING) "DOCKER_IMAGE_PREFIX" "registry prefix with '/' at the end"
 	@printf $(HELP_FORMAT_STRING) "DOCKER_TAG" "docker tag for building and running images"
 	@printf $(HELP_FORMAT_STRING) "DOCKER_RUN_EXTRA_ARGS" "Extra arguments for running docker container"
