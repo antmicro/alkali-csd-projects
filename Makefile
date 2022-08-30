@@ -74,7 +74,7 @@ endif
 # -----------------------------------------------------------------------------
 
 .PHONY: all
-all: $(BOOT_BIN) ## Build all system components for the specified board
+all: boot-image ## Build all system components for the specified board
 
 # -----------------------------------------------------------------------------
 # Clean -----------------------------------------------------------------------
