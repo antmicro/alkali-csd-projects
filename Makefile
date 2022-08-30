@@ -74,8 +74,7 @@ endif
 # -----------------------------------------------------------------------------
 
 .PHONY: all
-all: hardware/all
-all: firmware/all ## Build all binaries for Hardware and Firmware
+all: $(BOOT_BIN) ## Build all system components for the specified board
 
 # -----------------------------------------------------------------------------
 # Clean -----------------------------------------------------------------------
