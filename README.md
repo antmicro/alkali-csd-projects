@@ -50,7 +50,7 @@ your machine, follow the instructions from the `alkali.dockerfile`.
 Use `make enter` to open the container and then execute the rest of
 the commands inside it.
 
-# Usage
+# Building
 
 **NOTE: You have to be in the dedicated docker container or have all
 the prerequisites installed locally to use the instructions below correctly.
@@ -67,6 +67,22 @@ Then run the target that you want to compile. The list of targets is available
 after running `make help`. To build all output products use:
 ```
 make all
+```
+
+# Running examples
+
+To run one of the examples on a board, you need to load the files generated in
+the previous step to the board and initialize the system.
+
+After that, you can load one of the tests from the `examples/` directory
+to the given NVMe device, by using:
+
+```
+EXAMPLE=<example-name> NVME_DEVICE=/dev/<nvme-dev> load-example
+```
+For example:
+```
+EXAMPLE=add NVME=/dev/nvme1n1 load-example
 ```
 
 ## Before publishing
