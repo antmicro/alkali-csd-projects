@@ -34,7 +34,6 @@ FW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-fw
 FW_THIRD_PARTY_DIR = $(FW_ROOT_DIR)/third-party
 REGGEN_DIR = $(FW_THIRD_PARTY_DIR)/registers-generator
 TENSORFLOW_DIR = $(FW_THIRD_PARTY_DIR)/tensorflow
-DOCKER_DIR = $(ROOT_DIR)/docker
 BOARD_DIR = $(ROOT_DIR)/boards/$(BOARD)
 EXAMPLE_DIR = $(ROOT_DIR)/examples/$(EXAMPLE)
 HOSTAPP_DIR = $(ROOT_DIR)/host-app
@@ -268,18 +267,12 @@ $(DOCKER_BUILD_REGGEN_REQS_DIR):
 	@mkdir -p $@
 
 .PHONY: docker
-docker: $(DOCKER_DIR)/alkali.dockerfile  ## Build the development docker image
-docker: $(DOCKER_DIR)/install_config.txt
-docker: $(DOCKER_DIR)/entrypoint.sh
-docker: $(DOCKER_DIR)/Xilinx_Vivado_2019.2_1106_2127.tar.gz
+docker: alkali.dockerfile  ## Build the development docker image
 docker: requirements.txt
 docker: $(FW_ROOT_DIR)/requirements.txt
 docker: $(REGGEN_DIR)/requirements.txt
 docker: | $(DOCKER_BUILD_REGGEN_REQS_DIR)
-	cp $(DOCKER_DIR)/alkali.dockerfile $(DOCKER_BUILD_DIR)/Dockerfile
-	cp $(DOCKER_DIR)/install_config.txt $(DOCKER_BUILD_DIR)/.
-	cp $(DOCKER_DIR)/entrypoint.sh $(DOCKER_BUILD_DIR)/.
-	cp $(DOCKER_DIR)/Xilinx_Vivado_2019.2_1106_2127.tar.gz $(DOCKER_BUILD_DIR)/.
+	cp alkali.dockerfile $(DOCKER_BUILD_DIR)/Dockerfile
 	cp $(ROOT_DIR)/requirements.txt $(DOCKER_BUILD_DIR)/requirements.txt
 	mkdir -p $(DOCKER_BUILD_REGGEN_REQS_DIR)
 	cp $(FW_ROOT_DIR)/requirements.txt $(DOCKER_BUILD_FW_REQS_DIR)/requirements.txt
