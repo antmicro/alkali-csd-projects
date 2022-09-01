@@ -1,3 +1,10 @@
+/*
+ * Copyright 2021-2022 Western Digital Corporation or its affiliates
+ * Copyright 2021-2022 Antmicro
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 static void (*print)(char*) = (void *)1;
 static void (*tflite_apu)(char*, char*, int, int, int) = (void *)2;
 static void (*tflite_vta)(char*, char*, int, int, int) = (void *)3;
