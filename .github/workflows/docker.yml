@@ -1,0 +1,30 @@
+name: Publish Docker image
+
+on: [push, pull_request]
+
+jobs:
+  docker:
+    name: Push Docker image to DockerHub
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_TAG: antmicro/alkali
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+
+      - name: Build Docker image
+        run: make docker
+
+      - name: Log in to registry
+        uses: docker/login-action@v2
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Push Docker image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: docker push ${DOCKER_TAG}
