@@ -1,6 +1,6 @@
 # This is a boot script for U-Boot
 # Generate boot.scr:
-# mkimage -c none -A arm -T script -d boot_basalt.cmd boot.scr
+# mkimage -c none -A arm -T script -d boot_an300.cmd boot.scr
 
 setenv bootargs "earlycon root=/dev/ram0 rw rootwait"
 setenv fdt_high 0x60000000

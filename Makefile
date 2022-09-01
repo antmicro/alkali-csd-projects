@@ -9,7 +9,7 @@ DOCKER_TAG_NAME = alkali:1.0
 
 DOCKER_TAG ?= $(DOCKER_IMAGE_PREFIX)$(DOCKER_TAG_NAME)
 
-BOARD ?= basalt
+BOARD ?= an300
 BAR_SIZE ?= 16MB
 BUILD_DIR ?= $(ROOT_DIR)/build
 EXAMPLE ?= add
@@ -22,7 +22,7 @@ $(foreach BOARD, $(SUPPORTED_BOARDS),	- $(BOARD)
 )
 endef
 
-SUPPORTED_BOARDS = zcu106 basalt
+SUPPORTED_BOARDS = zcu106 an300
 ifneq '$(BOARD)' '$(findstring $(BOARD),$(SUPPORTED_BOARDS))'
 $(error $(UNSUPPORTED_BOARD_MSG))
 endif
@@ -321,7 +321,7 @@ help: ## Show this help message
 	@echo ""
 	@echo "Additionally, you can use the following environment variables:"
 	@echo ""
-	@printf $(HELP_FORMAT_STRING) "BOARD" "The board to build the gateware for ('basalt' or 'zcu106')"
+	@printf $(HELP_FORMAT_STRING) "BOARD" "The board to build the gateware for ('an300' or 'zcu106')"
 	@printf $(HELP_FORMAT_STRING) "BAR_SIZE" "bar size with unit (e.g. 16MB)"
 	@printf $(HELP_FORMAT_STRING) "EXAMPLE" "name of the example to run (name of the chosen directory in examples/)"
 	@printf $(HELP_FORMAT_STRING) "NVME_DEVICE" "nvme device to use"

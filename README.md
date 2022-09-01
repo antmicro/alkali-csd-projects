@@ -57,10 +57,10 @@ the prerequisites installed locally to use the instructions below correctly.
 Refer to the [#Prerequisites](#prerequisites) section in case of any problems
 with building the project**
 
-Before building any target choose the desired board (`basalt` or ` zcu106`),
+Before building any target choose the desired board (`an300` or ` zcu106`),
 by setting the `BOARD` environment variable:
 ```
-export BOARD=basalt
+export BOARD=an300
 ```
 
 Then run the target that you want to compile. The list of targets is available
