@@ -81,16 +81,5 @@ EXAMPLE=<example-name> NVME_DEVICE=/dev/<nvme-dev> load-example
 ```
 For example:
 ```
-EXAMPLE=add NVME=/dev/nvme1n1 load-example
-```
-
-## Before publishing
-
-**Note: Before making the alkali repositories public, it is necessary
-to bind your ssh keys to the docker container to download
-all the private repositories**
-
-This can be done be setting `DOCKER_RUN_EXTRA_ARGS`:
-```
-export DOCKER_RUN_EXTRA_ARGS="-v ${HOME}/.ssh:${HOME}/.ssh"
+EXAMPLE=add NVME_DEVICE=/dev/nvme1n1 load-example
 ```
