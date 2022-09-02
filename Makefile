@@ -3,10 +3,11 @@
 # -----------------------------------------------------------------------------
 
 ROOT_DIR = $(realpath $(CURDIR))
-DOCKER_TAG_NAME = alkali:1.0
 
 # Input settings -------------------------------------------------------------
 
+DOCKER_IMAGE_PREFIX ?= antmicro/
+DOCKER_TAG_NAME ?= alkali
 DOCKER_TAG ?= $(DOCKER_IMAGE_PREFIX)$(DOCKER_TAG_NAME)
 
 BOARD ?= an300
