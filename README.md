@@ -33,22 +33,21 @@ The diagram below presents the simplified structure of this repository along wit
 
 # Prerequisites
 
-To build this project it is recommended to use a dedicated docker container
-with all the prerequisites installed. The appropriate docker image can be
-created using `alkali.dockerfile` provided in the `docker` directory.
-
-Note that to build the image, you have to provide a tarball with Vivado 2019.2
-installer. This file has to be placed in the
-`docker/Xilinx_Vivado_2019.2_1106_2127.tar.gz` path before building the image.
-It can be [downloaded](https://www.xilinx.com/member/forms/download/xef.html?filename=Xilinx_Vivado_2019.2_1106_2127.tar.gz)
-from the Official Xilinx Website.
-
-After placing the file in the specified location use `make docker` to build
-the image. In case you want to install all the prerequisites directly on
-your machine, follow the instructions from the `alkali.dockerfile`.
+To build this project it is recommended to use a dedicated docker image
+with all the prerequisites installed. The image can be downloaded from
+DockerHub using the following command:
+```
+docker pull antmicro/alkali
+```
+Alternatively, it can be built by invoking `make docker` command.
 
 Use `make enter` to open the container and then execute the rest of
-the commands inside it.
+the commands inside it. If you want to bind `vivado` from outside
+the container you have to provide a custom binding option, by setting the
+`DOCKER_RUN_EXTRA_ARGS` environment variable before entering the container:
+```
+DOCKER_RUN_EXTRA_ARGS="-v <path-to-vivado-host>:<path-to-vivado-container>" make enter
+```
 
 # Building
 
