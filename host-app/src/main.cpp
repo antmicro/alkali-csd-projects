@@ -15,6 +15,7 @@
 #include <cstring>
 #include <cassert>
 #include <ctime>
+#include <errno.h>
 
 #include "vendor.h"
 
@@ -172,15 +173,15 @@ uint32_t input_len = 0;
 int copy_input(char *ifile, char *dev)
 {
 	int ifd = open(ifile, O_RDONLY);
-	int ofd = open(dev, O_WRONLY, O_SYNC | O_DIRECT);
+	int ofd = open(dev, O_WRONLY | O_SYNC | O_DIRECT);
 
 	if(ifd == -1) {
-		printf("Failed to open input file!\n");
+		printf("Failed to open input file (errno=%d)!\n", errno);
 		return 1;
 	}
 
 	if(ofd == -1) {
-		printf("Failed to open NVMe device (%s:%d)!\n", __func__, __LINE__);
+		printf("Failed to open NVMe device (errno=%d)!\n", errno);
 		return 1;
 	}
 
@@ -188,7 +189,12 @@ int copy_input(char *ifile, char *dev)
 	input_len = ((len + BUF_SIZE - 1) / BUF_SIZE) * BUF_SIZE;
 	lseek(ifd, 0, SEEK_SET);
 
-	void *buf = malloc(input_len);
+	void *buf = NULL;
+	int res = posix_memalign(&buf, BUF_SIZE, input_len);
+	if (res) {
+		printf("posix_memalign() failed, errno=%d\n", errno);
+		return 1;
+	}
 
 	uint32_t rlen = read(ifd, buf, len);
 
@@ -206,7 +212,7 @@ int copy_input(char *ifile, char *dev)
 	free(buf);
 
 	if(wlen != input_len) {
-		printf("Failed to write to NVMe! (got: %d, expected: %d)\n", wlen, input_len);
+		printf("Failed to write to NVMe! (got: %d, expected: %d), errno=%d\n", wlen, input_len, errno);
 		return 1;
 	}
 
@@ -218,21 +224,27 @@ int copy_input(char *ifile, char *dev)
 
 int copy_output(char *dev, char *ofile)
 {
-	int ifd = open(dev, O_RDONLY, O_SYNC | O_DIRECT);
-	int ofd = open(ofile, O_WRONLY, O_CREAT | O_TRUNC);
+	int ifd = open(dev, O_RDONLY | O_SYNC | O_DIRECT);
+	int ofd = open(ofile, O_WRONLY | O_CREAT | O_TRUNC);
 
 	if(ofd == -1) {
-		printf("Failed to open output file!\n");
+		printf("Failed to open output file! (errno=%d)\n", errno);
 		return 1;
 	}
 
 	if(ifd == -1) {
-		printf("Failed to open NVMe device (%s:%d)!\n", __func__, __LINE__);
+		printf("Failed to open NVMe device (errno=%d)!\n", errno);
+		return 1;
 	}
 
 	uint32_t len = BUF_SIZE;
 
-	void *buf = malloc(len);
+	void *buf = NULL;
+	int res = posix_memalign(&buf, BUF_SIZE, len);
+	if (res) {
+		printf("posix_memalign() failed, errno=%d\n", errno);
+		return 1;
+	}
 
 	lseek(ifd, input_len, SEEK_SET);
 
@@ -250,7 +262,7 @@ int copy_output(char *dev, char *ofile)
 	close(ofd);
 
 	if(wlen != len) {
-		printf("Failed to read input file! (got: %d, expected: %d)\n", wlen, len);
+		printf("Failed to read input file! (got: %d, expected: %d), errno=%d\n", wlen, len, errno);
 		return 1;
 	}
 
@@ -311,11 +323,13 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	copy_input(argv[3], argv[1]);
+	if (copy_input(argv[3], argv[1])) {
+		return -1;
+	}
 
 	printf("Opening device: %s\n", argv[1]);
 
-	int fd = open(argv[1], O_RDWR, O_SYNC | O_DIRECT);
+	int fd = open(argv[1], O_RDWR | O_SYNC | O_DIRECT);
 
 	if(fd == -1) {
 		printf("Failed to open NVMe device!\n");
@@ -369,7 +383,9 @@ int main(int argc, char *argv[])
 
 	printf("Copying output data\n");
 
-	copy_output(argv[1], argv[4]);
+	if (copy_output(argv[1], argv[4])) {
+		return -1;
+	}
 
 	return 0;
 }
