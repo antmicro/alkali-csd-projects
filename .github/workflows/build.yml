@@ -1,0 +1,54 @@
+name: Build Alkali Project
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build Alkali Project
+    runs-on: ubuntu-latest
+    container:
+      image: antmicro/alkali:latest
+    strategy:
+      matrix:
+        board: [an300, zcu106]
+    env:
+      BOARD: ${{ matrix.board }}
+      RELEASE_FILE: ${{ matrix.board }}.zip
+      RELEASE_URL: https://github.com/antmicro/alkali-csd-hw/releases/download/v1.0/${{ matrix.board }}.zip
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+
+      - name: Apply workaround for broken Buildroot mirror
+        run: echo "1.1.1.1 invisible-mirror.net" | tee -a /etc/hosts
+
+      - name: Build hardware (without Vivado + prebuilts)
+        run: |
+          # Build everything besides running vivado
+          make hardware//chisel
+          # Create fake output directories for make
+          mkdir -p build/hardware/${BOARD}/project_vta/out
+          mkdir -p build/hardware/${BOARD}/chisel_project
+          mkdir -p build/hardware/scala
+          # Download prebuilts
+          wget -O /tmp/${RELEASE_FILE} ${RELEASE_URL}
+          unzip /tmp/${RELEASE_FILE} -d /tmp/
+          cp /tmp/${BOARD}/* build/hardware/${BOARD}/project_vta/out
+          stat build/hardware/${BOARD}/project_vta/out/top.bit build/hardware/${BOARD}/project_vta/out/top.xsa
+          # Fool future make calls by touching hardware targets
+          make -t hardware/all
+
+      - name: Build firmware
+        run: make firmware/all
+
+      - name: Build output files
+        run: make all
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: alkali-projects-${{ matrix.board }}
+          path: |
+            build/${{ matrix.board }}/sdcard
