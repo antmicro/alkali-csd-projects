@@ -1,7 +1,7 @@
 NVMe host application
 =====================
 
-Copyright 2021-2022 Western Digital Corporation or its affiliates
+Copyright 2021-2022 Western Digital Corporation or its affiliates<br>
 Copyright 2021-2022 Antmicro
 
 This directory contains host PC userspace application that is responsible for
