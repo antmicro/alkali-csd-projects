@@ -74,7 +74,7 @@ endif
 # -----------------------------------------------------------------------------
 
 .PHONY: all
-all: boot-image ## Build all system components for the specified board
+all: sdcard ## Build all system components for the specified board
 
 # -----------------------------------------------------------------------------
 # Clean -----------------------------------------------------------------------

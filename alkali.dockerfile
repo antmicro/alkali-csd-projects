@@ -33,7 +33,6 @@ RUN apt-get update && apt-get install -y \
   python3 \
   python3-pip \
   rsync \
-  rustc \
   tcl \
   u-boot-tools \
   unzip \
@@ -41,6 +40,10 @@ RUN apt-get update && apt-get install -y \
   x11-xserver-utils \
   xsltproc \
   && rm -rf /var/lib/apt/lists/*
+
+# Install rust
+RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Install CMake
 RUN git clone -b v3.16.7 https://gitlab.kitware.com/cmake/cmake.git cmake && \
