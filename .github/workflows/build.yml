@@ -22,6 +22,11 @@ jobs:
         with:
           submodules: 'recursive'
 
+      - name: Install prerequisites
+        run: |
+          apt update
+          apt install -y zip
+
       - name: Apply workaround for broken Buildroot mirror
         run: echo "1.1.1.1 invisible-mirror.net" | tee -a /etc/hosts
 
@@ -52,3 +57,16 @@ jobs:
           name: alkali-projects-${{ matrix.board }}
           path: |
             build/${{ matrix.board }}/sdcard
+
+      - name: Prepare release
+        run: |
+          cd build/${{matrix.board}}/sdcard/
+          zip -r ${GITHUB_WORKSPACE}/build/${{matrix.board}}.zip *
+
+      - uses: pyTooling/Actions/releaser@r0
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: latest
+          files: |
+            build/${{ matrix.board }}.zip
