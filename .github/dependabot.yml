@@ -2,14 +2,7 @@ version: 2
 
 updates:
   - package-ecosystem: gitsubmodule
-    directory: "alkali-csd-fw"
-    schedule:
-      interval: daily
-    commit-message:
-      prefix: "submodules"
-
-  - package-ecosystem: gitsubmodule
-    directory: "alkali-csd-hw"
+    directory: /
     schedule:
       interval: daily
     commit-message:
