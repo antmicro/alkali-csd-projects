@@ -1,9 +1,11 @@
 [submodule "alkali-csd-hw"]
 	path = alkali-csd-hw
 	url = ../alkali-csd-hw.git
+	branch = main
 [submodule "alkali-csd-fw"]
 	path = alkali-csd-fw
 	url = ../alkali-csd-fw.git
+	branch = main
 [submodule "third-party/embeddedsw"]
 	path = third-party/embeddedsw
 	url = https://github.com/Xilinx/embeddedsw/
