@@ -76,7 +76,7 @@ you can build and load one of the tests from the `examples/` directory to
 the NVMe accelerator. To build the example, make sure that you are
 **inside the docker container** and use the following command:
 ```
-EXAMPLE=<example-name> NVME_DEVICE=/dev/<nvme-dev> make example/build
+EXAMPLE=<example-name> make example/build
 ```
 To load the example, make sure that you are **outside the docker container** and use:
 ```
@@ -87,8 +87,9 @@ For instance, if your NVMe accelerator is available as `/dev/nvme1n1`,
 the following commands may be used to build and load the `add` example:
 
 ```bash
-make enter                                               # enter the docker container
-EXAMPLE=add NVME_DEVICE=/dev/nvme1n1 make example/build  # build the example
-exit                                                     # exit the docker container
-EXAMPLE=add NVME_DEVICE=/dev/nvme1n1 make example/load   # upload the example to the board
+make enter                                              # enter the docker container
+make all                                                # build all system components
+EXAMPLE=add make example/build                          # build the example
+exit                                                    # exit the docker container
+EXAMPLE=add NVME_DEVICE=/dev/nvme1n1 make example/load  # upload the example to the board
 ```
