@@ -74,7 +74,7 @@ endif
 # -----------------------------------------------------------------------------
 
 .PHONY: all
-all: sdcard ## Build all system components for the specified board
+all: sdcard example/build  ## Build all system components for the specified board
 
 # -----------------------------------------------------------------------------
 # Clean -----------------------------------------------------------------------
@@ -233,8 +233,11 @@ EXAMPLE_INPUT_FILE = $(EXAMPLE_BUILD_DIR)/input.bin
 EXAMPLE_OUTPUT_FILE = $(EXAMPLE_BUILD_DIR)/output.bin
 EXAMPLE_BPF_OBJECT_FILE = $(EXAMPLE_BUILD_DIR)/bpf.o
 
-.PHONY: load-example
-load-example: $(EXAMPLE_OUTPUT_FILE) ## Load example specified by EXAMPLE to nvme device specified by NVME_DEVICE
+.PHONY: example/load
+example/load: $(EXAMPLE_OUTPUT_FILE) ## Load example specified by EXAMPLE to nvme device specified by NVME_DEVICE
+
+.PHONY: example/build
+example/build: $(EXAMPLE_INPUT_FILE) ## Build example specified by EXAMPLE to nvme device specified by NVME_DEVICE
 
 $(EXAMPLE_BUILD_DIR):
 	@mkdir -p $@

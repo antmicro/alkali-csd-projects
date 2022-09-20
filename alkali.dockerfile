@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
   bison \
   build-essential \
   bzip2 \
+  clang \
   cpio \
   curl \
   flex \
