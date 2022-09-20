@@ -238,6 +238,8 @@ example/load: $(EXAMPLE_OUTPUT_FILE) ## Load example specified by EXAMPLE to nvm
 
 .PHONY: example/build
 example/build: $(EXAMPLE_INPUT_FILE) ## Build example specified by EXAMPLE to nvme device specified by NVME_DEVICE
+example/build: $(EXAMPLE_BPF_OBJECT_FILE)
+example/build: $(HOSTAPP_OUTPUTS)
 
 $(EXAMPLE_BUILD_DIR):
 	@mkdir -p $@
