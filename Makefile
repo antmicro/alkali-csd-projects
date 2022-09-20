@@ -74,7 +74,7 @@ endif
 # -----------------------------------------------------------------------------
 
 .PHONY: all
-all: sdcard example/build  ## Build all system components for the specified board
+all: sdcard example/build host-app ## Build all system components for the specified board
 
 # -----------------------------------------------------------------------------
 # Clean -----------------------------------------------------------------------
