@@ -45,7 +45,7 @@ WEST_INIT_DIR = $(ROOT_DIR)
 # Output paths ----------------------------------------------------------------
 
 BOARD_BUILD_DIR = $(BUILD_DIR)/$(BOARD)
-BUILDROOT_BUILD_DIR = $(BUILD_DIR)/firmware/buildroot/images
+BUILDROOT_BUILD_DIR = $(BUILD_DIR)/firmware/buildroot/$(BOARD)/images
 HOSTAPP_BUILD_DIR = $(BUILD_DIR)/host-app
 EXAMPLE_BUILD_DIR = $(BUILD_DIR)/examples/$(EXAMPLE)
 WEST_YML = $(FW_BUILD_DIR)/rpu-app/west.yml
