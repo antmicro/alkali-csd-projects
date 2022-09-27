@@ -33,7 +33,7 @@ endif
 HW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-hw
 FW_ROOT_DIR = $(ROOT_DIR)/alkali-csd-fw
 FW_THIRD_PARTY_DIR = $(FW_ROOT_DIR)/third-party
-REGGEN_DIR = $(FW_THIRD_PARTY_DIR)/registers-generator
+REGGEN_DIR = $(FW_ROOT_DIR)/registers-generator
 TENSORFLOW_DIR = $(FW_THIRD_PARTY_DIR)/tensorflow
 BOARD_DIR = $(ROOT_DIR)/boards/$(BOARD)
 EXAMPLE_DIR = $(ROOT_DIR)/examples/tflite_vta/$(EXAMPLE)
