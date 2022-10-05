@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM debian:buster
+FROM debian:bullseye
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
   cpio \
   curl \
   flex \
-  gcc-8 \
+  gcc \
   git \
   gperf \
   libcurl4-openssl-dev \
