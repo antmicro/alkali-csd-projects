@@ -56,6 +56,11 @@ the prerequisites installed locally to use the instructions below correctly.
 Refer to the [#Prerequisites](#prerequisites) section in case of any problems
 with building the project**
 
+Start off with loading the Vivado environment:
+```
+source <path-to-vivado-container>/settings64.sh
+```
+
 Before building any target choose the desired board (`an300` or ` zcu106`),
 by setting the `BOARD` environment variable:
 ```
@@ -67,6 +72,34 @@ after running `make help`. To build all output products use:
 ```
 make all
 ```
+
+# Prepping the SD card for ZCU106 board
+
+In case the board runs from SD card (as in the case of the ZCU106 board), we can run:
+```
+make sdcard
+```
+
+This will create a directory `build/<target>/sdcard` directory with all files needed to run the project on the target.
+
+To prepare the SD card for the system, plug it to the computer and determine its device handle (e.g. `/dev/sdX`, where `X` is the letter corresponding to the SD card).
+
+**NOTE**: It is crucial to correctly determine the device, since the SD card will be wiped before placing files.
+
+After this, run:
+
+```
+./scripts/format-sdcard.sh /dev/<devname>
+```
+
+And conduct the formatting process.
+
+After formatting, there are two partitions:
+
+* `boot` bootable FAT32 partition
+* `root` EXT4 partition
+
+Mount the FAT partition and copy the contents of the `build/<target>/sdcard` directory to this directory.
 
 # Running examples
 
