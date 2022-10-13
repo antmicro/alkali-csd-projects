@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM debian:buster
+FROM debian:bullseye
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
   cpio \
   curl \
   flex \
-  gcc-8 \
+  gcc \
   git \
   gperf \
   libcurl4-openssl-dev \
@@ -59,8 +59,9 @@ RUN git clone -b v3.16.7 https://gitlab.kitware.com/cmake/cmake.git cmake && \
 COPY requirements.txt requirements.txt
 COPY alkali-csd-fw/requirements.txt alkali-csd-fw/requirements.txt
 COPY alkali-csd-fw/registers-generator/requirements.txt alkali-csd-fw/registers-generator/requirements.txt
+COPY alkali-csd-fw/apu-app/requirements.txt alkali-csd-fw/apu-app/requirements.txt
 RUN pip3 install -r requirements.txt
-RUN rm requirements.txt alkali-csd-fw/requirements.txt alkali-csd-fw/registers-generator/requirements.txt
+RUN rm requirements.txt alkali-csd-fw/requirements.txt alkali-csd-fw/registers-generator/requirements.txt alkali-csd-fw/apu-app/requirements.txt
 
 # Install Zephyr dependencies
 RUN wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.10.3/zephyr-sdk-0.10.3-setup.run && \

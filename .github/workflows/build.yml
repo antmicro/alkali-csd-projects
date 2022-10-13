@@ -8,6 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: antmicro/alkali:latest
+      volumes:
+        - /usr/share/dotnet:/usr/share/dotnet
+        - /usr/local/lib/android:/usr/local/lib/android
+        - /opt/ghc:/opt/ghc
     strategy:
       matrix:
         board: [an300, zcu106]
@@ -17,15 +21,23 @@ jobs:
       RELEASE_URL: https://github.com/antmicro/alkali-csd-hw/releases/download/v1.0/${{ matrix.board }}.zip
 
     steps:
-      - name: Check out the repo
-        uses: actions/checkout@v3
-        with:
-          submodules: 'recursive'
-
       - name: Install prerequisites
         run: |
           apt update
           apt install -y zip
+      - name: Increase build space
+        run: |
+          echo "Before cleanup"
+          df -H
+          rm -rf /usr/share/dotnet/*
+          rm -rf /usr/local/lib/android/*
+          rm -rf /opt/ghc/*
+          echo "After cleanup"
+          df -H
+      - name: Check out the repo
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
 
       - name: Apply workaround for broken Buildroot mirror
         run: echo "1.1.1.1 invisible-mirror.net" | tee -a /etc/hosts
