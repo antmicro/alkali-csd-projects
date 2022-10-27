@@ -44,19 +44,7 @@ jobs:
 
       - name: Build hardware (without Vivado + prebuilts)
         run: |
-          # Build everything besides running vivado
-          make hardware//chisel
-          # Create fake output directories for make
-          mkdir -p build/hardware/${BOARD}/project_vta/out
-          mkdir -p build/hardware/${BOARD}/chisel_project
-          mkdir -p build/hardware/scala
-          # Download prebuilts
-          wget -O /tmp/${RELEASE_FILE} ${RELEASE_URL}
-          unzip /tmp/${RELEASE_FILE} -d /tmp/
-          cp /tmp/${BOARD}/* build/hardware/${BOARD}/project_vta/out
-          stat build/hardware/${BOARD}/project_vta/out/top.bit build/hardware/${BOARD}/project_vta/out/top.xsa
-          # Fool future make calls by touching hardware targets
-          make -t hardware/all
+          make hardware/all-with-prebuilts
 
       - name: Build firmware
         run: make firmware/all
