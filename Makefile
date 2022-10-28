@@ -116,6 +116,15 @@ $(WEST_YML): # Generate west.yml based on manifest from Firmware repository
 hardware/all: ## Build all Hardware binaries (Vivado design)
 	$(MAKE) -C $(HW_ROOT_DIR) $(HW_MAKE_OPTS) all
 
+.PHONY: hardware/all-with-prebuilts
+hardware/all-with-prebuilts:  ## Build all hardware data, but use prebuilt design from GitHub instead of building it locally
+	make hardware//chisel
+	mkdir -p $(HW_BUILD_DIR)/$(BOARD)/project_vta/out
+	mkdir -p $(HW_BUILD_DIR)/$(BOARD)/chisel_project
+	mkdir -p $(HW_BUILD_DIR)/scala
+	./scripts/download-hw-data.sh $(BOARD) $(HW_BUILD_DIR)
+	make -t hardware/all
+
 .PHONY: hardware/clean
 hardware/clean:
 	$(MAKE) -C $(HW_ROOT_DIR) $(HW_MAKE_OPTS) clean
@@ -123,7 +132,6 @@ hardware/clean:
 .PHONY: hardware//%
 hardware//%: ## Forward rule to invoke hardware rules directly e.g. `make hardware//chisel`
 	$(MAKE) -C $(HW_ROOT_DIR) $(HW_MAKE_OPTS) $*
-
 # -----------------------------------------------------------------------------
 # Build boot image ------------------------------------------------------------
 # -----------------------------------------------------------------------------
