@@ -1,0 +1,57 @@
+name: Documentation
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+    docs-generation:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout sources
+              uses: actions/checkout@v2
+            - name: Setup Python
+              uses: actions/setup-python@v2
+              with:
+                  python-version: 3.8.5
+            - name: Install dependencies
+              run: |
+                export DEBIAN_FRONTEND=noninteractive
+                sudo apt-get update
+                sudo apt-get install -y curl git rsync texlive-full
+                python -m pip install --upgrade \
+                    git+https://github.com/return42/linuxdoc \
+                    git+https://github.com/antmicro/sphinx_antmicro_theme.git \
+                    sphinx \
+                    sphinx_tabs
+            - name: Generate documentation
+              run: |
+                cd docs
+                make html
+                make latexpdf
+                cp build/latex/*.pdf build/html/
+            - name: Upload HTML documentation
+              uses: actions/upload-artifact@v2
+              with:
+                  name: gh-page
+                  path: docs/build/html
+            - name: Upload PDF documentation
+              uses: actions/upload-artifact@v2
+              with:
+                  name: pdf-documentation
+                  path: docs/build/latex/*.pdf
+            - name: Deploy to Github Pages
+              if: github.event_name == 'push'
+              run: |
+                cd docs/build/html
+                touch .nojekyll
+                git init
+                cp ../../../.git/config ./.git/config
+                git add .
+                git config --local user.email "push@gha"
+                git config --local user.name "GHA"
+                git commit -am "update ${{ github.sha }}"
+                git push -u origin +HEAD:gh-pages
+                rm-rf .git
