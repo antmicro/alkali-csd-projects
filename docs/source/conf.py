@@ -92,6 +92,8 @@ html_show_sphinx = False
 # Output file base name for HTML help builder.
 htmlhelp_basename = basic_filename
 
+html_show_sourcelink = False
+
 try: html_context
 except: html_context = {}
 html_context['basic_filename'] = basic_filename
