@@ -29,8 +29,8 @@ jobs:
             - name: Generate documentation
               run: |
                 cd docs
-                make html
-                make latexpdf
+                make SPHINXOPTS="-A commit=$GITHUB_SHA -A branch=$GITHUB_REF_NAME" html
+                make SPHINXOPTS="-A commit=$GITHUB_SHA -A branch=$GITHUB_REF_NAME" latexpdf
                 cp build/latex/*.pdf build/html/
             - name: Upload HTML documentation
               uses: actions/upload-artifact@v2
