@@ -9,7 +9,7 @@ set -o pipefail
 
 function help()
 {
-	echo "Usage nvme-read-wite-test.sh /dev/<nvme-dev>"
+	echo "Usage nvme-read-write-test.sh /dev/<nvme-dev>"
 	echo "Test read-write operation on NVMe device"
 }
 
