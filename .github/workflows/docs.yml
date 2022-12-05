@@ -54,4 +54,4 @@ jobs:
                 git config --local user.name "GHA"
                 git commit -am "update ${{ github.sha }}"
                 git push -u origin +HEAD:gh-pages
-                rm-rf .git
+                rm -rf .git
