@@ -73,7 +73,7 @@ after running `make help`. To build all output products use:
 make all
 ```
 
-# Prepping the SD card for ZCU106 board
+# Flashing the SD card for ZCU106 board
 
 In case the board runs from SD card (as in the case of the ZCU106 board), we can run:
 ```
@@ -100,6 +100,63 @@ After formatting, there are two partitions:
 * `root` EXT4 partition
 
 Mount the FAT partition and copy the contents of the `build/<target>/sdcard` directory to this directory.
+
+# Connecting the board to the computer
+
+After flashing the boards, the remaining thing in order to use them is to connect them to the computer.
+
+To connect and prepare the device for processing:
+
+* Plug the board to a PCIe slot.
+* Access the board's serial console, i.e. via `picocom` in PC (`NOTE:` there are more than a single serial console, for RPU, APU and more)
+* Power on the board.
+* Once the board is successfully booted, reboot the PC.
+* After successful boot, check `lspci` for the device.
+  Something as follows should be observed:
+  ```
+  $ lspci | grep -i western
+  06:00.0 Non-Volatile memory controller: Western Digital Device 0001
+  06:00.1 Serial controller: Western Digital Device 1234
+  ```
+* Via serial console, in the TTY with the buildroot prompt (APU), log in as `root` and run:
+  ```
+  /bin/reload.sh
+  ```
+* After this, on PC, in the directory with `alkali-csd-projects` run [./scripts/pcie-rescan.sh](./scripts/pcie-rescan.sh) and [./scripts/nvme-bind.sh](./scripts/nvme-bind.sh) scripts:
+ ```
+ ./scripts/pcie-rescan.sh
+ ./scripts/nvme-bind.sh
+ ```
+* Use `nvme list` (from [nvme-cli](https://github.com/linux-nvme/nvme-cli)) to list available NVMe devices - the one with `DEADBEEF` identifier is the connected board, let's name it `/dev/<nvmedevice>`.
+
+From this point it is possible to:
+
+* [run the examples](#running-examples)
+* Test the communication with the NVMe device using [./scripts/nvme-read-write-test.sh](./scripts/nvme-read-write-test.sh):
+  ```
+  $ ./scripts/nvme-read-write-test.sh /dev/<nvmedevice>
+  Are you sure that you want to write to /dev/nvme0n1 (0123456789 DEADBEEF)?
+  [Y]es/[N]o: Y
+  1+0 records in
+  1+0 records out
+  1048576 bytes (1,0 MB, 1,0 MiB) copied, 0,00305868 s, 343 MB/s
+  1+0 records in
+  1+0 records out
+  1048576 bytes (1,0 MB, 1,0 MiB) copied, 1,26125 s, 831 kB/s
+  1+0 records in
+  1+0 records out
+  1048576 bytes (1,0 MB, 1,0 MiB) copied, 1,0398 s, 1,0 MB/s
+  Test passed!
+  ```
+
+If the board is rebooted, restart the APU app using `/bin/reload.sh` in the serial console for APU's buildroot as described above, and reconnect the board to the PC using the following commands:
+
+```
+./scripts/pcie-remove.sh
+./scripts/pcie-rescan.sh
+```
+
+The `./scripts/nvme-bind.sh` does not need to be executed again.
 
 # Running examples
 
