@@ -25,6 +25,7 @@ jobs:
                     git+https://github.com/return42/linuxdoc \
                     git+https://github.com/antmicro/sphinx_antmicro_theme.git \
                     sphinx \
+                    docutils==0.16 \
                     sphinx_tabs
             - name: Generate documentation
               run: |
