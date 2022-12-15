@@ -40,6 +40,7 @@ RUN apt-get update && apt-get install -y \
   wget \
   x11-xserver-utils \
   xsltproc \
+  texlive-full \
   && rm -rf /var/lib/apt/lists/*
 
 # Install rust

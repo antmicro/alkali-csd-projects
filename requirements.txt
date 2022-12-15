@@ -1,1 +1,2 @@
 -r alkali-csd-fw/requirements.txt
+-r docs/requirements.txt
