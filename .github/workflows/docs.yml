@@ -15,7 +15,7 @@ jobs:
             - name: Setup Python
               uses: actions/setup-python@v2
               with:
-                  python-version: 3.8.5
+                  python-version: 3.9
             - name: Install dependencies
               run: |
                 export DEBIAN_FRONTEND=noninteractive
