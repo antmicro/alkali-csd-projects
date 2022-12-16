@@ -15,18 +15,13 @@ jobs:
             - name: Setup Python
               uses: actions/setup-python@v2
               with:
-                  python-version: 3.8.5
+                  python-version: 3.9
             - name: Install dependencies
               run: |
                 export DEBIAN_FRONTEND=noninteractive
                 sudo apt-get update
                 sudo apt-get install -y curl git rsync texlive-full
-                python -m pip install --upgrade \
-                    git+https://github.com/return42/linuxdoc \
-                    git+https://github.com/antmicro/sphinx_antmicro_theme.git \
-                    sphinx \
-                    docutils==0.16 \
-                    sphinx_tabs
+                python -m pip install --upgrade -r docs/requirements.txt
             - name: Generate documentation
               run: |
                 cd docs

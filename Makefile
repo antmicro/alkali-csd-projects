@@ -283,6 +283,7 @@ $(DOCKER_BUILD_REGGEN_REQS_DIR):
 .PHONY: docker
 docker: alkali.dockerfile  ## Build the development docker image
 docker: requirements.txt
+docker: docs/requirements.txt
 docker: $(FW_ROOT_DIR)/requirements.txt
 docker: $(FW_ROOT_DIR)/apu-app/requirements.txt
 docker: $(REGGEN_DIR)/requirements.txt
@@ -291,6 +292,8 @@ docker: | $(DOCKER_BUILD_REGGEN_REQS_DIR)
 	cp $(ROOT_DIR)/requirements.txt $(DOCKER_BUILD_DIR)/requirements.txt
 	mkdir -p $(DOCKER_BUILD_REGGEN_REQS_DIR)
 	mkdir -p $(DOCKER_BUILD_FW_REQS_DIR)/apu-app
+	mkdir -p ${DOCKER_BUILD_DIR}/docs
+	cp ${ROOT_DIR}/docs/requirements.txt ${DOCKER_BUILD_DIR}/docs/requirements.txt
 	cp $(FW_ROOT_DIR)/requirements.txt $(DOCKER_BUILD_FW_REQS_DIR)/requirements.txt
 	cp $(FW_ROOT_DIR)/apu-app/requirements.txt $(DOCKER_BUILD_FW_REQS_DIR)/apu-app/requirements.txt
 	cp $(REGGEN_DIR)/requirements.txt $(DOCKER_BUILD_REGGEN_REQS_DIR)/requirements.txt

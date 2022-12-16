@@ -40,6 +40,7 @@ RUN apt-get update && apt-get install -y \
   wget \
   x11-xserver-utils \
   xsltproc \
+  texlive-full \
   && rm -rf /var/lib/apt/lists/*
 
 # Install rust
@@ -57,6 +58,7 @@ RUN git clone -b v3.16.7 https://gitlab.kitware.com/cmake/cmake.git cmake && \
 
 # Install Python dependencies
 COPY requirements.txt requirements.txt
+COPY docs/requirements.txt docs/requirements.txt
 COPY alkali-csd-fw/requirements.txt alkali-csd-fw/requirements.txt
 COPY alkali-csd-fw/registers-generator/requirements.txt alkali-csd-fw/registers-generator/requirements.txt
 COPY alkali-csd-fw/apu-app/requirements.txt alkali-csd-fw/apu-app/requirements.txt
