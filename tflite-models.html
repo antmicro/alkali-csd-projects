@@ -1,0 +1,266 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>TensorFlow Lite model preparation &mdash; Alkali CSD NVMe accelerators test platform</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="VTA accelerator" href="vta-accelerator.html" />
+    <link rel="prev" title="NVMe commands and extensions" href="nvme-commands.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Alkali CSD NVMe accelerators test platform
+          
+
+          
+            
+            <img src="_static/logo-400-html.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repositories.html">Repository reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">System architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nvme-commands.html">NVMe commands and extensions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">TensorFlow Lite model preparation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tensorflow-lite-models-and-runtime">TensorFlow Lite models and runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-models-used-in-development">Test models used in development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compiling-the-tensorflow-lite-models-with-examples">Compiling the TensorFlow Lite models with examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vta-accelerator.html">VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-delegated-ops.html">Operations accelerated on VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flashing-basalt.html">Flashing and connecting the Basalt board</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+        <div class="wide-toggle">
+          <span class="wide-toggle-btn">
+            Toggle wide view
+          </span>
+        </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Alkali CSD NVMe accelerators test platform</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>TensorFlow Lite model preparation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+      
+        <li class="wy-breadcrumbs-aside"><a href="alkali-csd-nvme-test-platform.pdf" class="fa fa-file-pdf-o"> PDF</a></li>
+      
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tensorflow-lite-model-preparation">
+<h1>TensorFlow Lite model preparation<a class="headerlink" href="#tensorflow-lite-model-preparation" title="Permalink to this headline">¶</a></h1>
+<p>This chapter describes the preparation and conversion process of models to the TensorFlow Lite FlatBuffers format.</p>
+<div class="section" id="tensorflow-lite-models-and-runtime">
+<h2>TensorFlow Lite models and runtime<a class="headerlink" href="#tensorflow-lite-models-and-runtime" title="Permalink to this headline">¶</a></h2>
+<p>The framework used for running inference in the <a class="reference internal" href="apu-software.html"><span class="doc">APU software</span></a> is <a class="reference external" href="https://www.tensorflow.org/lite">TensorFlow Lite</a>.
+TensorFlow Lite provides:</p>
+<ul class="simple">
+<li><p>a compiler for optimizing and converting the TensorFlow model to the <cite>.tflite</cite> model,</p></li>
+<li><p>an interpreter and runtime for running the model.</p></li>
+</ul>
+<p>The TFLite models are represented and stored in a <a class="reference external" href="https://google.github.io/flatbuffers/">FlatBuffers format</a>.
+The interpreter loads the model from file, and upon invoking it runs the inference.</p>
+<p>In TensorFlow Lite, it is possible to run all or some of the model operations (matrix multiplication, convolution, vector operations and more) on an accelerator using <a class="reference external" href="https://www.tensorflow.org/lite/performance/delegates">TFLite Delegates</a>.
+Delegates are libraries that tell if the current operation during runtime can be executed on the accelerator instead of the CPU (in this case APU), and if so they also implement the communication of the host (APU) with the target in order to delegate the operation and receive results.</p>
+<p>In this project, the APU has a delegate for the <a class="reference external" href="https://tvm.apache.org/docs/topic/vta/index.html">Versatile Tensor Accelerator (VTA)</a>.
+This accelerator computes the most popular operations present in the deep learning models, such as GEMM, MIN, MAX, ADD, MUL, operations on matrices and vectors.
+The acceleration is performed on quantized models (with INT8 precision).</p>
+</div>
+<div class="section" id="test-models-used-in-development">
+<span id="test-models"></span><h2>Test models used in development<a class="headerlink" href="#test-models-used-in-development" title="Permalink to this headline">¶</a></h2>
+<p>For the test purposes during development, models are generated in ONNX format using the <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw/blob/main/apu-app/scripts/simple-models.py">alkali-csd-fw/blob/main/apu-app/scripts/simple-models.py</a>.</p>
+</div>
+<div class="section" id="compiling-the-tensorflow-lite-models-with-examples">
+<span id="compiling-tflite-models"></span><h2>Compiling the TensorFlow Lite models with examples<a class="headerlink" href="#compiling-the-tensorflow-lite-models-with-examples" title="Permalink to this headline">¶</a></h2>
+<p>The detailed description on how to compile a TensorFlow model and get the <code class="docutils literal notranslate"><span class="pre">.tflite</span></code> file is present in <a class="reference external" href="https://www.tensorflow.org/lite/convert">TensorFlow Lite Converter Overview</a>.</p>
+<p>The models from <a class="reference internal" href="#test-models"><span class="std std-ref">Test models used in development</span></a> are compiled using random data as calibration dataset in the <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw/blob/main/apu-app/scripts/convert-to-tflite.py">alkali-csd-fw/blob/main/apu-app/scripts/convert-to-tflite.py</a>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          
+
+
+
+
+
+
+
+<footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="vta-accelerator.html" class="btn btn-neutral float-right" title="VTA accelerator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="nvme-commands.html" class="btn btn-neutral float-left" title="NVMe commands and extensions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Antmicro, 2023;
+      
+        <span class="commit" data-home="..html">
+          Revision <a id="commitnewlink" href=""><code>83945484</code></a>;
+        </span>
+      
+      <span class="commit">
+        branch <a id="branchnewlink" href=""><code>main</code></a>.
+      </span>
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

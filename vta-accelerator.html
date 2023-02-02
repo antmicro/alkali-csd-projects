@@ -1,0 +1,588 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>VTA accelerator &mdash; Alkali CSD NVMe accelerators test platform</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Operations accelerated on VTA accelerator" href="vta-delegated-ops.html" />
+    <link rel="prev" title="TensorFlow Lite model preparation" href="tflite-models.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Alkali CSD NVMe accelerators test platform
+          
+
+          
+            
+            <img src="_static/logo-400-html.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repositories.html">Repository reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">System architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nvme-commands.html">NVMe commands and extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tflite-models.html">TensorFlow Lite model preparation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">VTA accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-information">Basic information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#key-parameters-of-the-vta-accelerator">Key parameters of the VTA accelerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vta-instructions">VTA instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-structure-of-the-vta-accelerator">The structure of the VTA accelerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#shared-dram-between-vta-and-host">Shared DRAM between VTA and host</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#load-store-modules">LOAD/STORE modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compute-module">COMPUTE module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#vta-module-synchronization-mechanism">VTA module synchronization mechanism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vta-memory-addressing-scheme">VTA memory/addressing scheme</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vta-delegated-ops.html">Operations accelerated on VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flashing-basalt.html">Flashing and connecting the Basalt board</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+        <div class="wide-toggle">
+          <span class="wide-toggle-btn">
+            Toggle wide view
+          </span>
+        </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Alkali CSD NVMe accelerators test platform</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>VTA accelerator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+      
+        <li class="wy-breadcrumbs-aside"><a href="alkali-csd-nvme-test-platform.pdf" class="fa fa-file-pdf-o"> PDF</a></li>
+      
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="vta-accelerator">
+<h1>VTA accelerator<a class="headerlink" href="#vta-accelerator" title="Permalink to this headline">¶</a></h1>
+<p>This chapter covers the VTA accelerator - its model, structure, instructions and accessing.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The full specification of the VTA accelerator, along with examples can be found in <a class="reference external" href="https://tvm.apache.org/docs/topic/vta/dev/index.html">VTA Design and Developer Guide</a> in the Apache TVM documentation.</p>
+</div>
+<div class="section" id="basic-information">
+<span id="vta-basic-information"></span><h2>Basic information<a class="headerlink" href="#basic-information" title="Permalink to this headline">¶</a></h2>
+<p>VTA (Versatile Tensor Accelerator) is a generic deep learning accelerator designed for efficient linear algebra calculations.
+It is a simple RISC-like processor consisting of four modules:</p>
+<ul class="simple">
+<li><p>Fetch module - loads instruction streams from DRAM, decodes them and routes them to one of the following modules based on instruction type,</p></li>
+<li><p>Load module - loads data from shared DRAM with the host to VTA’s SRAM for processing,</p></li>
+<li><p>Store module - stores data from VTA’s SRAM to shared DRAM,</p></li>
+<li><p>Compute module - takes data and instructions from SRAM and computes micro-Op kernels containing ALU (add, sub, max, …) and GEMM operations.</p></li>
+</ul>
+<p>Both GEMM and ALU operations are performed on whole tensors of values.</p>
+<p>The separate modules work asynchronously, which allows to hide memory access latency (loading new data and storing previous results while compute module processes current data).
+The order of operations between all three modules is ensured with dependency FIFO queues.</p>
+</div>
+<div class="section" id="key-parameters-of-the-vta-accelerator">
+<h2>Key parameters of the VTA accelerator<a class="headerlink" href="#key-parameters-of-the-vta-accelerator" title="Permalink to this headline">¶</a></h2>
+<p>VTA is a configurable accelerator, where the computational and memory capabilities
+are parameterized.</p>
+<p>As mentioned in <a class="reference internal" href="#vta-basic-information"><span class="std std-ref">Basic information</span></a>, GEMM and ALU are operating on tensors.
+The dimensionalities of those tensors are specified with the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">VTA_BATCH</span></code> - 1</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VTA_BLOCK_IN</span></code> - 16</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VTA_BLOCK_OUT</span></code> - 16</p></li>
+</ul>
+<p>GEMM core computes the following tensors:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">out</span><span class="p">[</span><span class="n">VTA_BATCH</span> <span class="o">*</span> <span class="n">VTA_BLOCK_OUT</span><span class="p">]</span> <span class="o">=</span> <span class="n">inp</span><span class="p">[</span><span class="n">VTA_BATCH</span> <span class="o">*</span> <span class="n">VTA_BLOCK_IN</span><span class="p">]</span> <span class="o">*</span> <span class="n">wgt</span><span class="p">[</span><span class="n">VTA_BLOCK_IN</span> <span class="o">*</span> <span class="n">VTA_BLOCK_OUT</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>It means that with the default settings the GEMM multiples 1x16-element input vector by 16x16 weight matrix and produces 1x16-element output vector.</p>
+<p>ALU core computes the following tensors:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">out</span><span class="p">[</span><span class="n">VTA_BATCH</span> <span class="o">*</span> <span class="n">VTA_BLOCK_OUT</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="n">VTA_BATCH</span> <span class="o">*</span> <span class="n">VTA_BLOCK_OUT</span><span class="p">],</span> <span class="n">inp</span><span class="p">[</span><span class="n">VTA_BATCH</span> <span class="o">*</span> <span class="n">VTA_BLOCK_OUT</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>It means that with the default settings the ALU core computes requested operation on 1x16 vectors.</p>
+<p>Next, there are parameters controlling the number of bits in tensors:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">VTA_INP_WIDTH</span></code> - number of bits for input tensor elements, 8</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VTA_OUT_WIDTH</span></code> - number of bits for output tensor elements, 8</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VTA_WGT_WIDTH</span></code> - number of bits for weights tensor elements, 8</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VTA_ACC_WIDTH</span></code> - number of bits for accumulator (used in GEMM and ALU for storing intermediate results), 32</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VTA_UOP_WIDTH</span></code> - number of bits representing micro-op data width, 32</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VTA_INS_WIDTH</span></code> - length of a single instruction in VTA, 128</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The last parameter should not be modified</p>
+</div>
+<p>Another set of parameters configures buffer sizes (in bytes) for:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">VTA_INP_BUFF_SIZE</span></code> - input buffer size, 32768 B</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VTA_OUT_BUFF_SIZE</span></code> - output buffer size, 32768 B</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VTA_WGT_BUFF_SIZE</span></code> - weights buffer size, 262144 B</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VTA_ACC_BUFF_SIZE</span></code> - accumulator buffer size, 131072 B</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VTA_UOP_BUFF_SIZE</span></code> - micro-op buffer size, 32768 B</p></li>
+</ul>
+<p>The above parameters affect directly such aspects as:</p>
+<ul class="simple">
+<li><p>Data addressing in SRAM,</p></li>
+<li><p>Computational capabilities,</p></li>
+<li><p>Scheduling of operations.</p></li>
+</ul>
+</div>
+<div class="section" id="vta-instructions">
+<h2>VTA instructions<a class="headerlink" href="#vta-instructions" title="Permalink to this headline">¶</a></h2>
+<p>There are four instructions in VTA:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LOAD</span></code> - loads a 2D tensor from DRAM into the input buffer, weight buffer or register file, and micro-kernel into the micro-op cache.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STORE</span></code> - stores a 2D tensor from the output buffer to DRAM.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GEMM</span></code> - performs a micro-op sequence of matrix multiplications,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ALU</span></code> - performs a micro-op sequence of ALU operations.</p></li>
+</ul>
+<p>The instructions have 128-bit length, storing both operation type and their parameters.</p>
+</div>
+<div class="section" id="the-structure-of-the-vta-accelerator">
+<h2>The structure of the VTA accelerator<a class="headerlink" href="#the-structure-of-the-vta-accelerator" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>More thorough documentation can be found in <a class="reference external" href="https://tvm.apache.org/docs/topic/vta/dev/index.html">VTA Design and Developer Guide</a>.</p>
+</div>
+<p>As described in <a class="reference internal" href="#vta-basic-information"><span class="std std-ref">Basic information</span></a>, there are four modules - FETCH, LOAD, COMPUTE and STORE.</p>
+<p>FETCH module receives instructions from DRAM, and forwards them to one of the other three modules.</p>
+<p>Each of the modules work asynchronously, fetching the instructions from the fetch module and performing actions.</p>
+<p>The API for communicating with the VTA via its driver implementation is provided in the <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw/blob/main/apu-app/src/vta/vta_runtime.h">alkali-csd-fw/blob/main/apu-app/src/vta/vta_runtime.h</a>.</p>
+<p>The following subsections will provide both high-level look at operations, as well as low-level functions used to implement them.</p>
+<div class="section" id="shared-dram-between-vta-and-host">
+<h3>Shared DRAM between VTA and host<a class="headerlink" href="#shared-dram-between-vta-and-host" title="Permalink to this headline">¶</a></h3>
+<p>To perform <code class="docutils literal notranslate"><span class="pre">LOAD</span></code> and <code class="docutils literal notranslate"><span class="pre">STORE</span></code> operation between the shared DRAM and VTA’s SRAM modules, the shared (memory mapped) space needs to be allocated.</p>
+<p>Managing shared buffers is done via <code class="docutils literal notranslate"><span class="pre">VTABufferAlloc(size_t</span> <span class="pre">size)</span></code> (allocating the memory mapped region) and <code class="docutils literal notranslate"><span class="pre">VTABufferFree(void</span> <span class="pre">*bufferaddr)</span></code> (releasing the memory mapped region).</p>
+</div>
+<div class="section" id="load-store-modules">
+<h3>LOAD/STORE modules<a class="headerlink" href="#load-store-modules" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">LOAD</span></code> and <code class="docutils literal notranslate"><span class="pre">STORE</span></code> modules are responsible for passing data between shared DRAM and SRAM buffers in VTA.</p>
+<p>They perform 2D transfers, allowing to apply padding and stride of the data on-the-fly.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Some parameters in the below functions are going to have <strong>in unit elements</strong> disclaimer.
+It is the smallest tensor the SRAM can accept, and it depends on the SRAM type.
+The meaning of unit elements is specified in the <a class="reference internal" href="#vta-memory-scheme"><span class="std std-ref">VTA memory/addressing scheme</span></a>.</p>
+</div>
+<p>To load the data from DRAM to VTA’s SRAM, the <code class="docutils literal notranslate"><span class="pre">VTALoadBuffer2D</span></code> method is used</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">VTALoadBuffer2D</span><span class="p">(</span>
+<span class="w">    </span><span class="n">VTACommandHandle</span><span class="w"> </span><span class="n">cmd</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">src_dram_addr</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">src_elem_offset</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">x_size</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">y_size</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">x_stride</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">x_pad_before</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">y_pad_before</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">x_pad_after</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">y_pad_after</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">dst_sram_index</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">dst_memory_type</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cmd</span></code> - VTA command handle, created using <code class="docutils literal notranslate"><span class="pre">VTATLSCommandHandle()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src_dram_addr</span></code> - source DRAM address, allocated in shared space</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src_elem_offset</span></code> - the source DRAM offset <strong>in unit elements</strong></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x_size</span></code> - the lowest dimension (x axis) size in <strong>unit elements</strong></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y_size</span></code> - the number of rows (y axis)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x_stride</span></code> - the x axis stride</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x_pad_before</span></code> - start padding on x axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y_pad_before</span></code> - start padding on y axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x_pad_after</span></code> - end padding on x axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y_pad_after</span></code> - end padding on y axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dst_sram_index</span></code> - destination SRAM index</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dst_memory_type</span></code> - destination memory type (memory types are specified in <a class="reference internal" href="#vta-memory-scheme"><span class="std std-ref">VTA memory/addressing scheme</span></a>)</p></li>
+</ul>
+<p>To load the data from VTA’s SRAM to DRAM, the <code class="docutils literal notranslate"><span class="pre">VTAStoreBuffer2D</span></code> method is used:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">VTAStoreBuffer2D</span><span class="p">(</span>
+<span class="w">    </span><span class="n">VTACommandHandle</span><span class="w"> </span><span class="n">cmd</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">src_sram_index</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">src_memory_type</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">dst_dram_addr</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">dst_elem_offset</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">x_size</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">y_size</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">x_stride</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cmd</span></code> - VTA command handle</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src_sram_index</span></code> - the beginning location of the data in given SRAM, <strong>in unit elements</strong></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src_memory_type</span></code> - source memory type (memory types are specified in <a class="reference internal" href="#vta-memory-scheme"><span class="std std-ref">VTA memory/addressing scheme</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dst_dram_addr</span></code> - pointer to DRAM memory</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dst_elem_offset</span></code> - offset from the <code class="docutils literal notranslate"><span class="pre">dst_dram_addr</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x_size</span></code> - size of the tensor on x axis <strong>in unit elements</strong></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y_size</span></code> - size of the tensor on y axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x_stride</span></code> - stride along x axis</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Only <code class="docutils literal notranslate"><span class="pre">VTA_MEM_ID_OUT</span></code> SRAM is supported as <code class="docutils literal notranslate"><span class="pre">src_memory_type</span></code> in <code class="docutils literal notranslate"><span class="pre">VTAStoreBuffer2D</span></code>.</p>
+</div>
+<p>The above functions create 128-bit instructions that are passed to instruction fetch module, and later passed to <code class="docutils literal notranslate"><span class="pre">LOAD</span></code>/<code class="docutils literal notranslate"><span class="pre">STORE</span></code> modules.</p>
+</div>
+<div class="section" id="compute-module">
+<h3>COMPUTE module<a class="headerlink" href="#compute-module" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">COMPUTE</span></code> module loads data from SRAM buffers - input, weight or accumulator buffers (more information in <a class="reference internal" href="#vta-memory-scheme"><span class="std std-ref">VTA memory/addressing scheme</span></a>), and performs either <code class="docutils literal notranslate"><span class="pre">GEMM</span></code> or <code class="docutils literal notranslate"><span class="pre">ALU</span></code> operations.</p>
+<p>The instructions for COMPUTE module are wrapped in so-called micro-op kernels - a set of instructions applied on whole ranges of SRAM buffers.</p>
+<p>The micro-op definition starts with specifying optional outer and inner loops, created using:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">VTAUopLoopBegin</span><span class="p">(</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">extent</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">dst_factor</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">src_factor</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">wgt_factor</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">extent</span></code> - the extent of the loop, in other words the number of iterations for a given loop (outer or inner)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dst_factor</span></code> - the accum factor, is a factor by which the iterator is multiplied when computing address for ACC SRAM</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src_factor</span></code> - the input factor, is a factor by which the iterator is multiplied when computing address for INP SRAM</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">wgt_factor</span></code> - the weight factor, is a factor by which the iterator is multiplied when computing address for WGT SRAM</p></li>
+</ul>
+<p>The end of such loop is marked with <code class="docutils literal notranslate"><span class="pre">VTAUopLoopEnd()</span></code>.
+From the driver perspective, it changes the parameters of all <code class="docutils literal notranslate"><span class="pre">VTAUopPush</span></code> functions within the loop’s scope.
+All of those <code class="docutils literal notranslate"><span class="pre">VTAUopPush</span></code> are treated as list of micro-op instructions (<code class="docutils literal notranslate"><span class="pre">uop_instructions</span></code>), and those instructions along with loops are micro-op kernel.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">COMPUTE</span></code> module instructions are created using:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">VTAUopPush</span><span class="p">(</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">mode</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">reset_out</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">dst_index</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">src_index</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">wgt_index</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">opcode</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">use_imm</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">imm_val</span><span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mode</span></code> - 0 (<code class="docutils literal notranslate"><span class="pre">VTA_UOP_GEMM</span></code>) for GEMM, 1 (<code class="docutils literal notranslate"><span class="pre">VTA_UOP_ALU</span></code>) for ALU</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reset_out</span></code> - 1 if ACC SRAM in given address should be zeroed, 0 otherwise</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dst_index</span></code> - the ACC SRAM base index</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src_index</span></code> - the INP SRAM base index for GEMM, the ACC SRAM base index for second value for ALU</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">wgt_index</span></code> - the WGT SRAM base index</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">opcode</span></code> - ALU opcode, tells what operation is computed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">use_imm</span></code> - tells if the immediate value <code class="docutils literal notranslate"><span class="pre">imm_val</span></code> should be used instead of tensor provided in <code class="docutils literal notranslate"><span class="pre">src_index</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">imm_val</span></code> - immediate value in ALU mode, applied as a second value in ALU operation</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">imm_val</span></code> immediate value is a 16-bit signed integer.</p>
+<p>The GEMM operation pseudo-code looks as follows</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">e0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">e0</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">extent0</span><span class="o">:</span><span class="w"> </span><span class="n">e0</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">e1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">e1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">extent1</span><span class="p">;</span><span class="w"> </span><span class="n">e1</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">instruction</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">uop_instructions</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">src_index</span><span class="p">,</span><span class="w"> </span><span class="n">wgt_index</span><span class="p">,</span><span class="w"> </span><span class="n">dst_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_src_wgt_dst_indices</span><span class="p">(</span><span class="n">instruction</span><span class="p">);</span>
+<span class="w">            </span><span class="n">acc_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dst_index</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">e0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dst_factor0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">e1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dst_factor1</span><span class="p">;</span>
+<span class="w">            </span><span class="n">inp_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src_index</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">e0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src_factor0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">e1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src_factor1</span><span class="p">;</span>
+<span class="w">            </span><span class="n">wgt_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wgt_index</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">e0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">wgt_factor0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">e1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">wgt_factor1</span><span class="p">;</span>
+<span class="w">            </span><span class="n">ACC_SRAM</span><span class="p">[</span><span class="n">acc_idx</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">GEMM</span><span class="p">(</span><span class="n">INP_SRAM</span><span class="p">[</span><span class="n">inp_idx</span><span class="p">],</span><span class="w"> </span><span class="n">WGT_SRAM</span><span class="p">[</span><span class="n">wgt_idx</span><span class="p">]);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>And the ALU operation pseudo-code looks as follows</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">e0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">e0</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">extent0</span><span class="o">:</span><span class="w"> </span><span class="n">e0</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">e1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">e1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">extent1</span><span class="p">;</span><span class="w"> </span><span class="n">e1</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">instruction</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">uop_instructions</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">src_index</span><span class="p">,</span><span class="w"> </span><span class="n">dst_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_src_dst_indices</span><span class="p">(</span><span class="n">instruction</span><span class="p">);</span>
+<span class="w">            </span><span class="n">acc_idx_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dst_index</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">e0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dst_factor0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">e1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dst_factor1</span><span class="p">;</span>
+<span class="w">            </span><span class="n">acc_idx_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src_index</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">e0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src_factor0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">e1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src_factor1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">use_imm</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">ACC_SRAM</span><span class="p">[</span><span class="n">acc_idx1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ALU_OP</span><span class="p">(</span><span class="n">ACC_SRAM</span><span class="p">[</span><span class="n">acc_idx1</span><span class="p">],</span><span class="w"> </span><span class="n">imm_val</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">ACC_SRAM</span><span class="p">[</span><span class="n">acc_idx1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ALU_OP</span><span class="p">(</span><span class="n">ACC_SRAM</span><span class="p">[</span><span class="n">acc_idx1</span><span class="p">],</span><span class="w"> </span><span class="n">ACC_SRAM</span><span class="p">[</span><span class="n">acc_idx2</span><span class="p">]);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="vta-module-synchronization-mechanism">
+<span id="id1"></span><h2>VTA module synchronization mechanism<a class="headerlink" href="#vta-module-synchronization-mechanism" title="Permalink to this headline">¶</a></h2>
+<p>The VTA <code class="docutils literal notranslate"><span class="pre">LOAD</span></code>, <code class="docutils literal notranslate"><span class="pre">STORE</span></code>, <code class="docutils literal notranslate"><span class="pre">COMPUTE</span></code> work asynchronously.
+It allows to perform data loading, storing and computations in parallel, which makes latency hiding possible.</p>
+<p>However, it requires proper synchronization mechanism so all instructions are executed in a correct order.
+For this purpose, dependency queues are created.</p>
+<p>There are four dependency queues:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LOAD</span></code>-&gt;``COMPUTE`` dependency queue - tells <code class="docutils literal notranslate"><span class="pre">COMPUTE</span></code> module that data has finished loading and processing can start.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COMPUTE</span></code>-&gt;``LOAD`` dependency queue - tells <code class="docutils literal notranslate"><span class="pre">LOAD</span></code> module that <code class="docutils literal notranslate"><span class="pre">COMPUTE</span></code> module has finished processing and new data can be loaded.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STORE</span></code>-&gt;``COMPUTE`` dependency queue - tells <code class="docutils literal notranslate"><span class="pre">COMPUTE</span></code> module that computed data from ACC SRAM is stored in shared DRAM and can be overriden with new computations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COMPUTE</span></code>-&gt;``STORE`` dependency queue - tells <code class="docutils literal notranslate"><span class="pre">STORE</span></code> module that <code class="docutils literal notranslate"><span class="pre">COMPUTE</span></code> module has finished processing and data is ready to be stored in shared DRAM.</p></li>
+</ul>
+<p>There are two methods for managing those dependency queues:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">VTADepPush(from,</span> <span class="pre">to)</span></code> - for pushing a token of “readiness”,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VTADepPop(from,</span> <span class="pre">to)</span></code> - for popping a “readiness” token from the given queue.
+If the token is not present, the module waits until <code class="docutils literal notranslate"><span class="pre">VTADepPush</span></code> pushes a new token.</p></li>
+</ul>
+<p>This allows to control latency hiding and all of the algorithm’s flow.</p>
+</div>
+<div class="section" id="vta-memory-addressing-scheme">
+<span id="vta-memory-scheme"></span><h2>VTA memory/addressing scheme<a class="headerlink" href="#vta-memory-addressing-scheme" title="Permalink to this headline">¶</a></h2>
+<p>VTA accelerator consists of several SRAM modules.
+Each of them is characterized by three parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">kBits</span></code> - number of bits per element,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kLane</span></code> - number of lanes in a single element,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kMaxNumElements</span></code> - maximum number of elements.</p></li>
+</ul>
+<p>There are following SRAM modules:</p>
+<ul class="simple">
+<li><p>UOP SRAM (<code class="docutils literal notranslate"><span class="pre">VTA_MEM_ID_UOP</span></code>) - memory for storing micro-op kernels’ instructions,</p></li>
+<li><p>WGT SRAM (<code class="docutils literal notranslate"><span class="pre">VTA_MEM_ID_WGT</span></code>) - memory for storing weights,</p></li>
+<li><p>INP SRAM (<code class="docutils literal notranslate"><span class="pre">VTA_MEM_ID_INP</span></code>) - memory for storing inputs,</p></li>
+<li><p>ACC SRAM (<code class="docutils literal notranslate"><span class="pre">VTA_MEM_ID_ACC</span></code>) - accumulator memory, holding the intermediate results and ALU input tensors,</p></li>
+<li><p>OUT SRAM (<code class="docutils literal notranslate"><span class="pre">VTA_MEM_ID_OUT</span></code>) - provides the casted 8-bit values from the ACC SRAM.</p></li>
+</ul>
+<table class="docutils align-center" id="id2">
+<caption><span class="caption-number">Table 11 </span><span class="caption-text">VTA memory types</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Memory type</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">kBits</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">kLane</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">kMaxNumElements</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VTA_MEM_ID_WGT</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VTA_WGT_WIDTH</span></code> (8)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VTA_BLOCK_IN</span> <span class="pre">*</span> <span class="pre">VTA_BLOCK_OUT</span></code> (16 * 16)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VTA_WGT_BUFF_DEPTH</span></code> (1024)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VTA_MEM_ID_INP</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VTA_INP_WIDTH</span></code> (8)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VTA_BATCH</span> <span class="pre">*</span> <span class="pre">VTA_BLOCK_IN</span></code> (1 * 16)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VTA_INP_BUFF_DEPTH</span></code> (2048)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VTA_MEM_ID_ACC</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VTA_ACC_WIDTH</span></code> (32)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VTA_BATCH</span> <span class="pre">*</span> <span class="pre">VTA_BLOCK_OUT</span></code> (1 * 16)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VTA_ACC_BUFF_DEPTH</span></code> (2048)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VTA_MEM_ID_OUT</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VTA_OUT_WIDTH</span></code> (8)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VTA_BATCH</span> <span class="pre">*</span> <span class="pre">VTA_BLOCK_OUT</span></code> (1 * 16)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VTA_OUT_BUFF_DEPTH</span></code> (2048)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VTA_MEM_ID_UOP</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VTA_UOP_WIDTH</span></code> (32)</p></td>
+<td><p>1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VTA_UOP_BUFF_DEPTH</span></code> (8192)</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">VTALoadBuffer2D</span></code> can write to INP, WGT and ACC SRAMs.
+<code class="docutils literal notranslate"><span class="pre">VTAStoreBuffer2D</span></code> can read from OUT SRAM (not ACC SRAM).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It means that values need to be properly requantized and clamped to prevent overflows.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          
+
+
+
+
+
+
+
+<footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="vta-delegated-ops.html" class="btn btn-neutral float-right" title="Operations accelerated on VTA accelerator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tflite-models.html" class="btn btn-neutral float-left" title="TensorFlow Lite model preparation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Antmicro, 2023;
+      
+        <span class="commit" data-home="..html">
+          Revision <a id="commitnewlink" href=""><code>83945484</code></a>;
+        </span>
+      
+      <span class="commit">
+        branch <a id="branchnewlink" href=""><code>main</code></a>.
+      </span>
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,343 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RPU Software &mdash; Alkali CSD NVMe accelerators test platform</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="NVMe commands and extensions" href="nvme-commands.html" />
+    <link rel="prev" title="APU Software" href="apu-software.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Alkali CSD NVMe accelerators test platform
+          
+
+          
+            
+            <img src="_static/logo-400-html.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repositories.html">Repository reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="architecture.html">System architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="fpga-design.html">FPGA design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory-map.html">Memory map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host-software.html">Host Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apu-software.html">APU Software</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">RPU Software</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#operating-system">Operating system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nvme-firmware-overview">NVMe firmware overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#building-and-running-nvme-firmware">Building and running NVMe firmware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-support-for-new-nvme-commands">Adding support for new NVMe commands</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nvme-commands.html">NVMe commands and extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tflite-models.html">TensorFlow Lite model preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-accelerator.html">VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-delegated-ops.html">Operations accelerated on VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flashing-basalt.html">Flashing and connecting the Basalt board</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+        <div class="wide-toggle">
+          <span class="wide-toggle-btn">
+            Toggle wide view
+          </span>
+        </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Alkali CSD NVMe accelerators test platform</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="architecture.html">System architecture</a> &raquo;</li>
+        
+      <li>RPU Software</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+      
+        <li class="wy-breadcrumbs-aside"><a href="alkali-csd-nvme-test-platform.pdf" class="fa fa-file-pdf-o"> PDF</a></li>
+      
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rpu-software">
+<h1>RPU Software<a class="headerlink" href="#rpu-software" title="Permalink to this headline">¶</a></h1>
+<p>This chapter describes the software that will be running on the RPU (R5 cores) part of the Zynq US+ MPSoC.
+The RPU software will be responsible for handling the functionality required by the NVMe standard including regular read/write transactions.</p>
+<div class="section" id="operating-system">
+<h2>Operating system<a class="headerlink" href="#operating-system" title="Permalink to this headline">¶</a></h2>
+<p>The RPU software uses <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr">Zephyr RTOS</a> as the operating system.</p>
+</div>
+<div class="section" id="nvme-firmware-overview">
+<h2>NVMe firmware overview<a class="headerlink" href="#nvme-firmware-overview" title="Permalink to this headline">¶</a></h2>
+<p>The NVMe app runs from a reserved part of the APU DDR memory. The exact location of this area is specified in <a class="reference internal" href="memory-map.html#rpu-memory"><span class="std std-ref">RPU-APU shared memory</span></a>.
+This space is used for the app itself as well as for various buffers needed to process the NVMe commands.
+The app also uses a small chunk (60B) of memory at <code class="docutils literal notranslate"><span class="pre">0x0</span></code> to store reset and exception vectors, but that memory range is mapped into the TCM memory.</p>
+<p>The debug output from RPU is provided on serial port 0.</p>
+<p>The app contains custom drivers for the two peripherals implemented in the PL:</p>
+<ul class="simple">
+<li><p>Verilog-PCIe DMA core</p></li>
+<li><p>Custom NVMe register module, described in <a class="reference internal" href="fpga-design.html#nvme-ip"><span class="std std-ref">NVMe register module</span></a></p></li>
+</ul>
+<p>Both of these peripherals generate interrupts when RPU attention is needed.
+The NVMe register module generates an interrupt for each Host register write, and the DMA generates interrupts after finishing a transfer.</p>
+<p>At the moment the app supports a minimal set of Admin commands sent by the NVMe Linux driver:</p>
+<ul class="simple">
+<li><p>Obtaining Identify Controller/Namespace structure with <code class="docutils literal notranslate"><span class="pre">Identify</span></code></p></li>
+<li><p>Obtaining SMART data structure using <code class="docutils literal notranslate"><span class="pre">Get</span> <span class="pre">Log</span> <span class="pre">Page</span></code></p></li>
+<li><p>Manipulating I/O Submission/Completion Queues with <code class="docutils literal notranslate"><span class="pre">Create/Delete</span> <span class="pre">I/O</span> <span class="pre">Completion/Submission</span> <span class="pre">Queue</span></code></p></li>
+<li><p>Configuring the amount of queues using <code class="docutils literal notranslate"><span class="pre">Set</span> <span class="pre">Features</span></code></p></li>
+</ul>
+<p>I/O commands are also supported but for the moment support is minimal - all commands are marked as successful in theirs Completions.</p>
+<p>This level of supported commands allows the drive to successfully register in the system and <a class="reference external" href="https://github.com/linux-nvme/nvme-cli">nvme-cli</a> can be used to perform basic operations, e.g. identifying the drive, dumping SMART data.
+More details on that can be found in <a class="reference internal" href="nvme-commands.html#basic-nvme-tests"><span class="std std-ref">Basic NVMe operations</span></a>.</p>
+</div>
+<div class="section" id="building-and-running-nvme-firmware">
+<h2>Building and running NVMe firmware<a class="headerlink" href="#building-and-running-nvme-firmware" title="Permalink to this headline">¶</a></h2>
+<p>For building instructions follow <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw">alkali-csd-fw README</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is recommended to build the whole project by following <a class="reference external" href="https://github.com/antmicro/alkali-csd-projects">alkali-csd-projects README</a>.</p>
+</div>
+</div>
+<div class="section" id="adding-support-for-new-nvme-commands">
+<span id="rpu-commands"></span><h2>Adding support for new NVMe commands<a class="headerlink" href="#adding-support-for-new-nvme-commands" title="Permalink to this headline">¶</a></h2>
+<p>Adding support for additional commands is fairly simple.
+Commands are dispatched by <code class="docutils literal notranslate"><span class="pre">handle_adm</span></code> and <code class="docutils literal notranslate"><span class="pre">handle_io</span></code> functions located in <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw/blob/main/rpu-app/src/cmd.c">alkali-csd-fw/blob/main/rpu-app/src/cmd.c</a>.
+To handle a new one you simply need to add another entry in the <code class="docutils literal notranslate"><span class="pre">switch</span></code> block which calls handler for your command.
+For example, this is how a handler for <code class="docutils literal notranslate"><span class="pre">Write</span></code> command is called:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">case</span><span class="w"> </span><span class="no">NVME_IO_CMD_WRITE</span><span class="p">:</span>
+<span class="w">    </span><span class="n">nvme_cmd_io_write</span><span class="p">(</span><span class="n">priv</span><span class="p">);</span>
+<span class="w">    </span><span class="k">break</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Commands can be also passed to APU for processing which is the case for FW update commands and vendor commands.
+You can get more information about handling them on the APU side in <a class="reference internal" href="apu-software.html#zcu-commands"><span class="std std-ref">Adding support for new NVMe commands</span></a>.</p>
+</div>
+<p>Once in handler, you will have access to a buffer with your command provided via <code class="docutils literal notranslate"><span class="pre">priv</span></code> variable.
+You can use that to retrieve all needed command fields just like in this example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">cmd_cdw10</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">fid</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">rsvd</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">23</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">sv</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="n">cmd_cdw10_t</span><span class="p">;</span>
+
+<span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">cmd_cdw14</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">uuid_idx</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">7</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">rsvd</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">25</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="n">cmd_cdw14_t</span><span class="p">;</span>
+
+<span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">cmd_sq</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">nvme_sq_entry_base_t</span><span class="w"> </span><span class="n">base</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cmd_cdw10_t</span><span class="w"> </span><span class="n">cdw10</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">cdw</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+<span class="w">        </span><span class="n">cmd_cdw14_t</span><span class="w"> </span><span class="n">cdw14</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="n">cmd_sq_t</span><span class="p">;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">nvme_cmd_adm_set_features</span><span class="p">(</span><span class="n">nvme_cmd_priv_t</span><span class="w"> </span><span class="o">*</span><span class="n">priv</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="n">cmd_sq_t</span><span class="w"> </span><span class="o">*</span><span class="n">cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">cmd_sq_t</span><span class="o">*</span><span class="p">)</span><span class="n">priv</span><span class="o">-&gt;</span><span class="n">sq_buf</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">switch</span><span class="p">(</span><span class="n">cmd</span><span class="o">-&gt;</span><span class="n">cdw10</span><span class="p">.</span><span class="n">fid</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="no">FID_NUMBER_OF_QUEUES</span><span class="p">:</span>
+<span class="w">                        </span><span class="n">number_of_queues</span><span class="p">(</span><span class="n">priv</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="k">default</span><span class="o">:</span>
+<span class="w">                        </span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;Invalid Set Features FID value! (%d)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cmd</span><span class="o">-&gt;</span><span class="n">cdw10</span><span class="p">.</span><span class="n">fid</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">nvme_cmd_return</span><span class="p">(</span><span class="n">priv</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This snippet also shows another important point - all handlers must include <code class="docutils literal notranslate"><span class="pre">nvme_cmd_return</span></code> or <code class="docutils literal notranslate"><span class="pre">nvme_cmd_return_data</span></code>.
+Without that no NVMe response will be sent and the command will timeout.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          
+
+
+
+
+
+
+
+<footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="nvme-commands.html" class="btn btn-neutral float-right" title="NVMe commands and extensions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="apu-software.html" class="btn btn-neutral float-left" title="APU Software" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Antmicro, 2023;
+      
+        <span class="commit" data-home="..html">
+          Revision <a id="commitnewlink" href=""><code>83945484</code></a>;
+        </span>
+      
+      <span class="commit">
+        branch <a id="branchnewlink" href=""><code>main</code></a>.
+      </span>
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,752 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>NVMe commands and extensions &mdash; Alkali CSD NVMe accelerators test platform</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="TensorFlow Lite model preparation" href="tflite-models.html" />
+    <link rel="prev" title="RPU Software" href="rpu-software.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Alkali CSD NVMe accelerators test platform
+          
+
+          
+            
+            <img src="_static/logo-400-html.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repositories.html">Repository reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">System architecture</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">NVMe commands and extensions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-nvme-operations">Basic NVMe operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nvme-vendor-extensions">NVMe Vendor extensions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#get-log-page-log-page-identifier-0xc0">Get Log Page (Log Page Identifier 0xC0)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-nvme-commands">Custom NVMe commands</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#admin-command-set-extension">Admin command set extension</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#accelerator-identify-0xc2">Accelerator Identify (0xC2)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#get-accelerator-status-0xc6">Get Accelerator Status (0xC6)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#global-accelerator-control-0xc0">Global Accelerator Control (0xC0)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#i-o-commands">I/O commands</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#send-data-to-accelerator-0x81">Send data to accelerator (0x81)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#read-data-from-accelerator-0x82">Read data from accelerator (0x82)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#send-firmware-to-accelerator-0x85">Send Firmware to accelerator (0x85)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#read-firmware-from-accelerator-0x86">Read Firmware from accelerator (0x86)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#use-local-storage-as-accelerator-input-0x88">Use local storage as accelerator input (0x88)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#use-local-storage-as-accelerator-output-0x8c">Use local storage as accelerator output (0x8c)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#basic-accelerator-control-0x91">Basic Accelerator Control (0x91)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#example-command-flow">Example command flow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tflite-models.html">TensorFlow Lite model preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-accelerator.html">VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-delegated-ops.html">Operations accelerated on VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flashing-basalt.html">Flashing and connecting the Basalt board</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+        <div class="wide-toggle">
+          <span class="wide-toggle-btn">
+            Toggle wide view
+          </span>
+        </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Alkali CSD NVMe accelerators test platform</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>NVMe commands and extensions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+      
+        <li class="wy-breadcrumbs-aside"><a href="alkali-csd-nvme-test-platform.pdf" class="fa fa-file-pdf-o"> PDF</a></li>
+      
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="nvme-commands-and-extensions">
+<h1>NVMe commands and extensions<a class="headerlink" href="#nvme-commands-and-extensions" title="Permalink to this headline">¶</a></h1>
+<p>This chapter discusses a proposal of the NVMe protocol with vendor-specific commands.
+Custom commands are extending both Admin and I/O commands sets.
+All the additional commands are encoded in the vendor-specific commands address space.</p>
+<div class="section" id="basic-nvme-operations">
+<span id="basic-nvme-tests"></span><h2>Basic NVMe operations<a class="headerlink" href="#basic-nvme-operations" title="Permalink to this headline">¶</a></h2>
+<p>To perform basic NVMe operations once the device gets probed successfully, you can use <a class="reference external" href="https://github.com/linux-nvme/nvme-cli">nvme-cli</a>.
+This tool allows you to send various commands to NVMe devices.</p>
+<p>Currently supported commands are:</p>
+<ul class="simple">
+<li><p><cite>list</cite></p></li>
+<li><p><cite>list-subsys</cite></p></li>
+<li><p><cite>id-ctrl</cite></p></li>
+<li><p><cite>id-ns</cite></p></li>
+<li><p><cite>list-ns</cite></p></li>
+<li><p><cite>smart-log</cite></p></li>
+<li><p><cite>set-feature</cite></p></li>
+<li><p><cite>read</cite></p></li>
+<li><p><cite>write</cite></p></li>
+<li><p><cite>fw-download</cite></p></li>
+<li><p><cite>fw-commit</cite></p></li>
+</ul>
+</div>
+<div class="section" id="nvme-vendor-extensions">
+<span id="nvme-commands"></span><h2>NVMe Vendor extensions<a class="headerlink" href="#nvme-vendor-extensions" title="Permalink to this headline">¶</a></h2>
+<p>In order to use the accelerator you need to be able to control it over NVMe interface.
+The control functionality can be implemented with additional, vendor-specific commands.
+This way the accelerator device will be compatible with generic NVMe software.
+Custom software will be required to use the additional accelerator functionalities.
+Some of the commands defined in the NVMe standard support vendor extensions which can
+be used to implement basic features, e.g. retrieving accelerator logs.</p>
+<div class="section" id="get-log-page-log-page-identifier-0xc0">
+<h3>Get Log Page (Log Page Identifier 0xC0)<a class="headerlink" href="#get-log-page-log-page-identifier-0xc0" title="Permalink to this headline">¶</a></h3>
+<p>The get log page command returns a data buffer containing the log page for the specified accelerator.
+The command returns a variable length buffer containing a list of status descriptors.</p>
+<p>Accelerators are identified using numeric ID values. Accelerator ID is provided in the <code class="docutils literal notranslate"><span class="pre">Log</span> <span class="pre">Specific</span> <span class="pre">Identifier</span></code> field.
+Bits 15:0 of the <code class="docutils literal notranslate"><span class="pre">Log</span> <span class="pre">Specific</span> <span class="pre">Identifier</span></code> field contain Accelerator ID.</p>
+<p>Accelerator logs are packed into Log Entry descriptors.
+The tables below contain the descriptors’ structure:</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-number">Table 1 </span><span class="caption-text">Get Accelerator Log Page data structure</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bytes</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0:3</p></td>
+<td><p>Log page length (in bytes)</p></td>
+</tr>
+<tr class="row-odd"><td><p>4:15</p></td>
+<td><p>reserved for future use</p></td>
+</tr>
+<tr class="row-even"><td><p>16:N</p></td>
+<td><p>Accelerator log entry descriptor list</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-number">Table 2 </span><span class="caption-text">Accelerator Log Entry descriptor</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bytes</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0:3</p></td>
+<td><p>Descriptor length (in bytes)</p></td>
+</tr>
+<tr class="row-odd"><td><p>4:11</p></td>
+<td><p>Timestamp</p></td>
+</tr>
+<tr class="row-even"><td><p>12:15</p></td>
+<td><p>Entry type ID</p></td>
+</tr>
+<tr class="row-odd"><td><p>16:N</p></td>
+<td><p>Accelerator-specific information (optional)</p></td>
+</tr>
+</tbody>
+</table>
+<p>The data inside the optional information block can be used to provide more information for the log entry, e.g. error message string.</p>
+<p>Entry types are identified with unique IDs.
+The exact ID list is to be defined.
+Below is an example list:</p>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-number">Table 3 </span><span class="caption-text">Entry type IDs</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>Descrption</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>Invalid firmware ID was selected</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>Invalid input buffer configuration</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>Invalid output buffer configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>Accelerator specific error</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="custom-nvme-commands">
+<h2>Custom NVMe commands<a class="headerlink" href="#custom-nvme-commands" title="Permalink to this headline">¶</a></h2>
+<p>Controlling accelerator-related features will require a set of custom commands on top of what NVMe provides.
+The NVMe standard supports defining vendor-specific commands that use a separate range of opcodes.
+The following sections lists custom (vendor-specific) commands extending the Admin and I/O sets.</p>
+<div class="section" id="admin-command-set-extension">
+<h3>Admin command set extension<a class="headerlink" href="#admin-command-set-extension" title="Permalink to this headline">¶</a></h3>
+<p>Custom admin commands will be used to obtain information about the device, status of the accelerators and will enable basic accelerator control.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">DPTR</span></code> field of an NVMe command frame will be used to specify buffer location for commands that transfer data to or from the device.</p>
+<div class="section" id="accelerator-identify-0xc2">
+<h4>Accelerator Identify (0xC2)<a class="headerlink" href="#accelerator-identify-0xc2" title="Permalink to this headline">¶</a></h4>
+<p>The identify command returns a data buffer that describes information about the custom accelerators available in the device.
+The command may also be used to determine if the connected device is an NVMe accelerator device.
+The data structure has a variable length.
+The length is determined by reading the first 8 bytes (confirming that the first 4 bytes hold the magic value).
+Once the length is known, the whole buffer can be retrieved.</p>
+<p>Accelerators are described using descriptors.
+The tables below depict data structures used by the Accelerator Identify command.</p>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-number">Table 4 </span><span class="caption-text">Accelerators Idenfity descriptor structure</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bytes</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0:3</p></td>
+<td><p>Magic value (“WDC0”)</p></td>
+</tr>
+<tr class="row-odd"><td><p>4:7</p></td>
+<td><p>Descriptor length (in bytes)</p></td>
+</tr>
+<tr class="row-even"><td><p>8:15</p></td>
+<td><p>Reserved for future use</p></td>
+</tr>
+<tr class="row-odd"><td><p>16:N</p></td>
+<td><p>Accelerator descriptor list</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-number">Table 5 </span><span class="caption-text">Accelerators descriptor list entry</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bytes</p></th>
+<th class="head"><p>Descritpion</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0:3</p></td>
+<td><p>Accelerator descriptor length (in bytes)</p></td>
+</tr>
+<tr class="row-odd"><td><p>4:5</p></td>
+<td><p>Accelerator ID (unique within the device)</p></td>
+</tr>
+<tr class="row-even"><td><p>6:7</p></td>
+<td><p>Reserved for future use</p></td>
+</tr>
+<tr class="row-odd"><td><p>8:N</p></td>
+<td><p>Accelerator capabilities list</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id6">
+<caption><span class="caption-number">Table 6 </span><span class="caption-text">Accelerator capabilities list entry</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bytes</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0:3</p></td>
+<td><p>Capability ID</p></td>
+</tr>
+<tr class="row-odd"><td><p>4:15</p></td>
+<td><p>Capability specific data</p></td>
+</tr>
+</tbody>
+</table>
+<p>Capabilities are identified with unique IDs.
+The exact ID list is to be defined.
+Below is an example list:</p>
+<table class="docutils align-default" id="id7">
+<caption><span class="caption-number">Table 7 </span><span class="caption-text">Capabilites IDs</span><a class="headerlink" href="#id7" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>Descrption</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>Accelerator supports firmware exchange</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>Accelerator supports input buffer of size defined in bytes 8:15 of the capability descriptor</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>Accelerator supports output buffer of size defined in bytes 8:15 of the capability descriptor</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-accelerator-status-0xc6">
+<h4>Get Accelerator Status (0xC6)<a class="headerlink" href="#get-accelerator-status-0xc6" title="Permalink to this headline">¶</a></h4>
+<p>The Get Accelerator Status command is used to retrieve information about the current status of the selected Accelerator available in the system.
+The command returns a variable length buffer containing a list of status descriptors.</p>
+<p>Accelerators are identified using numeric ID values. Accelerator ID will be provided in the <code class="docutils literal notranslate"><span class="pre">CDW12</span></code> field.
+Bits 15:0 of the <code class="docutils literal notranslate"><span class="pre">CDW12</span></code> field contain Accelerator ID.
+Bit 31 of the <code class="docutils literal notranslate"><span class="pre">CDW12</span></code> is the Retain Asynchronous Event (<code class="docutils literal notranslate"><span class="pre">RAE</span></code>) flag - when set to true, status information will not be modified until accessed with bit set as false.
+This mechanism allows the host to read the header of the status data buffer, determine the length of the whole transaction and finally read the whole buffer.</p>
+<p>Accelerators statuses are packed into Status descriptors.
+Statuses are tied to accelerators capabilities, e.g. buffers can report how much data was processed.
+The tables below summarize the descriptors’ structure:</p>
+<table class="docutils align-default" id="id8">
+<caption><span class="caption-number">Table 8 </span><span class="caption-text">Get Accelerator Status data structure</span><a class="headerlink" href="#id8" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bytes</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0:3</p></td>
+<td><p>Descriptor length</p></td>
+</tr>
+<tr class="row-odd"><td><p>4:7</p></td>
+<td><p>Status ID</p></td>
+</tr>
+<tr class="row-even"><td><p>8:31</p></td>
+<td><p>reserved for future use</p></td>
+</tr>
+<tr class="row-odd"><td><p>32:N</p></td>
+<td><p>Accelerators status descriptors list</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id9">
+<caption><span class="caption-number">Table 9 </span><span class="caption-text">Accelerator status descriptor</span><a class="headerlink" href="#id9" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bytes</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0:3</p></td>
+<td><p>Capability ID</p></td>
+</tr>
+<tr class="row-odd"><td><p>4:31</p></td>
+<td><p>Status specific data</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="global-accelerator-control-0xc0">
+<h4>Global Accelerator Control (0xC0)<a class="headerlink" href="#global-accelerator-control-0xc0" title="Permalink to this headline">¶</a></h4>
+<p>This Global Accelerator Control command is used to enable/disable accelerator subsystem.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CDW12</span></code> field contains operation ID.</p>
+<p>Operation identifier will take one of the specified values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0x00</span></code> - Enable accelerator subsystem</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0x01</span></code> - Disable accelerator subsystem</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="i-o-commands">
+<h3>I/O commands<a class="headerlink" href="#i-o-commands" title="Permalink to this headline">¶</a></h3>
+<p>I/O commands are used to transfer data to and from the accelerators.</p>
+<p>Bits 15:0 of the <code class="docutils literal notranslate"><span class="pre">CDW12</span></code> field contain Accelerator ID.</p>
+<div class="section" id="send-data-to-accelerator-0x81">
+<h4>Send data to accelerator (0x81)<a class="headerlink" href="#send-data-to-accelerator-0x81" title="Permalink to this headline">¶</a></h4>
+<p>This command is used to fill accelerator input buffer with data from host memory.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CDW10</span></code> field contains the number of dwords to transfer.</p>
+</div>
+<div class="section" id="read-data-from-accelerator-0x82">
+<h4>Read data from accelerator (0x82)<a class="headerlink" href="#read-data-from-accelerator-0x82" title="Permalink to this headline">¶</a></h4>
+<p>This command is used to copy the accelerator output buffer to host memory.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CDW10</span></code> field contains the number of dwords to transfer.</p>
+</div>
+<div class="section" id="send-firmware-to-accelerator-0x85">
+<h4>Send Firmware to accelerator (0x85)<a class="headerlink" href="#send-firmware-to-accelerator-0x85" title="Permalink to this headline">¶</a></h4>
+<p>This command is used to upload firmware from the host memory to the selected accelerator firmware buffer.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CDW10</span></code> field contains the number of dwords to transfer.
+<code class="docutils literal notranslate"><span class="pre">CDW13</span></code> field contains Firmware ID.</p>
+</div>
+<div class="section" id="read-firmware-from-accelerator-0x86">
+<h4>Read Firmware from accelerator (0x86)<a class="headerlink" href="#read-firmware-from-accelerator-0x86" title="Permalink to this headline">¶</a></h4>
+<p>This command is used to download firmware with selected ID from accelerator firmware buffer to host.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CDW10</span></code> field contains number of dwords to transfer.
+<code class="docutils literal notranslate"><span class="pre">CDW13</span></code> field contains Firmware ID.</p>
+</div>
+<div class="section" id="use-local-storage-as-accelerator-input-0x88">
+<h4>Use local storage as accelerator input (0x88)<a class="headerlink" href="#use-local-storage-as-accelerator-input-0x88" title="Permalink to this headline">¶</a></h4>
+<p>This command is used to fill accelerator input buffer with data from local storage.</p>
+<p>This command reuse <code class="docutils literal notranslate"><span class="pre">CDW10</span></code> to <code class="docutils literal notranslate"><span class="pre">CDW13</span></code> field layout from standard <code class="docutils literal notranslate"><span class="pre">Read</span></code> command relocated to <code class="docutils literal notranslate"><span class="pre">CDW12</span></code> to <code class="docutils literal notranslate"><span class="pre">CDW15</span></code>.
+<code class="docutils literal notranslate"><span class="pre">CDW14</span></code> and <code class="docutils literal notranslate"><span class="pre">CDW15</span></code> from original <code class="docutils literal notranslate"><span class="pre">Read</span></code> command will not be used.</p>
+</div>
+<div class="section" id="use-local-storage-as-accelerator-output-0x8c">
+<h4>Use local storage as accelerator output (0x8c)<a class="headerlink" href="#use-local-storage-as-accelerator-output-0x8c" title="Permalink to this headline">¶</a></h4>
+<p>This command is used to copy accelerator output buffer to local storage.</p>
+<p>This command reuse <code class="docutils literal notranslate"><span class="pre">CDW10</span></code> to <code class="docutils literal notranslate"><span class="pre">CDW13</span></code> field layout from standard <code class="docutils literal notranslate"><span class="pre">Write</span></code> command relocated to <code class="docutils literal notranslate"><span class="pre">CDW12</span></code> to <code class="docutils literal notranslate"><span class="pre">CDW15</span></code>.
+<code class="docutils literal notranslate"><span class="pre">CDW14</span></code> and <code class="docutils literal notranslate"><span class="pre">CDW15</span></code> from original <code class="docutils literal notranslate"><span class="pre">Write</span></code> command will not be used.</p>
+</div>
+<div class="section" id="basic-accelerator-control-0x91">
+<h4>Basic Accelerator Control (0x91)<a class="headerlink" href="#basic-accelerator-control-0x91" title="Permalink to this headline">¶</a></h4>
+<p>This Basic Accelerator Control command is used to control the selected accelerator.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">CDW13</span></code> field will hold the operation identifier.</p>
+<p>Operation identifier will take one of the specified values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0x00</span></code> - Reset accelerator - revert the accelerator to a blank stopped state.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0x01</span></code> - Start accelerator - verify the accelerator configuration (i.e. data buffers, eBPF app) and start processing.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0x02</span></code> - Stop accelerator - stop processing without modifying the configuration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0x03</span></code> - Set active firmware - select the firmware which will be</p></li>
+</ul>
+<p>More operations are to be defined.</p>
+<p>The result of a certain operation can be retrieved with the <code class="docutils literal notranslate"><span class="pre">Get</span> <span class="pre">Accelerator</span> <span class="pre">Status</span></code> command.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Start</span> <span class="pre">accelerator</span></code> operation uses additional fields.</p>
+<p><code class="docutils literal notranslate"><span class="pre">DPTR</span></code> field contains location of Argument List in host memory.
+<code class="docutils literal notranslate"><span class="pre">CDW10</span></code> field contains Argument List length in dwords.
+<code class="docutils literal notranslate"><span class="pre">CDW14</span></code> field contains Firmware ID.</p>
+<p>Argument List will contain 0 or more concatenated entries.
+The table below depicts Argument List entry.</p>
+<table class="docutils align-default" id="id10">
+<caption><span class="caption-number">Table 10 </span><span class="caption-text">Argument List entry</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bytes</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0:3</p></td>
+<td><p>Argument entry length in bytes</p></td>
+</tr>
+<tr class="row-odd"><td><p>4:N</p></td>
+<td><p>Argument entry value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="section" id="example-command-flow">
+<h2>Example command flow<a class="headerlink" href="#example-command-flow" title="Permalink to this headline">¶</a></h2>
+<p>An example command flow that utilizes NVMe command set extensions is shown below.</p>
+<ol class="arabic simple">
+<li><p>Get basic information about the system:</p>
+<ol class="arabic simple">
+<li><p>Send the <code class="docutils literal notranslate"><span class="pre">Accelerator</span> <span class="pre">Identify</span></code> command with the length set to 8 bytes.</p>
+<ol class="arabic simple">
+<li><p>Verify that the first 4 bytes of the response match the magic value.</p></li>
+<li><p>Use the remaining 4 bytes as the Identify structure length.</p></li>
+</ol>
+</li>
+<li><p>Send the <code class="docutils literal notranslate"><span class="pre">Accelerator</span> <span class="pre">Identify</span></code> command again using the length obtained earlier.</p>
+<ol class="arabic simple">
+<li><p>Process the list of accelerators.</p></li>
+<li><p>Process the list of capabilities for each accelerator.</p></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>Enable accelerator subsystem</p>
+<ol class="arabic simple">
+<li><p>Send the <code class="docutils literal notranslate"><span class="pre">Global</span> <span class="pre">Accelerator</span> <span class="pre">Control</span></code> command with the operation ID set to <code class="docutils literal notranslate"><span class="pre">Enable</span> <span class="pre">accelerator</span> <span class="pre">subsystem</span></code>.</p></li>
+</ol>
+</li>
+<li><p>Load firmware to the accelerator (applicable only to accelerators supporting firmware reloading)</p>
+<ol class="arabic simple">
+<li><p>Check accelerator capabilities to verify that firmware loading is supported. The host software should cache the capabilities, so that it does not have to read it each time.</p></li>
+<li><p>Send the <code class="docutils literal notranslate"><span class="pre">Send</span> <span class="pre">Firmware</span> <span class="pre">to</span> <span class="pre">accelerator</span></code> command.</p>
+<ol class="arabic simple">
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">accelerator</span> <span class="pre">ID</span></code> field to select which accelerator will receive the firmware.</p></li>
+<li><p>Set the <code class="docutils literal notranslate"><span class="pre">firmware</span> <span class="pre">ID</span></code> to select firmware slot.</p></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>Send data to accelerator input buffer</p>
+<ol class="arabic simple">
+<li><p>Check accelerator capabilities to get input buffer size and use that as the upper limit on input data size. The host software should cache the capabilities so that it does not have to read it each time.</p></li>
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">accelerator</span> <span class="pre">ID</span></code> field to select which accelerator will receive the data.</p></li>
+<li><p>Send the data using either</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Send</span> <span class="pre">data</span> <span class="pre">to</span> <span class="pre">accelerator</span></code>, or</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Use</span> <span class="pre">local</span> <span class="pre">storage</span> <span class="pre">as</span> <span class="pre">accelerator</span> <span class="pre">input</span></code></p></li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>Start processing</p>
+<ol class="arabic simple">
+<li><p>Send the <code class="docutils literal notranslate"><span class="pre">Basic</span> <span class="pre">Accelerator</span> <span class="pre">Control</span></code> command.</p>
+<ol class="arabic simple">
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">accelerator</span> <span class="pre">id</span></code> to select which accelerator should start.</p></li>
+<li><p>Set operation ID to <code class="docutils literal notranslate"><span class="pre">Start</span> <span class="pre">accelerator</span></code>.</p></li>
+<li><p>Set the <code class="docutils literal notranslate"><span class="pre">Firmware</span> <span class="pre">ID</span></code> field to select firmware slot that should be used by the accelerator.</p></li>
+<li><p>Pack all the firmware arguments into the <code class="docutils literal notranslate"><span class="pre">Argument</span> <span class="pre">List</span></code> field</p></li>
+<li><p>Set correct list length and use <code class="docutils literal notranslate"><span class="pre">DPTR</span></code> to point to list location in memory.</p></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>Monitor accelerator status</p>
+<ol class="arabic simple">
+<li><p>Send the <code class="docutils literal notranslate"><span class="pre">Get</span> <span class="pre">Accelerator</span> <span class="pre">Status</span></code> command with the length set to 4 bytes and <code class="docutils literal notranslate"><span class="pre">RAE=1</span></code>.</p>
+<ol class="arabic simple">
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">Accelerator</span> <span class="pre">ID</span></code> field to select the target accelerator.</p></li>
+<li><p>Use the returned value as the status structure length.</p></li>
+</ol>
+</li>
+<li><p>Send the <code class="docutils literal notranslate"><span class="pre">Get</span> <span class="pre">Accelerator</span> <span class="pre">Status</span></code> command again using the retrieved length and <code class="docutils literal notranslate"><span class="pre">RAE=0</span></code>.</p>
+<ol class="arabic simple">
+<li><p>Check the <code class="docutils literal notranslate"><span class="pre">Status</span> <span class="pre">ID</span></code> field to see if the accelerator is still processing, is stopped or if an error has occurred.</p></li>
+<li><p>Use status descriptors to check capability-specific status information, e.g. the amount of output data produced for output data buffer capability.</p></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>Retrieve accelerator logs</p>
+<ol class="arabic simple">
+<li><p>Send the <code class="docutils literal notranslate"><span class="pre">Get</span> <span class="pre">Log</span> <span class="pre">Page</span></code> command with <code class="docutils literal notranslate"><span class="pre">Log</span> <span class="pre">Page</span> <span class="pre">Identifier</span> <span class="pre">=</span> <span class="pre">0xC0</span></code>, <code class="docutils literal notranslate"><span class="pre">RAE=1</span></code> and the length set to 4 bytes.</p>
+<ol class="arabic simple">
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">Log</span> <span class="pre">Specific</span> <span class="pre">Identifier</span></code> field to provide target accelerator ID.</p></li>
+<li><p>Use the returned value as the log page length.</p></li>
+</ol>
+</li>
+<li><p>Send the <code class="docutils literal notranslate"><span class="pre">Get</span> <span class="pre">Log</span> <span class="pre">Page</span></code> command again using the retrieved length and <code class="docutils literal notranslate"><span class="pre">RAE=0</span></code>.</p>
+<ol class="arabic simple">
+<li><p>Process the log entry list.</p></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>Retrieve data from the accelerator output buffer</p>
+<ol class="arabic simple">
+<li><p>Use the output data length obtained from <code class="docutils literal notranslate"><span class="pre">Get</span> <span class="pre">Accelerator</span> <span class="pre">Status</span></code> to see how much output data was produced.</p></li>
+<li><p>Transfer the data using either:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Read</span> <span class="pre">the</span> <span class="pre">data</span> <span class="pre">from</span> <span class="pre">accelerator</span></code>, or</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Use</span> <span class="pre">the</span> <span class="pre">local</span> <span class="pre">storage</span> <span class="pre">as</span> <span class="pre">accelerator</span> <span class="pre">output</span></code></p></li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          
+
+
+
+
+
+
+
+<footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tflite-models.html" class="btn btn-neutral float-right" title="TensorFlow Lite model preparation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rpu-software.html" class="btn btn-neutral float-left" title="RPU Software" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Antmicro, 2023;
+      
+        <span class="commit" data-home="..html">
+          Revision <a id="commitnewlink" href=""><code>83945484</code></a>;
+        </span>
+      
+      <span class="commit">
+        branch <a id="branchnewlink" href=""><code>main</code></a>.
+      </span>
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

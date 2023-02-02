@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>APU Software &mdash; Alkali CSD NVMe accelerators test platform</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="RPU Software" href="rpu-software.html" />
+    <link rel="prev" title="Host Software" href="host-software.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Alkali CSD NVMe accelerators test platform
+          
+
+          
+            
+            <img src="_static/logo-400-html.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repositories.html">Repository reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="architecture.html">System architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="fpga-design.html">FPGA design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory-map.html">Memory map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host-software.html">Host Software</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">APU Software</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#building-the-apu-software">Building the APU software</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apu-base-system">APU base system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ubpf-virtual-machine">uBPF Virtual Machine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#userspace-custom-nvme-command-handler">Userspace custom NVMe command handler</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#adding-support-for-new-nvme-commands">Adding support for new NVMe commands</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rpu-software.html">RPU Software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nvme-commands.html">NVMe commands and extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tflite-models.html">TensorFlow Lite model preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-accelerator.html">VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-delegated-ops.html">Operations accelerated on VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flashing-basalt.html">Flashing and connecting the Basalt board</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+        <div class="wide-toggle">
+          <span class="wide-toggle-btn">
+            Toggle wide view
+          </span>
+        </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Alkali CSD NVMe accelerators test platform</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="architecture.html">System architecture</a> &raquo;</li>
+        
+      <li>APU Software</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+      
+        <li class="wy-breadcrumbs-aside"><a href="alkali-csd-nvme-test-platform.pdf" class="fa fa-file-pdf-o"> PDF</a></li>
+      
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="apu-software">
+<h1>APU Software<a class="headerlink" href="#apu-software" title="Permalink to this headline">¶</a></h1>
+<p>This chapter describes the software that will be running on the APU (A53 cores) part of the Zynq US+ MPSoC.
+The APU software is responsible for processing the custom NVMe commands.</p>
+<p>The firmware is available under <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw">alkali-csd-fw</a>.</p>
+<div class="section" id="building-the-apu-software">
+<h2>Building the APU software<a class="headerlink" href="#building-the-apu-software" title="Permalink to this headline">¶</a></h2>
+<p>To build the system and necessary software, follow <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw/tree/main">alkali-csd-fw README</a>.</p>
+</div>
+<div class="section" id="apu-base-system">
+<h2>APU base system<a class="headerlink" href="#apu-base-system" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://github.com/xilinx/linux-xlnx">Linux Kernel linux-xlnx</a> is used as the operating system for the APU.
+<a class="reference external" href="https://buildroot.org/">Buildroot</a> is used to build all dependencies and utilities for the APU and creates rootfs.</p>
+<p>The rootfs contains basic set of system utilities, APU and RPU applications.</p>
+</div>
+<div class="section" id="ubpf-virtual-machine">
+<h2>uBPF Virtual Machine<a class="headerlink" href="#ubpf-virtual-machine" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://github.com/antmicro/ubpf/tree/61725ce189f65f8e9cf10985d5932dac9aa3b861">uBPF Virtual Machine</a> a user space software allowing execution of a BPF programs.
+the uBPF library is integrated with the APU application and is used to execute BPF payloads sent from the host.
+The capabilities of BPF programs can be easily extended by adding external functions that can be called from the BPF binary.
+Such functions are implemented in <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw/tree/main/apu-app/src/vm">alkali-csd-fw/tree/main/apu-app/src/vm</a>.</p>
+<p>Currently, the BPF programs allow to delegate inference of TFLite models to the VTA delegate.</p>
+<p>The example of such program is <a class="reference external" href="https://github.com/antmicro/alkali-csd-projects/blob/main/examples/tflite_vta/add/bpf.c">ADD runner in alkali-csd-projects project</a>.</p>
+</div>
+<div class="section" id="userspace-custom-nvme-command-handler">
+<h2>Userspace custom NVMe command handler<a class="headerlink" href="#userspace-custom-nvme-command-handler" title="Permalink to this headline">¶</a></h2>
+<p>Userspace application is used to handle custom Accelerator-related NVMe commands.
+Communication with firmware running on the RPU is achieved by using <a class="reference external" href="https://www.kernel.org/doc/Documentation/rpmsg.txt">rpmsg</a>.
+All vendor specific commands detected by the firmware are passed through to this application.</p>
+<p>The application is available in <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw/tree/main/apu-app">alkali-csd-fw/tree/main/apu-app</a>.</p>
+<div class="section" id="adding-support-for-new-nvme-commands">
+<span id="zcu-commands"></span><h3>Adding support for new NVMe commands<a class="headerlink" href="#adding-support-for-new-nvme-commands" title="Permalink to this headline">¶</a></h3>
+<p>Adding support for additional commands is fairly simple.
+Commands are dispatched by <code class="docutils literal notranslate"><span class="pre">handle_adm_cmd</span></code> and <code class="docutils literal notranslate"><span class="pre">handle_io_cmd</span></code> functions located in <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw/blob/main/apu-app/src/cmd.cpp">alkali-csd-fw/blob/main/apu-app/src/cmd.cpp</a>.
+To handle another command, simply expand the <code class="docutils literal notranslate"><span class="pre">switch</span></code> responsible for calling handlers by calling your new handler and then <code class="docutils literal notranslate"><span class="pre">send_ack</span></code> with proper ACK type (<code class="docutils literal notranslate"><span class="pre">PAYLOAD_ACK_DATA</span></code> when command returns data, <code class="docutils literal notranslate"><span class="pre">PAYLOAD_ACK</span></code> otherwise).
+Buffer with the command will be provided using <code class="docutils literal notranslate"><span class="pre">recv</span></code> and <code class="docutils literal notranslate"><span class="pre">mmap_buf</span></code> represents buffer for data transferred to or from host.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          
+
+
+
+
+
+
+
+<footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rpu-software.html" class="btn btn-neutral float-right" title="RPU Software" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="host-software.html" class="btn btn-neutral float-left" title="Host Software" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Antmicro, 2023;
+      
+        <span class="commit" data-home="..html">
+          Revision <a id="commitnewlink" href=""><code>83945484</code></a>;
+        </span>
+      
+      <span class="commit">
+        branch <a id="branchnewlink" href=""><code>main</code></a>.
+      </span>
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

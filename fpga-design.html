@@ -1,0 +1,382 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>FPGA design &mdash; Alkali CSD NVMe accelerators test platform</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Memory map" href="memory-map.html" />
+    <link rel="prev" title="System architecture" href="architecture.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Alkali CSD NVMe accelerators test platform
+          
+
+          
+            
+            <img src="_static/logo-400-html.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repositories.html">Repository reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="architecture.html">System architecture</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">FPGA design</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#building-the-design">Building the design</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nvme-register-module">NVMe register module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#generating-nvme-ip">Generating NVMe IP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#adding-new-registers">Adding new registers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#vta-module">VTA module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#built-artifacts">Built artifacts</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="memory-map.html">Memory map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host-software.html">Host Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apu-software.html">APU Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpu-software.html">RPU Software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nvme-commands.html">NVMe commands and extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tflite-models.html">TensorFlow Lite model preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-accelerator.html">VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-delegated-ops.html">Operations accelerated on VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flashing-basalt.html">Flashing and connecting the Basalt board</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+        <div class="wide-toggle">
+          <span class="wide-toggle-btn">
+            Toggle wide view
+          </span>
+        </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Alkali CSD NVMe accelerators test platform</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="architecture.html">System architecture</a> &raquo;</li>
+        
+      <li>FPGA design</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+      
+        <li class="wy-breadcrumbs-aside"><a href="alkali-csd-nvme-test-platform.pdf" class="fa fa-file-pdf-o"> PDF</a></li>
+      
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="fpga-design">
+<h1>FPGA design<a class="headerlink" href="#fpga-design" title="Permalink to this headline">¶</a></h1>
+<p>This chapter describes the FPGA design that will be used on the target platform.
+It will utilize Zynq US+ MPSoC’s PCIe hard block and additional supporting logic to handle NVMe physical layer and expose the NVMe configuration registers and DMAs to the RPU.</p>
+<p>A diagram that presents the connections between various elements of the design is shown below:</p>
+<div class="figure align-center">
+<img alt="design schematic" src="_images/nvme-system.png" />
+</div>
+<p>There are four major parts that can be distinguished:</p>
+<ul class="simple">
+<li><p>PCIe core, which will handle the basic PCIe protocol and will provide:</p>
+<ul>
+<li><p>Host access to NVMe control registers using BAR space</p></li>
+<li><p>Access to Host memory for PCIe DMA.</p></li>
+<li><p>Support for generating Host interrupts.</p></li>
+</ul>
+</li>
+<li><p>The RPU core, NVMe control reigsters and PCIe DMA that will be responsible for handling the base NVMe protocol:</p>
+<ul>
+<li><p>RPU will implement NVMe handling logic.</p></li>
+<li><p>NVMe control registers will provide register space required by the NVMe specification and will generate required interrupts, e.g. on writes to <code class="docutils literal notranslate"><span class="pre">Doorbell</span></code> registers).</p></li>
+<li><p>PCIe DMA will be responsible for transferring data to and from the Host memory.</p></li>
+</ul>
+</li>
+<li><p>The APU core and PS IPI core that will be responsible for handling custom NVMe commands:</p>
+<ul>
+<li><p>The IPI core will be used to communicate between RPU and APU.</p></li>
+<li><p>APU will implement logic that handles custom NVMe commands.</p></li>
+</ul>
+</li>
+<li><p>Shared PS DDR memory will be used by both APU and RPU cores and will be used as buffer before transferring NVMe data to/from the Host.</p></li>
+</ul>
+<div class="section" id="building-the-design">
+<h2>Building the design<a class="headerlink" href="#building-the-design" title="Permalink to this headline">¶</a></h2>
+<p>Instructions for building the design (and the whole project) are present in the <a class="reference external" href="https://github.com/antmicro/alkali-csd-projects">alkali-csd-projects README</a> and <a class="reference external" href="https://github.com/antmicro/alkali-csd-hw">alkali-csd-hw README</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Building the design will require Vivado 2019.2 to be installed on the development PC.</p>
+</div>
+</div>
+<div class="section" id="nvme-register-module">
+<span id="nvme-ip"></span><h2>NVMe register module<a class="headerlink" href="#nvme-register-module" title="Permalink to this headline">¶</a></h2>
+<p>The NVMe register module is an IP core written in Chisel that implements Controller Registers described in the NVMe Specification.</p>
+<p>The register map follows the register layout from the specification and by default contains 5 pairs of doorbell registers.</p>
+<p>On top of implementing basic Controller Registers, this module contains additional logic that is used by the firmware running on the RPU for:</p>
+<ul>
+<li><p>Generating RPU interrupts on Host writes</p>
+<blockquote>
+<div><p>On each Host write, register address is saved to Host Write Address FIFO which can later be accessed by the RPU to see which registers have been written and require action.</p>
+</div></blockquote>
+</li>
+<li><p>Generating Host interrupts</p>
+<blockquote>
+<div><p>RPU can trigger one of the 32 MSI interrupts by writing to a control register with correct bits set, e.g. writing a value with bit 31 set sends interrupt 31.</p>
+</div></blockquote>
+</li>
+</ul>
+<p>To be able to use those additional features, the core contains three additional registers:</p>
+<ul class="simple">
+<li><p>Interrupt Status Register - by default located at <code class="docutils literal notranslate"><span class="pre">0x1028</span></code> which returns <code class="docutils literal notranslate"><span class="pre">1</span></code> when there is at least one entry in Host Write Address FIFO.</p></li>
+<li><p>Interrupt Data Register - located at <code class="docutils literal notranslate"><span class="pre">0x102c</span></code> returns oldest entry from Host Write Address FIFO when read.</p></li>
+<li><p>Host Interrupt Register - located at <code class="docutils literal notranslate"><span class="pre">0x1030</span></code> triggers Host interrupt when written.</p></li>
+</ul>
+<div class="section" id="generating-nvme-ip">
+<h3>Generating NVMe IP<a class="headerlink" href="#generating-nvme-ip" title="Permalink to this headline">¶</a></h3>
+<p>NVMe IP is written in Chisel which means that synthesizable Verilog must be first generated from sources.
+The sources for generating NVMe IP is present in <a class="reference external" href="https://github.com/antmicro/alkali-csd-hw/tree/main/chisel">alkali-csd-hw/tree/main/chisel</a>.</p>
+<p>It is built within <a class="reference external" href="https://github.com/antmicro/alkali-csd-hw">alkali-csd-hw build flow, described in its README</a>.</p>
+<p>To just generate the NVMe IP, the following dependencies are required:</p>
+<ul class="simple">
+<li><p>Scala (2.13.0)</p></li>
+<li><p>SBT</p></li>
+<li><p>Java</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A <a class="reference external" href="https://github.com/antmicro/alkali-csd-hw/blob/main/hw.dockerfile">Dockerfile for building HW artifacts</a> is a recommended environment for generating the NVMe IP.</p>
+</div>
+<p>Once the dependencies are present, run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">antmicro</span><span class="o">/</span><span class="n">alkali</span><span class="o">-</span><span class="n">csd</span><span class="o">-</span><span class="n">hw</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">chisel</span>
+<span class="n">make</span> <span class="n">verilog</span>
+</pre></div>
+</div>
+<div class="section" id="updating-register-definitions">
+<h4>Updating register definitions<a class="headerlink" href="#updating-register-definitions" title="Permalink to this headline">¶</a></h4>
+<p>You can update the register definitions using <a class="reference external" href="https://github.com/antmicro/nvme-registers-generator">nvme-registers-generator</a>.</p>
+<p>Those generator scripts take the NVMe Specification <code class="docutils literal notranslate"><span class="pre">.pdf</span></code> file as an input and based on that generate register definitions that can be used in Chisel.</p>
+<p>For details on generating register definitions check the <a class="reference external" href="https://github.com/antmicro/nvme-registers-generator">nvme-registers-generator README</a> file in the repository.</p>
+</div>
+</div>
+<div class="section" id="adding-new-registers">
+<h3>Adding new registers<a class="headerlink" href="#adding-new-registers" title="Permalink to this headline">¶</a></h3>
+<p>NVMe IP can be expanded with additional registers, either unimplemented optional ones or vendor specific.</p>
+<p>To add a new register, you can use the following steps:</p>
+<ol class="arabic">
+<li><p>Check if your register layout is defined in <code class="docutils literal notranslate"><span class="pre">RegisterDefs.scala</span></code> (this only applies if you want do add an unimplemented register).
+Take a look into <code class="docutils literal notranslate"><span class="pre">CSRRegMap.scala</span></code> if your register was already defined - it might be already present as a simple <code class="docutils literal notranslate"><span class="pre">StorageRegister</span></code>.</p></li>
+<li><p>Add new register layout definition to <code class="docutils literal notranslate"><span class="pre">CSR.scala</span></code> if needed.</p>
+<p><code class="docutils literal notranslate"><span class="pre">IRQHOST</span></code> can be used as an example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>class<span class="w"> </span>IRQHOST<span class="w"> </span>extends<span class="w"> </span>RegisterDef<span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>val<span class="w"> </span><span class="nv">REQ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>UInt<span class="o">(</span><span class="m">32</span>.W<span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Instantiate new register as a module in <code class="docutils literal notranslate"><span class="pre">CSRFile.scala</span></code>, make all needed connections and add it to <code class="docutils literal notranslate"><span class="pre">regMap</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">IRQHOST</span></code> can be used as an example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>val<span class="w"> </span><span class="nv">irqHost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Module<span class="o">(</span>new<span class="w"> </span>AutoClearingRegister<span class="o">(</span>new<span class="w"> </span>IRQHOST,<span class="w"> </span>dataWidth<span class="o">))</span>
+
+println<span class="o">(</span>f<span class="s2">&quot;adding Host interrupt register at 0x</span><span class="si">${</span><span class="nv">irqHostBase</span><span class="si">}</span><span class="s2">%x&quot;</span><span class="o">)</span>
+regMap<span class="o">(</span>irqHostBase<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>irqHost
+
+io.irqHost<span class="w"> </span>:<span class="o">=</span><span class="w"> </span>irqHost.fields.REQ
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="vta-module">
+<h2>VTA module<a class="headerlink" href="#vta-module" title="Permalink to this headline">¶</a></h2>
+<p>The VTA is an IP core written in HLS that is used by TFLite to accelerate certain operations.
+You can find more information about using it in <a class="reference internal" href="vta-accelerator.html"><span class="doc">VTA accelerator</span></a>.</p>
+<p>To build the VTA and whole HW design, follow the <a class="reference external" href="https://github.com/antmicro/alkali-csd-hw/tree/main">README in alkali-csd-hw</a>.</p>
+</div>
+<div class="section" id="built-artifacts">
+<h2>Built artifacts<a class="headerlink" href="#built-artifacts" title="Permalink to this headline">¶</a></h2>
+<p>The ready-to-use binaries for the hardware are available under <a class="reference external" href="https://github.com/antmicro/alkali-csd-hw/releases">alkali-csd-hw releases</a>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          
+
+
+
+
+
+
+
+<footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="memory-map.html" class="btn btn-neutral float-right" title="Memory map" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="architecture.html" class="btn btn-neutral float-left" title="System architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Antmicro, 2023;
+      
+        <span class="commit" data-home="..html">
+          Revision <a id="commitnewlink" href=""><code>83945484</code></a>;
+        </span>
+      
+      <span class="commit">
+        branch <a id="branchnewlink" href=""><code>main</code></a>.
+      </span>
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

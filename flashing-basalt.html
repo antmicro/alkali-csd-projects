@@ -1,0 +1,328 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Flashing and connecting the Basalt board &mdash; Alkali CSD NVMe accelerators test platform</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Operations accelerated on VTA accelerator" href="vta-delegated-ops.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Alkali CSD NVMe accelerators test platform
+          
+
+          
+            
+            <img src="_static/logo-400-html.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repositories.html">Repository reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">System architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nvme-commands.html">NVMe commands and extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tflite-models.html">TensorFlow Lite model preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-accelerator.html">VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-delegated-ops.html">Operations accelerated on VTA accelerator</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Flashing and connecting the Basalt board</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#flashing-through-nvme-interface">Flashing through NVMe interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flashing-via-jtag-using-vivado">Flashing via JTAG using Vivado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#connecting-the-board-to-the-pc">Connecting the board to the PC</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+        <div class="wide-toggle">
+          <span class="wide-toggle-btn">
+            Toggle wide view
+          </span>
+        </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Alkali CSD NVMe accelerators test platform</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Flashing and connecting the Basalt board</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+      
+        <li class="wy-breadcrumbs-aside"><a href="alkali-csd-nvme-test-platform.pdf" class="fa fa-file-pdf-o"> PDF</a></li>
+      
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="flashing-and-connecting-the-basalt-board">
+<span id="basalt-flashing"></span><h1>Flashing and connecting the Basalt board<a class="headerlink" href="#flashing-and-connecting-the-basalt-board" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="flashing-through-nvme-interface">
+<h2>Flashing through NVMe interface<a class="headerlink" href="#flashing-through-nvme-interface" title="Permalink to this headline">¶</a></h2>
+<p>Using the <cite>fw-download</cite> and <cite>fw-commit</cite> commands you can flash new firmware to the onboard QSPI flash.</p>
+<p>First you need to send the firmware file to the device with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>nvme<span class="w"> </span>fw-download<span class="w"> </span>&lt;nvme<span class="w"> </span>device&gt;<span class="w"> </span>--fw<span class="o">=</span>&lt;boot.bin<span class="w"> </span>file&gt;<span class="w"> </span>--xfer<span class="o">=</span><span class="m">131072</span>
+</pre></div>
+</div>
+<p>And then trigger the flashing process with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>nvme<span class="w"> </span>fw-commit<span class="w"> </span>&lt;nvme<span class="w"> </span>device&gt;
+</pre></div>
+</div>
+<p>After running the <cite>fw-commit</cite> command you need to monitor <cite>apu-app</cite> logs to determine when flashing completes.
+Once completed then app prints out how much data was written:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Writing<span class="w"> </span><span class="m">50856272</span><span class="w"> </span>bytes<span class="w"> </span>of<span class="w"> </span>firmware<span class="w"> </span>to<span class="w"> </span>/dev/mtd0
+<span class="m">50856272</span><span class="w"> </span>bytes<span class="w"> </span>written
+</pre></div>
+</div>
+</div>
+<div class="section" id="flashing-via-jtag-using-vivado">
+<h2>Flashing via JTAG using Vivado<a class="headerlink" href="#flashing-via-jtag-using-vivado" title="Permalink to this headline">¶</a></h2>
+<p>In case of anything going wrong and you cannot access Basalt via NVMe you can flash it via JTAG and Vivado</p>
+<ol class="arabic simple">
+<li><p>First you need to ensure that Basalt won’t boot from QSPI because once it does the flashing will fail (Vivado hangs). There are two options available:</p></li>
+</ol>
+<blockquote>
+<div><p>a). Select JTAG boot mode</p>
+<blockquote>
+<div><p>To do this use the tiny dipsitches on the board, they should be accessible through a window in the cover. Set MODE to <code class="docutils literal notranslate"><span class="pre">3'b000</span></code> by turning on all of them (on = low).</p>
+</div></blockquote>
+<p>b). Erase the QSPI flash</p>
+<blockquote>
+<div><p>This is possible provided that you have access to the UART and at least U-Boot works. Interrupt the boot process by hitting enter in the UART console right after powering on the board (PCIe need not to be connected). Once you get an U-Boot prompt (it should say “ZynqMP&gt;”) issue the following commands to erase the flash completely:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sf</span> <span class="n">probe</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="n">sf</span> <span class="n">erase</span> <span class="mi">0</span> <span class="mh">0x8000000</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Once the flash is erased the board needs to be power cycled.</p>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p>Vivado needs the <code class="docutils literal notranslate"><span class="pre">BOOT.bin</span></code> file as well as <code class="docutils literal notranslate"><span class="pre">fsbl.elf</span></code> separately. <strong>Do not extract and use the FSBL from BOOT.bin as it won’t work</strong> But you can use the same FSBL that was used to created <code class="docutils literal notranslate"><span class="pre">BOOT.bin</span></code>.</p></li>
+<li><p>Connect a JTAG adapter compatible with Vivado to the J2 connector on the Basalt board.</p></li>
+<li><p>Launch Vivado (tested with 2019.2 and 2021.2). It is best to do that from a terminal as during flashing it will output some progress information there which is not visible in GUI</p></li>
+<li><p>Open a new HW target, You should see two “devices”: <code class="docutils literal notranslate"><span class="pre">xczu7_0</span></code> and <code class="docutils literal notranslate"><span class="pre">arm_dap_1</span></code>.</p></li>
+<li><p>Right click the first one and select “Add configuration memory device”. Select <code class="docutils literal notranslate"><span class="pre">mt25ql01g-qspi-x4-single</span></code> for the flash type (whether it is x1, x2 or x4 should not matter).</p></li>
+<li><p>Point Vivado to the <code class="docutils literal notranslate"><span class="pre">BOOT.bin</span></code> file for Basalt as well as to the extracted <code class="docutils literal notranslate"><span class="pre">fsbl.elf</span></code> file.</p></li>
+<li><p>Uncheck the “Erase” option (the flash has been already erased) and “Verify” (for speedup, unless you want to be absolutely sure that the flashing succeeds). Click “OK”</p></li>
+<li><p>Vivado should start flashing which may take ~30min. In the terminal (used to run Vivado) you should see the following (or simial) output:</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Using</span> <span class="n">default</span> <span class="n">mini</span> <span class="n">u</span><span class="o">-</span><span class="n">boot</span> <span class="n">image</span> <span class="n">file</span> <span class="o">-</span> <span class="o">../</span><span class="n">Vivado</span><span class="o">/</span><span class="mf">2021.2</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">xicom</span><span class="o">/</span><span class="n">cfgmem</span><span class="o">/</span><span class="n">uboot</span><span class="o">/</span><span class="n">zynqmp_qspi_x4_single</span><span class="o">.</span><span class="n">bin</span>
+<span class="o">=====</span> <span class="n">mrd</span><span class="o">-&gt;</span><span class="n">addr</span><span class="o">=</span><span class="mh">0xFF5E0204</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="mh">0x00000222</span> <span class="o">=====</span>
+<span class="n">BOOT_MODE</span> <span class="n">REG</span> <span class="o">=</span> <span class="mh">0x0222</span>
+<span class="n">Downloading</span> <span class="n">FSBL</span><span class="o">...</span>
+<span class="n">Running</span> <span class="n">FSBL</span><span class="o">...</span>
+<span class="o">=====</span> <span class="n">mrd</span><span class="o">-&gt;</span><span class="n">addr</span><span class="o">=</span><span class="mh">0xFFD80044</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="mh">0x00000000</span> <span class="o">=====</span>
+<span class="o">=====</span> <span class="n">mrd</span><span class="o">-&gt;</span><span class="n">addr</span><span class="o">=</span><span class="mh">0xFFD80044</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="mh">0x00000003</span> <span class="o">=====</span>
+<span class="n">Finished</span> <span class="n">running</span> <span class="n">FSBL</span><span class="o">.</span>
+
+<span class="n">U</span><span class="o">-</span><span class="n">Boot</span> <span class="mf">2021.01</span><span class="o">-</span><span class="mi">00102</span><span class="o">-</span><span class="n">g43adebe</span> <span class="p">(</span><span class="n">Oct</span> <span class="mi">11</span> <span class="mi">2021</span> <span class="o">-</span> <span class="mi">01</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">06</span> <span class="o">-</span><span class="mi">0600</span><span class="p">)</span>
+
+<span class="n">Model</span><span class="p">:</span> <span class="n">ZynqMP</span> <span class="n">MINI</span> <span class="n">QSPI</span> <span class="n">SINGLE</span>
+<span class="n">Board</span><span class="p">:</span> <span class="n">Xilinx</span> <span class="n">ZynqMP</span>
+<span class="n">DRAM</span><span class="p">:</span>  <span class="n">WARNING</span><span class="p">:</span> <span class="n">Initializing</span> <span class="n">TCM</span> <span class="n">overwrites</span> <span class="n">TCM</span> <span class="n">content</span>
+<span class="mi">256</span> <span class="n">KiB</span>
+<span class="n">EL</span> <span class="n">Level</span><span class="p">:</span>       <span class="n">EL3</span>
+<span class="n">Multiboot</span><span class="p">:</span>      <span class="mi">16384</span>
+<span class="n">In</span><span class="p">:</span>    <span class="n">dcc</span>
+<span class="n">Out</span><span class="p">:</span>   <span class="n">dcc</span>
+<span class="n">Err</span><span class="p">:</span>   <span class="n">dcc</span>
+<span class="n">ZynqMP</span><span class="o">&gt;</span> <span class="n">sf</span> <span class="n">probe</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="n">SF</span><span class="p">:</span> <span class="n">Detected</span> <span class="n">n25q00a</span> <span class="k">with</span> <span class="n">page</span> <span class="n">size</span> <span class="mi">256</span> <span class="n">Bytes</span><span class="p">,</span> <span class="n">erase</span> <span class="n">size</span> <span class="mi">64</span> <span class="n">KiB</span><span class="p">,</span> <span class="n">total</span> <span class="mi">128</span> <span class="n">MiB</span>
+<span class="n">ZynqMP</span><span class="o">&gt;</span> <span class="n">Sector</span> <span class="n">size</span> <span class="o">=</span> <span class="mf">65536.</span>
+<span class="n">sf</span> <span class="n">write</span> <span class="n">FFFC0000</span> <span class="mi">0</span> <span class="mi">20000</span>
+<span class="n">device</span> <span class="mi">0</span> <span class="n">offset</span> <span class="mh">0x0</span><span class="p">,</span> <span class="n">size</span> <span class="mh">0x20000</span>
+<span class="n">SF</span><span class="p">:</span> <span class="mi">131072</span> <span class="nb">bytes</span> <span class="o">@</span> <span class="mh">0x0</span> <span class="n">Written</span><span class="p">:</span> <span class="n">OK</span>
+<span class="n">ZynqMP</span><span class="o">&gt;</span> <span class="n">sf</span> <span class="n">write</span> <span class="n">FFFC0000</span> <span class="mi">20000</span> <span class="mi">20000</span>
+<span class="n">device</span> <span class="mi">0</span> <span class="n">offset</span> <span class="mh">0x20000</span><span class="p">,</span> <span class="n">size</span> <span class="mh">0x20000</span>
+<span class="n">SF</span><span class="p">:</span> <span class="mi">131072</span> <span class="nb">bytes</span> <span class="o">@</span> <span class="mh">0x20000</span> <span class="n">Written</span><span class="p">:</span> <span class="n">OK</span>
+</pre></div>
+</div>
+<p>The last three lines should continuously repead with increasing addresses.</p>
+</div></blockquote>
+<ol class="arabic simple" start="10">
+<li><p>Once the flashing is complete power cycle the board.</p></li>
+</ol>
+</div>
+<div class="section" id="connecting-the-board-to-the-pc">
+<h2>Connecting the board to the PC<a class="headerlink" href="#connecting-the-board-to-the-pc" title="Permalink to this headline">¶</a></h2>
+<p>For instructions on connecting the board to the PC follow <a class="reference external" href="https://github.com/antmicro/alkali-csd-projects">alkali-csd-projects README</a>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          
+
+
+
+
+
+
+
+<footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="vta-delegated-ops.html" class="btn btn-neutral float-left" title="Operations accelerated on VTA accelerator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Antmicro, 2023;
+      
+        <span class="commit" data-home="..html">
+          Revision <a id="commitnewlink" href=""><code>83945484</code></a>;
+        </span>
+      
+      <span class="commit">
+        branch <a id="branchnewlink" href=""><code>main</code></a>.
+      </span>
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,332 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Memory map &mdash; Alkali CSD NVMe accelerators test platform</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Host Software" href="host-software.html" />
+    <link rel="prev" title="FPGA design" href="fpga-design.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Alkali CSD NVMe accelerators test platform
+          
+
+          
+            
+            <img src="_static/logo-400-html.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repositories.html">Repository reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="architecture.html">System architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="fpga-design.html">FPGA design</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Memory map</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pcie-and-nvme-cores">PCIe and NVMe Cores</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vta-cores">VTA Cores</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rpu-apu-shared-memory">RPU-APU shared memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ramdisk-area">Ramdisk area</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="host-software.html">Host Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apu-software.html">APU Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpu-software.html">RPU Software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nvme-commands.html">NVMe commands and extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tflite-models.html">TensorFlow Lite model preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-accelerator.html">VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-delegated-ops.html">Operations accelerated on VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flashing-basalt.html">Flashing and connecting the Basalt board</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+        <div class="wide-toggle">
+          <span class="wide-toggle-btn">
+            Toggle wide view
+          </span>
+        </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Alkali CSD NVMe accelerators test platform</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="architecture.html">System architecture</a> &raquo;</li>
+        
+      <li>Memory map</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+      
+        <li class="wy-breadcrumbs-aside"><a href="alkali-csd-nvme-test-platform.pdf" class="fa fa-file-pdf-o"> PDF</a></li>
+      
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="memory-map">
+<span id="id1"></span><h1>Memory map<a class="headerlink" href="#memory-map" title="Permalink to this headline">¶</a></h1>
+<p>Multiple memory areas are used in the system, this includes both register areas for IP cores and shared memory:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 24%" />
+<col style="width: 42%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Base</p></td>
+<td><p>Size</p></td>
+<td><p>Name</p></td>
+</tr>
+<tr class="row-even"><td><p>0x6000_0000</p></td>
+<td><p>128 MiB</p></td>
+<td><p>RPU FW area</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x6800_0000</p></td>
+<td><p>384 MiB</p></td>
+<td><p>NVMe ramdisk</p></td>
+</tr>
+<tr class="row-even"><td><p>0xA000_0000</p></td>
+<td><p>64 KiB</p></td>
+<td><p>PCIe DMA IP</p></td>
+</tr>
+<tr class="row-odd"><td><p>0xA001_0000</p></td>
+<td><p>64 KiB</p></td>
+<td><p>NVMe IP</p></td>
+</tr>
+<tr class="row-even"><td><p>0xB000_0000</p></td>
+<td><p>4 KiB</p></td>
+<td><p>VTA Fetch IP</p></td>
+</tr>
+<tr class="row-odd"><td><p>0xB000_1000</p></td>
+<td><p>4 KiB</p></td>
+<td><p>VTA Load IP</p></td>
+</tr>
+<tr class="row-even"><td><p>0xB000_2000</p></td>
+<td><p>4 KiB</p></td>
+<td><p>VTA Compute IP</p></td>
+</tr>
+<tr class="row-odd"><td><p>0xB000_3000</p></td>
+<td><p>4 KiB</p></td>
+<td><p>VTA Store IP</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="pcie-and-nvme-cores">
+<span id="nvme-cores"></span><h2>PCIe and NVMe Cores<a class="headerlink" href="#pcie-and-nvme-cores" title="Permalink to this headline">¶</a></h2>
+<p>Location of PCIe and NVMe cores in memory map is set in Vivado design located in <a class="reference external" href="https://github.com/antmicro/alkali-csd-hw/tree/main/vivado">alkali-csd-hw/tree/main/vivado</a>.
+After making changes to their addresses you need to adjust <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw/blob/main/rpu-app/nvme.overlay">nvme.overlay for RPU firmware</a> to contain correct base addresses.</p>
+</div>
+<div class="section" id="vta-cores">
+<span id="id2"></span><h2>VTA Cores<a class="headerlink" href="#vta-cores" title="Permalink to this headline">¶</a></h2>
+<p>Location of VTA cores in memory map is set in Vivado design located in <a class="reference external" href="https://github.com/antmicro/alkali-csd-hw/tree/main/vivado">alkali-csd-hw/tree/main/vivado</a>.
+After making changes to their addresses you need to adjust <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw/blob/main/apu-app/src/vta/vta_params.hpp">vta_params.hpp</a> file used by the <code class="docutils literal notranslate"><span class="pre">apu-app</span></code> to contain correct base addresses.</p>
+</div>
+<div class="section" id="rpu-apu-shared-memory">
+<span id="rpu-memory"></span><h2>RPU-APU shared memory<a class="headerlink" href="#rpu-apu-shared-memory" title="Permalink to this headline">¶</a></h2>
+<p>The main memory is shared between Linux running on the APU and Zephyr RTOS app running on the RPU.
+To ensure that the two don’t interfere with each other a memory range dedicated to the RPU needs to be defined.
+It can then be used in Linux to reserve that part of the RAM and in Zephyr to limit size of the application and its buffers.
+In both cases this is defined via the devicetree.</p>
+<p>For RPU it is defined in <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw/blob/main/rpu-app/nvme.overlay">nvme.overlay</a> as <code class="docutils literal notranslate"><span class="pre">sram0</span></code> which represents area for the firmware.
+In APU case it is declared in:</p>
+<ul class="simple">
+<li><p>an300 - <code class="docutils literal notranslate"><span class="pre">zynqmp-an300-nvme.dts</span></code> added in <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw/blob/main/br2-external/common/patches/linux/0012-dts-add-an300-support.patch">alkali-csd-fw/blob/main/br2-external/common/patches/linux/0012-dts-add-an300-support.patch</a></p></li>
+<li><p>zcu106 - <code class="docutils literal notranslate"><span class="pre">zynqmp-zcu106-nvme.dts</span></code> added in <a class="reference external" href="https://github.com/antmicro/lkali-csd-fw/blob/main/br2-external/common/patches/linux/0003-dts-add-separate-devicetree-for-NVMe-ZCU106.patch">lkali-csd-fw/blob/main/br2-external/common/patches/linux/0003-dts-add-separate-devicetree-for-NVMe-ZCU106.patch</a></p></li>
+</ul>
+<p>as <code class="docutils literal notranslate"><span class="pre">reserved-memory</span></code>.</p>
+</div>
+<div class="section" id="ramdisk-area">
+<h2>Ramdisk area<a class="headerlink" href="#ramdisk-area" title="Permalink to this headline">¶</a></h2>
+<p>Ramdisk is also located in the main memory and is shared between Linux on the APU and Zephyr on the RPU.
+For RPU it is defined in <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw/blob/main/rpu-app/nvme.overlay">nvme.overlay</a> as <code class="docutils literal notranslate"><span class="pre">sram1</span></code>.
+In APU case it is declared in <code class="docutils literal notranslate"><span class="pre">zynqmp-basalt-nvme.dts</span></code> as part of <code class="docutils literal notranslate"><span class="pre">reserved-memory</span></code> and you need to adjust <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw/blob/main/apu-app/src/lba.h">alkali-csd-fw/blob/main/apu-app/src/lba.h</a> in <code class="docutils literal notranslate"><span class="pre">apu-app</span></code> when changing ramdisk location in Zephyr.
+To access a particular page you need to first calculate it’s offset with <code class="docutils literal notranslate"><span class="pre">(lba</span> <span class="pre">*</span> <span class="pre">RAMDISK_PAGE)</span> <span class="pre">+</span> <span class="pre">RAMDISK_BASE</span></code> and then either use that address directly (in case of RPU) or MMAP it (on APU).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Accessing ramdisk area from the BPF code is achieved with help of <code class="docutils literal notranslate"><span class="pre">Use</span> <span class="pre">local</span> <span class="pre">storage</span> <span class="pre">as</span> <span class="pre">accelerator</span> <span class="pre">input</span></code> and <code class="docutils literal notranslate"><span class="pre">Use</span> <span class="pre">local</span> <span class="pre">storage</span> <span class="pre">as</span> <span class="pre">accelerator</span> <span class="pre">output</span></code> commands.
+Those commands take LBA value to calculate correct offset, MMAP it and then pass it as a pointer to your main BPF function.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          
+
+
+
+
+
+
+
+<footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="host-software.html" class="btn btn-neutral float-right" title="Host Software" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="fpga-design.html" class="btn btn-neutral float-left" title="FPGA design" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Antmicro, 2023;
+      
+        <span class="commit" data-home="..html">
+          Revision <a id="commitnewlink" href=""><code>83945484</code></a>;
+        </span>
+      
+      <span class="commit">
+        branch <a id="branchnewlink" href=""><code>main</code></a>.
+      </span>
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

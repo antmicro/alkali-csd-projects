@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Alkali CSD NVMe accelerators test platform &mdash; Alkali CSD NVMe accelerators test platform</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> Alkali CSD NVMe accelerators test platform
+          
+
+          
+            
+            <img src="_static/logo-400-html.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repositories.html">Repository reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">System architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nvme-commands.html">NVMe commands and extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tflite-models.html">TensorFlow Lite model preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-accelerator.html">VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-delegated-ops.html">Operations accelerated on VTA accelerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flashing-basalt.html">Flashing and connecting the Basalt board</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+        <div class="wide-toggle">
+          <span class="wide-toggle-btn">
+            Toggle wide view
+          </span>
+        </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Alkali CSD NVMe accelerators test platform</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Alkali CSD NVMe accelerators test platform</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+      
+        <li class="wy-breadcrumbs-aside"><a href="alkali-csd-nvme-test-platform.pdf" class="fa fa-file-pdf-o"> PDF</a></li>
+      
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="project">
+<h1>Alkali CSD NVMe accelerators test platform<a class="headerlink" href="#project" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repositories.html">Repository reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">System architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fpga-design.html">FPGA design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory-map.html">Memory map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host-software.html">Host Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apu-software.html">APU Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpu-software.html">RPU Software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nvme-commands.html">NVMe commands and extensions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nvme-commands.html#basic-nvme-operations">Basic NVMe operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nvme-commands.html#nvme-vendor-extensions">NVMe Vendor extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nvme-commands.html#custom-nvme-commands">Custom NVMe commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nvme-commands.html#example-command-flow">Example command flow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tflite-models.html">TensorFlow Lite model preparation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tflite-models.html#tensorflow-lite-models-and-runtime">TensorFlow Lite models and runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tflite-models.html#test-models-used-in-development">Test models used in development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tflite-models.html#compiling-the-tensorflow-lite-models-with-examples">Compiling the TensorFlow Lite models with examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vta-accelerator.html">VTA accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="vta-accelerator.html#basic-information">Basic information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vta-accelerator.html#key-parameters-of-the-vta-accelerator">Key parameters of the VTA accelerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vta-accelerator.html#vta-instructions">VTA instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vta-accelerator.html#the-structure-of-the-vta-accelerator">The structure of the VTA accelerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vta-accelerator.html#vta-module-synchronization-mechanism">VTA module synchronization mechanism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vta-accelerator.html#vta-memory-addressing-scheme">VTA memory/addressing scheme</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vta-delegated-ops.html">Operations accelerated on VTA accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="vta-delegated-ops.html#tensorflow-lite-delegation-scheme">TensorFlow Lite delegation scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vta-delegated-ops.html#adding-a-new-operator-to-the-delegate-with-8-bit-precision">Adding a new operator to the delegate with 8-bit precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vta-delegated-ops.html#add-operator">ADD operator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vta-delegated-ops.html#conv2d-operator">CONV2D operator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vta-delegated-ops.html#further-work">Further work</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vta-delegated-ops.html#resources">Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="flashing-basalt.html">Flashing and connecting the Basalt board</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="flashing-basalt.html#flashing-through-nvme-interface">Flashing through NVMe interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flashing-basalt.html#flashing-via-jtag-using-vivado">Flashing via JTAG using Vivado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flashing-basalt.html#connecting-the-board-to-the-pc">Connecting the board to the PC</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          
+
+
+
+
+
+
+
+<footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="introduction.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Antmicro, 2023;
+      
+        <span class="commit" data-home="..html">
+          Revision <a id="commitnewlink" href=""><code>83945484</code></a>;
+        </span>
+      
+      <span class="commit">
+        branch <a id="branchnewlink" href=""><code>main</code></a>.
+      </span>
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

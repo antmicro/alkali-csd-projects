@@ -1,0 +1,550 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Operations accelerated on VTA accelerator &mdash; Alkali CSD NVMe accelerators test platform</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Flashing and connecting the Basalt board" href="flashing-basalt.html" />
+    <link rel="prev" title="VTA accelerator" href="vta-accelerator.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Alkali CSD NVMe accelerators test platform
+          
+
+          
+            
+            <img src="_static/logo-400-html.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repositories.html">Repository reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">System architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nvme-commands.html">NVMe commands and extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tflite-models.html">TensorFlow Lite model preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vta-accelerator.html">VTA accelerator</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Operations accelerated on VTA accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tensorflow-lite-delegation-scheme">TensorFlow Lite delegation scheme</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#simpledelegateinterface">SimpleDelegateInterface</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-a-new-operator-to-the-delegate-with-8-bit-precision">Adding a new operator to the delegate with 8-bit precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#add-operator">ADD operator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conv2d-operator">CONV2D operator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#further-work">Further work</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#resources">Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="flashing-basalt.html">Flashing and connecting the Basalt board</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+        <div class="wide-toggle">
+          <span class="wide-toggle-btn">
+            Toggle wide view
+          </span>
+        </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Alkali CSD NVMe accelerators test platform</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Operations accelerated on VTA accelerator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+      
+        <li class="wy-breadcrumbs-aside"><a href="alkali-csd-nvme-test-platform.pdf" class="fa fa-file-pdf-o"> PDF</a></li>
+      
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="operations-accelerated-on-vta-accelerator">
+<h1>Operations accelerated on VTA accelerator<a class="headerlink" href="#operations-accelerated-on-vta-accelerator" title="Permalink to this headline">¶</a></h1>
+<p>This chapter describes the currently supported TFLite operations on VTA accelerator.</p>
+<div class="section" id="tensorflow-lite-delegation-scheme">
+<h2>TensorFlow Lite delegation scheme<a class="headerlink" href="#tensorflow-lite-delegation-scheme" title="Permalink to this headline">¶</a></h2>
+<p>TensorFlow Lite allows to delegate certain operations to an accelerator using the Delegate API. It consists of:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SimpleDelegateInterface</span></code> - is executed during initialization of model runtime, it decides what operations should be delegated to the accelerator based on its capabilities.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SimpleDelegateKernelInterface</span></code> - is executed during inference, it implements the communication with the accelerator to compute and obtain results.</p></li>
+</ul>
+<div class="section" id="simpledelegateinterface">
+<h3>SimpleDelegateInterface<a class="headerlink" href="#simpledelegateinterface" title="Permalink to this headline">¶</a></h3>
+<p>In the VTA delegate implementation, the <code class="docutils literal notranslate"><span class="pre">VTADelegate</span></code> class derives from <code class="docutils literal notranslate"><span class="pre">SimpleDelegateInterface</span></code>.</p>
+<p>This class requires implementing following methods:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IsNodeSupportedByDelegate</span></code> - this function decides whether the node (operation in the neural network model) can be delegated or not to the accelerator.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Initialize</span></code> - performs initialization actions for the delegation checker, not the accelerator itself.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Name</span></code> - returns the name of the delegate.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CreateDelegateKernelInterface</span></code> - creates an object inheriting from <code class="docutils literal notranslate"><span class="pre">SimpleDelegateKernelInterface</span></code>.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">IsNodeSupportedByDelegate</span></code> receives:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">registration</span></code> data, such as <code class="docutils literal notranslate"><span class="pre">builtin_code</span></code> or <code class="docutils literal notranslate"><span class="pre">custom_name</span></code>, telling the type of the operator (e.g. <code class="docutils literal notranslate"><span class="pre">kTfLiteBuiltinAdd</span></code>, <code class="docutils literal notranslate"><span class="pre">kTfLiteBuiltinConv2d</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">node</span></code> is a pointer to the current node that is being considered for delegation.
+It contains such data as indices for inputs, outputs, intermediate and temporary tensors (indices to tensors in <code class="docutils literal notranslate"><span class="pre">context-&gt;tensors</span></code> array)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">context</span></code> - a TFLite context containing list and count of tensors in the model, execution plan and methods for getting and manipulating tensors.</p></li>
+</ul>
+<p>It returns <code class="docutils literal notranslate"><span class="pre">true</span></code> when the node can be delegated, <code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">VTADelegate</span></code>, the currently supported operators are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">kTfLiteBuiltinAdd</span></code> - tensor addition of elements in 8-bit format.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kTfLiteBuiltinConv2d</span></code> - 2D convolution, with 8-bit inputs, kernels, outputs and 32-bit bias.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The support for <code class="docutils literal notranslate"><span class="pre">kTfLiteBuiltinConv2d</span></code> is not complete.</p>
+</div>
+</div>
+</div>
+<div class="section" id="adding-a-new-operator-to-the-delegate-with-8-bit-precision">
+<h2>Adding a new operator to the delegate with 8-bit precision<a class="headerlink" href="#adding-a-new-operator-to-the-delegate-with-8-bit-precision" title="Permalink to this headline">¶</a></h2>
+<p>The neural network models usually operate using 32-bit floats, as required during the training process to train them efficiently.
+However, VTA accelerator can only operate on quantized models, where weights and activations are 8-bit.</p>
+<p>TensorFlow Lite provides methods for quantizing neural networks, as well as necessary parameters to infer quantized models during inference.</p>
+<p>During the quantization process, the algorithm passes the calibration dataset through the neural network, and computes the following parameters for every tensor in the network (input tensors, output tensors, activation tensors, weights’ tensors):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">scale</span></code> - 32-bit float</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zero_point</span></code> - 8-bit signed integer</p></li>
+</ul>
+<p>During inference, the floating-point operations are simulated with integers using dequantization and requantization.
+Dequantization is the process of representing quantized number in a higher-precision form (e.g. 32-bit integers representing fixed-point arithmetics, as in TensorFlow Lite). Requantization is a process of bringing higher precision values (e.g. 32-bit accumulators) to 8-bit representation.</p>
+<p>The requantization (or rather quantization) and dequantization process includes inputs and outputs.</p>
+<p>The formula for quantization with given <code class="docutils literal notranslate"><span class="pre">scale</span></code> and <code class="docutils literal notranslate"><span class="pre">zero_point</span></code> is following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Q</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span> <span class="o">/</span> <span class="n">scale</span><span class="p">)</span> <span class="o">+</span> <span class="n">zero_point</span>
+</pre></div>
+</div>
+<p>The dequantization, on the other hand, is computed as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">D</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="o">=</span> <span class="n">cast</span><span class="o">&lt;</span><span class="nb">type</span><span class="o">&gt;</span><span class="p">(</span><span class="n">q</span> <span class="o">-</span> <span class="n">zero_point</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span>
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">type</span></code> corresponds to the type after dequantization (in terms of network’s outputs it is 32-bit float).</p>
+<p>When it comes to operations within the neural network, each input tensor (activations, weights, …) of the node (operation) needs to be dequantized, and the final output of a given node (operation) needs to be requantized.</p>
+<p>What is more, to prevent overflows, the clamping of the outputs is performed on every outputs.</p>
+<p>To sum up, the flow of every node should look as follow:</p>
+<ul class="simple">
+<li><p>Dequantize all input tensors</p></li>
+<li><p>Compute the operation on dequantized input tensors</p></li>
+<li><p>Requantize the output tensors (in higher precision)</p></li>
+<li><p>Clamp values in output tensors to range (the range may differ depending on the operator, usually it is the range of values in quantized values)</p></li>
+<li><p>Cast the output tensors to a target type</p></li>
+<li><p>Return the outputs.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">scale</span></code> and <code class="docutils literal notranslate"><span class="pre">zero_point</span></code> parameters can be computed per-tensor, or per-channel.
+The details which variant is used in a given operation is described in <a class="reference external" href="https://www.tensorflow.org/lite/performance/quantization_spec">TensorFlow Lite Quantization specification</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is possible to simplify requantization/dequantization process for certain operations by simplifying formulas.</p>
+</div>
+<p>In TensorFlow Lite, since the operations are supposed to be quantized and scales are 32-bit floating points, they are firstly decomposed into a normalized fraction and an integral power of two (shift):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scale</span> <span class="o">=</span> <span class="n">multiplier</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">^</span> <span class="p">(</span><span class="n">shift</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>E.g. for value 96 the multiplier is 0.75 and shift is 7.
+The shift in TensorFlow Lite a 32-bit signed integer, and the multiplier is again 32-bit floating point value in range [0.5-1.0].</p>
+<p>Secondly, the multiplier is multiplied by <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">^</span> <span class="pre">31</span></code> and stored as a 32-bit Integer.</p>
+<p>The above approach present in TensorFlow lite requires up to 64-bit registers during requantization when the 32-bit integer value (subtracted by zero point) is multiplied by 32-bit signed integer representing multiplier.</p>
+<p>VTA accelerator cannot follow this scheme since the ACC SRAM has only 32-bit width.</p>
+<p>To address this, the VTA delegate follows a customized approach where multiplier and shift are 16-bit signed integers instead of 32-bit signed integers.
+This, in the peak processing requires 32-bit registers, which still fits in VTA capabilities.</p>
+<p>To sum up, the computation of multiplier and shift looks as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">q</span> <span class="o">=</span> <span class="n">frexp</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">shift32</span><span class="p">);</span>
+<span class="n">q_fixed</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">q</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">15</span><span class="p">));</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">q_fixed</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">15</span><span class="p">))</span>
+<span class="p">{</span>
+    <span class="n">q_fixed</span> <span class="o">/=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="o">++</span><span class="n">shift32</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">multiplier</span> <span class="o">=</span> <span class="n">static_cast</span><span class="o">&lt;</span><span class="n">int16_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">q_fixed</span><span class="p">);</span>
+<span class="n">shift</span> <span class="o">=</span> <span class="n">static_cast</span><span class="o">&lt;</span><span class="n">int16_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">shift32</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Dequantization of values is computed as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">valoffset</span> <span class="o">=</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">val</span><span class="p">;</span> <span class="o">//</span> <span class="nb">max</span> <span class="mi">7</span> <span class="n">bits</span> <span class="n">required</span>
+<span class="n">valshift</span> <span class="o">=</span> <span class="n">valoffset</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">left_shift</span><span class="p">);</span> <span class="o">//</span> <span class="o">~</span><span class="mi">15</span> <span class="n">bits</span> <span class="n">required</span>
+<span class="n">valscaledraw32</span> <span class="o">=</span> <span class="n">valshift</span> <span class="o">*</span> <span class="n">multiplier</span><span class="p">;</span> <span class="o">//</span> <span class="o">~</span><span class="mi">32</span> <span class="n">bits</span> <span class="n">required</span>
+<span class="n">valscaled</span> <span class="o">=</span> <span class="p">(</span><span class="n">valscaledraw32</span> <span class="o">+</span> <span class="n">nudge</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">15</span><span class="p">;</span> <span class="o">//</span> <span class="o">~</span><span class="mi">16</span> <span class="n">bits</span> <span class="n">required</span>
+<span class="n">finval</span> <span class="o">=</span> <span class="n">valscaled</span> <span class="o">&gt;&gt;</span> <span class="o">-</span><span class="n">shift</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Left shift is a constant value equal to 7.
+Nudge is a value used for rounding to nearest.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The left shift is being embedded in the scaling factor.</p>
+</div>
+<p>Requantization of values is computed as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">valscaled</span> <span class="o">=</span> <span class="n">val</span> <span class="o">*</span> <span class="n">qdata</span><span class="o">.</span><span class="n">multiplier</span><span class="p">;</span>
+<span class="n">valshifted</span> <span class="o">=</span> <span class="n">valscaled</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="mi">15</span> <span class="o">-</span> <span class="n">qdata</span><span class="o">.</span><span class="n">shift</span><span class="p">);</span>
+<span class="n">valoffset</span> <span class="o">=</span> <span class="n">valshifted</span> <span class="o">+</span> <span class="n">qdata</span><span class="o">.</span><span class="n">offset</span><span class="p">;</span>
+<span class="n">valclamped</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">MIN</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">valoffset</span><span class="p">,</span> <span class="n">MAX</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-operator">
+<h2>ADD operator<a class="headerlink" href="#add-operator" title="Permalink to this headline">¶</a></h2>
+<p>The current implementation supports adding signed 8-bit integer tensors and returning signed 8-bit integer.
+The operation can be represented as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">Y_q</span> <span class="o">-</span> <span class="n">z_y</span><span class="p">)</span> <span class="o">*</span> <span class="n">s_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">A_q</span> <span class="o">-</span> <span class="n">z_a</span><span class="p">)</span> <span class="o">*</span> <span class="n">s_a</span> <span class="o">+</span> <span class="p">(</span><span class="n">B_q</span> <span class="o">-</span> <span class="n">z_b</span><span class="p">)</span> <span class="o">*</span> <span class="n">s_b</span>
+<span class="n">Y_q</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">s_y</span> <span class="o">*</span> <span class="p">[(</span><span class="n">A_q</span> <span class="o">-</span> <span class="n">z_a</span><span class="p">)</span> <span class="o">*</span> <span class="n">s_a</span> <span class="o">+</span> <span class="p">(</span><span class="n">B_q</span> <span class="o">-</span> <span class="n">z_b</span><span class="p">)</span> <span class="o">*</span> <span class="n">s_b</span><span class="p">]</span> <span class="o">+</span> <span class="n">z_y</span>
+<span class="n">Y_q</span> <span class="o">=</span> <span class="n">s_yinv</span> <span class="o">*</span> <span class="p">[(</span><span class="n">A_q</span> <span class="o">-</span> <span class="n">z_a</span><span class="p">)</span> <span class="o">*</span> <span class="n">s_a</span> <span class="o">+</span> <span class="p">(</span><span class="n">B_q</span> <span class="o">-</span> <span class="n">z_b</span><span class="p">)</span> <span class="o">*</span> <span class="n">s_b</span><span class="p">]</span> <span class="o">+</span> <span class="n">z_y</span>
+</pre></div>
+</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">z_y</span></code>, <code class="docutils literal notranslate"><span class="pre">s_y</span></code> - zero point and scale for output tensor,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">z_a</span></code>, <code class="docutils literal notranslate"><span class="pre">s_a</span></code> - zero point and scale for 1st input tensor,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">z_b</span></code>, <code class="docutils literal notranslate"><span class="pre">s_b</span></code> - zero point and scale for 2nd input tensor,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Y_q</span></code> - quantized output,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">A_q</span></code> - quantized 1st input,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">B_q</span></code> - quantized 2nd input,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">s_yinv</span></code> - inverted <code class="docutils literal notranslate"><span class="pre">s_y</span></code>.</p></li>
+</ul>
+<p>The aim is to compute <code class="docutils literal notranslate"><span class="pre">Y_q</span></code>.</p>
+<p>The scales are going through additional processing before converting to multipliers and shifts:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">doubled_max_scale</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">s_a</span><span class="p">,</span> <span class="n">s_b</span><span class="p">);</span>
+<span class="n">s_a</span><span class="s1">&#39; = s_a / doubled_max_scale;</span>
+<span class="n">s_b</span><span class="s1">&#39; = s_b / doubled_max_scale;</span>
+<span class="n">s_yinv</span><span class="s1">&#39; = doubled_max_scale / ((1 &lt;&lt; left_shift) * s_y)</span>
+</pre></div>
+</div>
+<p>Usage of <code class="docutils literal notranslate"><span class="pre">doubled_max_scale</span></code> is to prevent having too small scales for 16-bit multipliers and shifts to store.</p>
+<p>Firstly, the inputs are dequantized, so the above formula takes the following form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Y_q</span> <span class="o">=</span> <span class="n">s_yinv</span> <span class="o">*</span> <span class="p">[</span><span class="n">A</span><span class="s1">&#39; + B&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">z_y</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Current implementation performs dequantization on CPU.
+Those operations may need to be performed on VTA in the future to perform operations entirely on VTA.</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">A'</span></code> and <code class="docutils literal notranslate"><span class="pre">B'</span></code> are 16-bit signed integers that are passed to VTA’s ACC SRAM buffer.
+They are aligned to have size divisible by <code class="docutils literal notranslate"><span class="pre">VTA_BATCH</span> <span class="pre">*</span> <span class="pre">VTA_BLOCK_OUT</span></code> - those are the smallest units on which VTA performs ALU operations.</p>
+<p>After this, the delegate sends the vectors of the following length:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">maxelements</span> <span class="o">=</span> <span class="n">VTA_ACC_BUFF_DEPTH</span> <span class="o">/</span> <span class="n">NUM_THREADS</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span>  <span class="n">VTA_BLOCK_OUT</span>
+</pre></div>
+</div>
+<p>Where 2 stands for two input vectors to be stored in the ACC SRAM, and <code class="docutils literal notranslate"><span class="pre">NUM_THREADS</span></code> is a number of “threads” of processing in the VTA, can be either 1 or 2.</p>
+<p>The idea of threading in VTA comes from asynchronous nature of <code class="docutils literal notranslate"><span class="pre">LOAD</span></code>, <code class="docutils literal notranslate"><span class="pre">STORE</span></code> and <code class="docutils literal notranslate"><span class="pre">COMPUTE</span></code> modules - the <code class="docutils literal notranslate"><span class="pre">COMPUTE</span></code> module can process data while <code class="docutils literal notranslate"><span class="pre">LOAD</span></code> module handles data loading from DRAM and <code class="docutils literal notranslate"><span class="pre">STORE</span></code> module stores results in DRAM.
+This approach is called latency hiding.
+The “threading” is achieved by proper management of dependency queues between the modules.</p>
+<p>To sum up, the <code class="docutils literal notranslate"><span class="pre">LOAD</span></code> module fills half of the SRAM based on which “thread” it works on, while the <code class="docutils literal notranslate"><span class="pre">COMPUTE</span></code> module processes the data on the other half of the SRAM.</p>
+<p>The processing of <code class="docutils literal notranslate"><span class="pre">COMPUTE</span></code> module consists of following operations:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="n">B</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">multiplier</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">A</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="mi">15</span> <span class="o">-</span> <span class="n">shift</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="n">offset</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">MIN</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">MAX</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="o">-</span><span class="mi">127</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>After the above operations, the ACC SRAM contains the results that can safely be casted to 8-bit integers - it can be loaded using <code class="docutils literal notranslate"><span class="pre">VTAStoreBuffer2D</span></code>.</p>
+<p>The operation is repeated until all the elements in the input tensors are processed.</p>
+<p>The implementation of the operation is present in <code class="docutils literal notranslate"><span class="pre">alkali-csd-fw/apu-app/src/vta-delegate-ops.cpp</span></code>.</p>
+</div>
+<div class="section" id="conv2d-operator">
+<h2>CONV2D operator<a class="headerlink" href="#conv2d-operator" title="Permalink to this headline">¶</a></h2>
+<p>Two dimensional convolution in TensorFlow Lite for VTA takes 8-bit input, 8-bit weights, 32-bit bias and returns 8-bit outputs.
+Weights are quantized symmetrically, which means that zero point for them equals 0.
+Assuming <code class="docutils literal notranslate"><span class="pre">x</span></code> is a convolution operator, the operations look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">Y_q</span> <span class="o">-</span> <span class="n">z_y</span><span class="p">)</span> <span class="o">*</span> <span class="n">s_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">s_w</span> <span class="o">*</span> <span class="n">W</span><span class="p">)</span> <span class="n">x</span> <span class="p">[</span><span class="n">s_i</span> <span class="o">*</span> <span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">z_i</span><span class="p">)]</span> <span class="o">+</span> <span class="p">(</span><span class="n">s_b</span> <span class="o">*</span> <span class="n">B</span><span class="p">)</span>
+<span class="p">(</span><span class="n">Y_q</span> <span class="o">-</span> <span class="n">z_y</span><span class="p">)</span> <span class="o">*</span> <span class="n">s_y</span> <span class="o">=</span> <span class="n">s_w</span> <span class="o">*</span> <span class="n">s_i</span> <span class="o">*</span> <span class="p">[</span><span class="n">W</span> <span class="n">x</span> <span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">z_i</span><span class="p">)]</span> <span class="o">+</span> <span class="p">(</span><span class="n">s_b</span> <span class="o">*</span> <span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The quantization algorithm assures that <code class="docutils literal notranslate"><span class="pre">s_b</span> <span class="pre">=</span> <span class="pre">s_w</span> <span class="pre">*</span> <span class="pre">s_i</span></code> (approximately).
+This leads to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">Y_q</span> <span class="o">-</span> <span class="n">z_y</span><span class="p">)</span> <span class="o">*</span> <span class="n">s_y</span> <span class="o">=</span> <span class="n">s_w</span> <span class="o">*</span> <span class="n">s_i</span> <span class="o">*</span> <span class="p">[</span><span class="n">W</span> <span class="n">x</span> <span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">z_i</span><span class="p">)</span> <span class="o">+</span> <span class="n">B</span><span class="p">]</span>
+<span class="n">Y_q</span> <span class="o">=</span> <span class="p">[(</span><span class="n">s_w</span> <span class="o">*</span> <span class="n">s_i</span><span class="p">)</span> <span class="o">/</span> <span class="n">s_y</span><span class="p">]</span> <span class="o">*</span> <span class="p">[</span><span class="n">W</span> <span class="n">x</span> <span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">z_i</span><span class="p">)</span> <span class="o">+</span> <span class="n">B</span><span class="p">]</span> <span class="o">+</span> <span class="n">z_y</span>
+</pre></div>
+</div>
+<p>It means that convolution <code class="docutils literal notranslate"><span class="pre">W</span> <span class="pre">x</span> <span class="pre">(I</span> <span class="pre">-</span> <span class="pre">z_i)</span></code> can be performed without dequantization (values are 8-bit).
+The result of convolution is 32-bit, to which the 32-bit bias is added.</p>
+<p>The only floating-point parameter here is <code class="docutils literal notranslate"><span class="pre">[(s_w</span> <span class="pre">*</span> <span class="pre">s_i)</span> <span class="pre">/</span> <span class="pre">s_y]</span></code> - it can be applied at the very end of processing (only before adding <code class="docutils literal notranslate"><span class="pre">z_y</span></code>).
+For this parameter the multiplier and shift are computed.</p>
+<p>When loading data from TensorFlow Lite, the first step is to convert the data to proper, VTA-compliant layout.</p>
+<p>Layouts for convolution data are following:</p>
+<ul class="simple">
+<li><p>input: <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">I</span> <span class="pre">Hi</span> <span class="pre">Wi</span></code></p></li>
+<li><p>weights: <code class="docutils literal notranslate"><span class="pre">O</span> <span class="pre">I</span> <span class="pre">Hk</span> <span class="pre">Wk</span></code></p></li>
+<li><p>output: <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">O</span> <span class="pre">Ho</span> <span class="pre">Wo</span></code></p></li>
+</ul>
+<p>Where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">N</span></code> - batch size,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">I</span></code> - number of input channels,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Hi</span></code> - input height,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Wi</span></code> - input width,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">O</span></code> - output channels,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Hk</span></code> - kernel height,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Wk</span></code> - kernel width,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Ho</span></code> - output height,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Wo</span></code> - output width.</p></li>
+</ul>
+<p>The expected layouts by VTA are:</p>
+<ul class="simple">
+<li><p>input: <code class="docutils literal notranslate"><span class="pre">N'</span> <span class="pre">I'</span> <span class="pre">Hi</span> <span class="pre">Wi</span> <span class="pre">n</span> <span class="pre">i</span></code></p></li>
+<li><p>weights: <code class="docutils literal notranslate"><span class="pre">O'</span> <span class="pre">I'</span> <span class="pre">Hk</span> <span class="pre">Wk</span> <span class="pre">o</span> <span class="pre">i</span></code></p></li>
+<li><p>output: <code class="docutils literal notranslate"><span class="pre">N'</span> <span class="pre">O'</span> <span class="pre">Ho</span> <span class="pre">Wo</span> <span class="pre">n</span> <span class="pre">o</span></code></p></li>
+</ul>
+<p>Where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">n</span></code> - subgroup of batch dimension of size <code class="docutils literal notranslate"><span class="pre">VTA_BATCH</span></code> (1),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">i</span></code> - subgroup of input channels’ dimension of size <code class="docutils literal notranslate"><span class="pre">VTA_BLOCK_IN</span></code> (16),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">o</span></code> - subgroup of output channels’ dimension of size <code class="docutils literal notranslate"><span class="pre">VTA_BLOCK_OUT</span></code> (16),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">N'</span></code> - number of batch subgroups <code class="docutils literal notranslate"><span class="pre">n</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">I'</span></code> - number of input channels subgroups <code class="docutils literal notranslate"><span class="pre">i</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">O'</span></code> - number of output channels subgroups <code class="docutils literal notranslate"><span class="pre">o</span></code>.</p></li>
+</ul>
+<p>To convert data to this layout the original dimensions need to be:</p>
+<ul class="simple">
+<li><p>zero-padded so they are divisible by block computable by VTA</p></li>
+<li><p>rearranged so the data can be passed just for processing directly to VTA.</p></li>
+</ul>
+<p>During convolution, for particular sample <code class="docutils literal notranslate"><span class="pre">n</span></code>, input pixel <code class="docutils literal notranslate"><span class="pre">(h,w)</span></code> and particular kernel pixel <code class="docutils literal notranslate"><span class="pre">(hk,wk)</span></code> partial convolution result is computed for 16 input channels and 16 output channels (using 16x16 weights).</p>
+<p>Current implementation assumes that:</p>
+<ul class="simple">
+<li><p>at least a single input row should fit into INPUT SRAM,</p></li>
+<li><p>at least a single kernel (for 16 output channels) should fit into WGT SRAM,</p></li>
+<li><p>at least for 16 output channels, full output row, needed biases, multipliers and shifts should fit into ACC SRAM.</p></li>
+</ul>
+<p>The pseudocode for the current implementations is as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">each</span> <span class="n">batch</span> <span class="n">subgroup</span>
+    <span class="k">for</span> <span class="n">each</span> <span class="n">output</span> <span class="n">channel</span> <span class="n">subgroup</span>
+        <span class="n">LOAD</span> <span class="n">weights</span> <span class="k">for</span> <span class="n">current</span> <span class="n">output</span> <span class="n">channels</span> <span class="n">to</span> <span class="n">WGT</span> <span class="n">SRAM</span>
+        <span class="n">LOAD</span> <span class="n">biases</span> <span class="k">for</span> <span class="n">current</span> <span class="n">output</span> <span class="n">channels</span> <span class="n">to</span> <span class="n">ACC</span> <span class="n">SRAM</span>
+        <span class="n">LOAD</span> <span class="n">multipliers</span> <span class="k">for</span> <span class="n">current</span> <span class="n">output</span> <span class="n">channels</span> <span class="n">to</span> <span class="n">ACC</span> <span class="n">SRAM</span>
+        <span class="n">LOAD</span> <span class="n">shifts</span> <span class="k">for</span> <span class="n">current</span> <span class="n">output</span> <span class="n">channels</span> <span class="n">to</span> <span class="n">ACC</span> <span class="n">SRAM</span>
+        <span class="k">for</span> <span class="n">each</span> <span class="n">output</span> <span class="n">row</span>
+            <span class="n">COMPUTE</span> <span class="n">micro</span><span class="o">-</span><span class="n">op</span>
+                <span class="n">VTAFOR</span> <span class="n">output</span> <span class="n">channels</span> <span class="n">to</span> <span class="n">compute</span>
+                    <span class="n">VTAFOR</span> <span class="n">rows</span> <span class="n">to</span> <span class="n">compute</span>
+                        <span class="n">RESET</span> <span class="n">outputs</span> <span class="ow">in</span> <span class="n">ACC</span> <span class="n">SRAM</span>
+            <span class="k">for</span> <span class="n">each</span> <span class="nb">input</span> <span class="n">channel</span> <span class="n">subgroup</span>
+                <span class="n">Load</span> <span class="nb">input</span> <span class="n">row</span> <span class="k">for</span> <span class="n">given</span> <span class="nb">input</span> <span class="n">channels</span> <span class="n">to</span> <span class="n">INP</span> <span class="n">SRAM</span>
+                <span class="n">COMPUTE</span> <span class="n">micro</span><span class="o">-</span><span class="n">op</span>
+                    <span class="n">VTAFOR</span> <span class="n">output</span> <span class="n">channels</span> <span class="n">to</span> <span class="n">compute</span>
+                        <span class="n">VTAFOR</span> <span class="n">rows</span> <span class="n">to</span> <span class="n">compute</span>
+                            <span class="k">for</span> <span class="n">kernel</span> <span class="n">rows</span>
+                                <span class="k">for</span> <span class="n">kernel</span> <span class="n">cols</span>
+                                    <span class="n">RUN</span> <span class="n">GEMM</span> <span class="n">on</span> <span class="n">data</span>
+            <span class="n">VTA</span> <span class="n">ALU</span> <span class="n">ADD</span> <span class="n">bias</span> <span class="n">to</span> <span class="n">convolution</span> <span class="n">output</span>
+            <span class="n">VTA</span> <span class="n">ALU</span> <span class="n">MUL</span> <span class="n">outputs</span> <span class="n">by</span> <span class="n">scale</span> <span class="n">multiplier</span>
+            <span class="n">VTA</span> <span class="n">ALU</span> <span class="n">SHR</span> <span class="n">outputs</span> <span class="n">by</span> <span class="n">scale</span> <span class="n">shift</span>
+            <span class="n">VTA</span> <span class="n">ALU</span> <span class="n">ADD</span> <span class="n">zero_point</span> <span class="n">to</span> <span class="n">outputs</span>
+            <span class="n">Store</span> <span class="n">partial</span> <span class="n">outputs</span> <span class="kn">from</span> <span class="nn">OUT</span> <span class="n">SRAM</span> <span class="ow">in</span> <span class="n">DRAM</span>
+</pre></div>
+</div>
+<p>The implementation of the operation is present in <code class="docutils literal notranslate"><span class="pre">alkali-csd-fw/apu-app/src/vta-delegate-ops.cpp</span></code>.</p>
+</div>
+<div class="section" id="further-work">
+<h2>Further work<a class="headerlink" href="#further-work" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Finish testing CONV2D operator.</p></li>
+<li><p>Test and debug (if necessary) sequence of VTA operations.</p></li>
+<li><p>Load data with or without preprocessing depending on context (next VTA op vs loading data from TFLite context).</p></li>
+<li><p>Add loading padding and stride data from model’s structure.</p></li>
+<li><p>Run and benchmark VTA accelerator on large network.</p></li>
+</ul>
+</div>
+<div class="section" id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p><a class="reference external" href="https://tvm.apache.org/docs/topic/vta/tutorials/vta_get_started.html#sphx-glr-topic-vta-tutorials-vta-get-started-py">TVM VTA Getting started guide</a></p></li>
+<li><p><a class="reference external" href="https://tvm.apache.org/docs/topic/vta/tutorials/vta_get_started.html#alu-operations">Example demonstrating sample IR code</a></p></li>
+<li><p><a class="reference external" href="https://www.tensorflow.org/lite/performance/implementing_delegate">TFLite tutorial on delegate implementation</a></p></li>
+<li><p>In <a class="reference external" href="https://github.com/antmicro/alkali-csd-fw">alkali-csd-fw repository</a>, the sources regarding delegate provide lots of useful information regarding VTA, delegating system and quantization scheme, they are also documented:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">apu-app/src/vta-delegate.hpp</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">apu-app/src/vta-delegate.cpp</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">apu-app/src/vta-delegate-ops.cpp</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">apu-app/src/vta/sim_driver.cc</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          
+
+
+
+
+
+
+
+<footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="flashing-basalt.html" class="btn btn-neutral float-right" title="Flashing and connecting the Basalt board" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vta-accelerator.html" class="btn btn-neutral float-left" title="VTA accelerator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Antmicro, 2023;
+      
+        <span class="commit" data-home="..html">
+          Revision <a id="commitnewlink" href=""><code>83945484</code></a>;
+        </span>
+      
+      <span class="commit">
+        branch <a id="branchnewlink" href=""><code>main</code></a>.
+      </span>
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
